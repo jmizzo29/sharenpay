@@ -5,6 +5,7 @@ enum DemoIDs {
     static let you = UUID(uuidString: "A0000000-0000-4000-8000-000000000001")!
     static let maya = UUID(uuidString: "A0000000-0000-4000-8000-000000000002")!
     static let jordan = UUID(uuidString: "A0000000-0000-4000-8000-000000000003")!
+    static let priya = UUID(uuidString: "A0000000-0000-4000-8000-000000000004")!
 }
 
 enum DemoCatalog {
@@ -18,7 +19,7 @@ enum DemoCatalog {
             handle: handle(from: displayName),
             kind: .you,
             hue: 0.62,
-            blurb: "Roommate at 300 West.",
+            blurb: "Splits bills.",
             isCurrentUser: true,
             venmoHandle: "alex-rivera",
             cashTag: "alexrivera",
@@ -31,7 +32,7 @@ enum DemoCatalog {
             handle: "maya",
             kind: .roommate,
             hue: 0.56,
-            blurb: "Pays the landlord. Lives down the hall.",
+            blurb: "Roommate. Often covers rent.",
             venmoHandle: "maya-chen",
             cashTag: "mayachen",
             paypalHandle: "mayachen",
@@ -43,26 +44,36 @@ enum DemoCatalog {
             handle: "jordan",
             kind: .roommate,
             hue: 0.18,
-            blurb: "Put the internet in their name.",
+            blurb: "Roommate.",
             venmoHandle: "jordanhale",
             cashTag: "jordanhale",
             paypalHandle: "jordanhale",
             zelleHint: "Jordan Hale"
         )
+        let priya = Person(
+            id: DemoIDs.priya,
+            displayName: "Priya Shah",
+            handle: "priya",
+            kind: .friend,
+            hue: 0.70,
+            blurb: "Friend. Dinners and shows.",
+            venmoHandle: "priyashah",
+            cashTag: "priyashah",
+            paypalHandle: "priyashah",
+            zelleHint: "Priya Shah"
+        )
 
-        [you, maya, jordan].forEach(context.insert)
+        [you, maya, jordan, priya].forEach(context.insert)
 
         let account = AppAccount(
             displayName: displayName,
             handle: you.handle,
-            householdName: "300 West",
             notificationsEnabled: true,
             hasCompletedOnboarding: false
         )
         context.insert(account)
 
         let now = Date.now
-        let house = [you, maya, jordan]
 
         addBill(
             context: context,
@@ -71,58 +82,57 @@ enum DemoCatalog {
             category: .rent,
             createdAt: now.addingTimeInterval(-60 * 60 * 40),
             payer: maya,
-            people: house,
+            people: [you, maya, jordan],
             settledIDs: [maya.id],
             agreedIDs: [maya.id],
             messages: [
-                (maya, "Paid the landlord on the 1st. $600 each.", -60 * 60 * 40)
+                (maya, "Paid the landlord. $600 each.", -60 * 60 * 40)
             ]
         )
 
         addBill(
             context: context,
-            note: "Rocky Mountain Power",
-            amountCents: 14_217,
-            category: .electric,
-            createdAt: now.addingTimeInterval(-60 * 60 * 20),
+            note: "Red Iguana",
+            amountCents: 8_640,
+            category: .dinner,
+            createdAt: now.addingTimeInterval(-60 * 60 * 18),
             payer: you,
-            people: house,
+            people: [you, maya, priya],
             settledIDs: [you.id],
-            agreedIDs: [you.id, jordan.id],
+            agreedIDs: [you.id],
             messages: [
-                (you, "Paid the electric bill. Same even split.", -60 * 60 * 20),
-                (jordan, "That's my share.", -60 * 60 * 12)
+                (you, "Dinner. Even split.", -60 * 60 * 18)
             ]
         )
 
         addBill(
             context: context,
-            note: "CenturyLink wifi",
-            amountCents: 8_999,
-            category: .internet,
+            note: "Uber from the airport",
+            amountCents: 3_200,
+            category: .ride,
             createdAt: now.addingTimeInterval(-60 * 60 * 10),
             payer: jordan,
-            people: house,
+            people: [you, jordan],
             settledIDs: [jordan.id],
             agreedIDs: [jordan.id],
             messages: [
-                (jordan, "Auto-pay hit my card. $30-ish each.", -60 * 60 * 10)
+                (jordan, "I put the Uber on my card.", -60 * 60 * 10)
             ]
         )
 
         addBill(
             context: context,
-            note: "Costco house staples",
-            amountCents: 6_450,
-            category: .groceries,
+            note: "The National tickets",
+            amountCents: 18_000,
+            category: .tickets,
             createdAt: now.addingTimeInterval(-60 * 60 * 6),
             payer: you,
-            people: house,
-            settledIDs: [you.id, maya.id],
-            agreedIDs: [you.id, maya.id],
+            people: [you, jordan, priya],
+            settledIDs: [you.id],
+            agreedIDs: [you.id, jordan.id],
             messages: [
-                (you, "Toilet paper, trash bags, coffee.", -60 * 60 * 6),
-                (maya, "Sent you Venmo. Mark me paid.", -60 * 60 * 4)
+                (you, "Three tickets. $60 each.", -60 * 60 * 6),
+                (jordan, "That's my share.", -60 * 60 * 4)
             ]
         )
 

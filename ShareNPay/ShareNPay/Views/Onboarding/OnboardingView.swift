@@ -28,7 +28,7 @@ struct OnboardingView: View {
                 .buttonStyle(.borderedProminent)
                 .tint(SNP.accent)
                 .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                Text("You’ll join the 300 West household. ShareNPay does not take payments.")
+                Text("Add a bill, split it, see who owes what. Settle outside the app. ShareNPay does not take payments.")
                     .font(.caption)
                     .foregroundStyle(SNP.textMuted)
                 Spacer()

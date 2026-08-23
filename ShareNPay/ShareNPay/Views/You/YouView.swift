@@ -4,7 +4,6 @@ struct YouView: View {
     @Environment(PaymentService.self) private var service
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
-    @State private var house = ""
     @State private var notifications = true
     @State private var confirmReset = false
 
@@ -25,10 +24,6 @@ struct YouView: View {
                                 }
                         }
                     }
-                    TextField("Household", text: $house)
-                        .onChange(of: house) { _, value in
-                            service.updateHouseholdName(value)
-                        }
                     Toggle("Reminders", isOn: $notifications)
                         .tint(SNP.accent)
                         .onChange(of: notifications) { _, value in
@@ -36,12 +31,12 @@ struct YouView: View {
                         }
                 }
                 Section {
-                    Text("ShareNPay does not move money. Track the house ledger here, then settle on Venmo, Cash App, PayPal, or Zelle.")
+                    Text("ShareNPay does the split. It does not take the money. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid.")
                         .font(.subheadline)
                         .foregroundStyle(SNP.textMuted)
                 }
                 Section {
-                    Button("Reset demo household") { confirmReset = true }
+                    Button("Reset demo data") { confirmReset = true }
                 }
             }
             .navigationTitle("Profile")
@@ -53,17 +48,15 @@ struct YouView: View {
             }
             .onAppear {
                 name = service.currentUser?.displayName ?? ""
-                house = service.householdName
                 notifications = service.account?.notificationsEnabled ?? true
             }
-            .confirmationDialog("Reset demo household?", isPresented: $confirmReset) {
+            .confirmationDialog("Reset demo data?", isPresented: $confirmReset) {
                 Button("Reset", role: .destructive) {
                     service.resetDemo(keepingName: name)
-                    house = service.householdName
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Restores 300 West, Maya, Jordan, and this month’s bills.")
+                Text("Restores Maya, Jordan, Priya, and the sample bills.")
             }
         }
     }

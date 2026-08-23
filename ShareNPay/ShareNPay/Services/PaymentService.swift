@@ -26,27 +26,14 @@ final class PaymentService {
         return try? context.fetch(descriptor).first
     }
 
-    var network: [Person] {
-        household
-    }
-
-    var household: [Person] {
+    var people: [Person] {
         let descriptor = FetchDescriptor<Person>(
             sortBy: [SortDescriptor(\.displayName)]
         )
         return (try? context.fetch(descriptor)) ?? []
     }
 
-    var householdName: String {
-        account?.householdName.isEmpty == false ? (account?.householdName ?? "300 West") : "300 West"
-    }
-
-    func updateHouseholdName(_ name: String) {
-        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !trimmed.isEmpty else { return }
-        account?.householdName = trimmed
-        save()
-    }
+    var network: [Person] { people }
 
     var activity: [Payment] {
         let descriptor = FetchDescriptor<Payment>(
@@ -97,17 +84,7 @@ final class PaymentService {
         note: String,
         amountCents: Int,
         category: ExpenseCategory,
-        people: [Person]
-    ) -> Payment? {
-        createHouseBill(note: note, amountCents: amountCents, category: category, payer: currentUser, people: people)
-    }
-
-    @discardableResult
-    func createHouseBill(
-        note: String,
-        amountCents: Int,
-        category: ExpenseCategory,
-        payer: Person?,
+        payer: Person? = nil,
         people: [Person]
     ) -> Payment? {
         guard let me = currentUser else { return nil }
@@ -149,6 +126,17 @@ final class PaymentService {
         )
         save()
         return payment
+    }
+
+    @discardableResult
+    func createHouseBill(
+        note: String,
+        amountCents: Int,
+        category: ExpenseCategory,
+        payer: Person?,
+        people: [Person]
+    ) -> Payment? {
+        createSharedExpense(note: note, amountCents: amountCents, category: category, payer: payer, people: people)
     }
 
     @discardableResult
@@ -344,7 +332,6 @@ final class PaymentService {
         if let account {
             account.displayName = displayName
             account.handle = DemoCatalog.handle(from: displayName)
-            account.householdName = "300 West"
             account.hasCompletedOnboarding = onboarded
             account.notificationsEnabled = notifications
         }
@@ -384,7 +371,7 @@ final class PaymentService {
 
     private func cleanedNote(_ note: String) -> String {
         let trimmed = note.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? "House bill" : String(trimmed.prefix(160))
+        return trimmed.isEmpty ? "Bill" : String(trimmed.prefix(160))
     }
 
     private func openShares(viewer: Person, limitedTo payment: Payment? = nil) -> [LedgerMath.OpenShare] {

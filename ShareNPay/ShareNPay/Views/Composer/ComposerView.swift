@@ -8,7 +8,7 @@ struct ComposerView: View {
 
     @State private var note = ""
     @State private var cents = 0
-    @State private var category: ExpenseCategory = .restaurant
+    @State private var category: ExpenseCategory = .dinner
     @State private var selected: Set<UUID> = []
 
     private let limit = 160
@@ -19,7 +19,7 @@ struct ComposerView: View {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
-                        Text("Add a house bill.")
+                        Text("Add a bill. Even split. Anyone can be on it.")
                             .font(.subheadline)
                             .foregroundStyle(SNP.textMuted)
                         noteEditor
@@ -45,7 +45,7 @@ struct ComposerView: View {
 
     private var noteEditor: some View {
         VStack(alignment: .leading, spacing: 8) {
-            TextField("What did you share?", text: $note, axis: .vertical)
+            TextField("Dinner, Uber, rent, concert…", text: $note, axis: .vertical)
                 .lineLimit(3...5)
                 .font(.title3)
                 .padding(14)
@@ -73,7 +73,7 @@ struct ComposerView: View {
                 .foregroundStyle(SNP.textMuted)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(ExpenseCategory.allCases) { item in
+                    ForEach(ExpenseCategory.splitCases) { item in
                         CategoryChip(category: item, selected: category == item) {
                             category = item
                         }

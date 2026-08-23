@@ -13,7 +13,6 @@ struct ActivityView: View {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {
-                        householdHeader
                         monthSummary
                         HomeComposer { payment in
                             if let payment { path.append(payment.id) }
@@ -50,17 +49,6 @@ struct ActivityView: View {
         }
     }
 
-    private var householdHeader: some View {
-        VStack(alignment: .leading, spacing: 4) {
-            Text(service.householdName)
-                .font(.title2.weight(.bold))
-                .foregroundStyle(SNP.text)
-            Text(service.household.map(\.firstName).joined(separator: " · "))
-                .font(.subheadline)
-                .foregroundStyle(SNP.textMuted)
-        }
-    }
-
     private var monthSummary: some View {
         HStack(spacing: 12) {
             summaryCard("You owe", service.youOweTotal())
@@ -85,11 +73,11 @@ struct ActivityView: View {
 
     private var bills: some View {
         VStack(alignment: .leading, spacing: 8) {
-            Text("This month")
+            Text("Bills")
                 .font(.headline)
                 .foregroundStyle(SNP.text)
             if payments.isEmpty {
-                Text("No house bills yet.")
+                Text("No bills yet.")
                     .foregroundStyle(SNP.textMuted)
             } else {
                 ForEach(payments, id: \.id) { payment in
@@ -113,16 +101,16 @@ struct HomeComposer: View {
 
     @State private var note = ""
     @State private var cents = 0
-    @State private var category: ExpenseCategory = .rent
+    @State private var category: ExpenseCategory = .dinner
     @State private var payerID: UUID?
     @State private var selected: Set<UUID> = []
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Add a house bill")
+            Text("Add a bill")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(SNP.text)
-            TextField("What was paid?", text: $note)
+            TextField("Dinner, Uber, rent, concert…", text: $note)
                 .onChange(of: note) { _, value in
                     if value.count > 160 { note = String(value.prefix(160)) }
                 }
@@ -130,7 +118,7 @@ struct HomeComposer: View {
                 AmountField(cents: $cents, size: 28)
                 Spacer()
                 Menu {
-                    ForEach(ExpenseCategory.householdCases) { item in
+                    ForEach(ExpenseCategory.splitCases) { item in
                         Button(item.title) { category = item }
                     }
                 } label: {
@@ -151,7 +139,7 @@ struct HomeComposer: View {
                     .font(.caption)
                     .foregroundStyle(SNP.textMuted)
                 Menu {
-                    ForEach(service.household, id: \.id) { person in
+                    ForEach(service.people, id: \.id) { person in
                         Button(person.isCurrentUser ? "You" : person.firstName) {
                             payerID = person.id
                         }
@@ -162,9 +150,12 @@ struct HomeComposer: View {
                         .foregroundStyle(SNP.text)
                 }
             }
+            Text("Who splits")
+                .font(.caption)
+                .foregroundStyle(SNP.textMuted)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
-                    ForEach(service.household, id: \.id) { person in
+                    ForEach(service.people, id: \.id) { person in
                         Button {
                             if selected.contains(person.id) {
                                 if selected.count > 1 { selected.remove(person.id) }
@@ -205,8 +196,8 @@ struct HomeComposer: View {
                 .strokeBorder(SNP.hairline, lineWidth: 1)
         }
         .onAppear {
-            if selected.isEmpty {
-                selected = Set(service.household.map(\.id))
+            if selected.isEmpty, let me = service.currentUser {
+                selected = [me.id]
             }
             if payerID == nil {
                 payerID = service.currentUser?.id
@@ -215,14 +206,14 @@ struct HomeComposer: View {
     }
 
     private var payerLabel: String {
-        let person = service.household.first { $0.id == payerID }
+        let person = service.people.first { $0.id == payerID }
         if person?.isCurrentUser == true { return "You" }
         return person?.firstName ?? "You"
     }
 
     private var splitCopy: String {
         guard selected.count >= 2, cents > 0 else {
-            return "Split evenly among the house"
+            return "Pick who split this. Even split."
         }
         let parts = LedgerMath.evenSplit(totalCents: cents, participantCount: selected.count)
         let each = parts.first ?? 0
@@ -234,9 +225,9 @@ struct HomeComposer: View {
     }
 
     private func post() {
-        let people = service.household.filter { selected.contains($0.id) }
-        let payer = service.household.first { $0.id == payerID }
-        let payment = service.createHouseBill(
+        let people = service.people.filter { selected.contains($0.id) }
+        let payer = service.people.first { $0.id == payerID }
+        let payment = service.createSharedExpense(
             note: note,
             amountCents: cents,
             category: category,

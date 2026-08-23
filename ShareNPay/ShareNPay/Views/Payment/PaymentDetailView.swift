@@ -31,8 +31,7 @@ struct PaymentDetailView: View {
                 SettleOutsideSheet(
                     payee: payee,
                     cents: share.amountCents,
-                    billNote: payment.note,
-                    household: service.householdName
+                    billNote: payment.note
                 ) {
                     service.markSharePaid(payment)
                 }
@@ -67,20 +66,27 @@ struct PaymentDetailView: View {
     private var splitCard: some View {
         CardSurface {
             VStack(alignment: .leading, spacing: 12) {
-                Text("Shares")
+                Text("Who owes")
                     .font(.subheadline.weight(.semibold))
                     .foregroundStyle(SNP.textMuted)
                 ForEach(payment.sortedSplits, id: \.persistentModelID) { share in
                     if let person = share.person {
-                        HStack {
+                        HStack(alignment: .top, spacing: 10) {
                             AvatarView(person: person, size: 32)
-                            VStack(alignment: .leading, spacing: 2) {
+                            VStack(alignment: .leading, spacing: 4) {
                                 Text(person.isCurrentUser ? "You" : person.displayName)
                                     .font(.body.weight(.medium))
                                     .foregroundStyle(SNP.text)
-                                Text(role(for: person, share: share))
+                                Text(payment.oweLine(for: share, viewer: service.currentUser) ?? "")
                                     .font(.caption)
                                     .foregroundStyle(SNP.textMuted)
+                                if canCollect(from: person, share: share) {
+                                    Button("Mark paid") {
+                                        service.markSharePaid(payment, person: person)
+                                    }
+                                    .font(.caption.weight(.semibold))
+                                    .foregroundStyle(SNP.accent)
+                                }
                             }
                             Spacer()
                             MoneyLabel(cents: share.amountCents, size: 16)
@@ -91,11 +97,10 @@ struct PaymentDetailView: View {
         }
     }
 
-    private func role(for person: Person, share: SplitShare) -> String {
-        if person.id == payment.payer?.id { return "Paid the bill" }
-        if share.settled { return "Paid" }
-        if share.agreed { return "That's their share · unpaid" }
-        return "Needs to confirm"
+    private func canCollect(from person: Person, share: SplitShare) -> Bool {
+        guard payment.status != .settled, !share.settled else { return false }
+        guard let me = service.currentUser, me.id == payment.payer?.id else { return false }
+        return person.id != me.id
     }
 
     @ViewBuilder
@@ -142,7 +147,7 @@ struct PaymentDetailView: View {
         let names = service.requiredApprovers(for: payment)
             .filter { service.share(for: $0, in: payment)?.agreed != true }
             .map(\.firstName)
-        if names.isEmpty { return "Waiting for roommates to pay outside the app." }
+        if names.isEmpty { return "Waiting for people to pay outside the app." }
         return "Waiting on \(names.joined(separator: ", ")) to confirm."
     }
 
@@ -195,7 +200,7 @@ struct PaymentDetailView: View {
 
     private var composer: some View {
         HStack(spacing: 10) {
-            TextField("Message the house", text: $draft, axis: .vertical)
+            TextField("Add a note", text: $draft, axis: .vertical)
                 .lineLimit(1...3)
                 .padding(10)
                 .background(SNP.fill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))

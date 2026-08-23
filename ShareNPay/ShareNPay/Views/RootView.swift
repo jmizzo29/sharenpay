@@ -69,7 +69,7 @@ struct MainTabs: View {
                 .tabItem { Label("Ledger", systemImage: "equal.circle") }
                 .tag(Tab.balances)
             PeopleView()
-                .tabItem { Label("Household", systemImage: "person.2") }
+                .tabItem { Label("People", systemImage: "person.2") }
                 .tag(Tab.people)
         }
     }

@@ -43,8 +43,8 @@ enum ExternalSettle {
         URL(string: "https://www.zellepay.com/")
     }
 
-    static func note(household: String, bill: String, cents: Int) -> String {
-        "\(household) · \(bill) · \(LedgerMath.currencyString(cents: cents))"
+    static func note(bill: String, cents: Int) -> String {
+        "ShareNPay · \(bill) · \(LedgerMath.currencyString(cents: cents))"
     }
 
     static func amountString(_ cents: Int) -> String {
@@ -59,7 +59,6 @@ struct SettleOutsideSheet: View {
     let payee: Person
     let cents: Int
     let billNote: String
-    let household: String
     let onMarkPaid: () -> Void
 
     @State private var copied = false
@@ -116,6 +115,6 @@ struct SettleOutsideSheet: View {
     }
 
     private var note: String {
-        ExternalSettle.note(household: household, bill: billNote, cents: cents)
+        ExternalSettle.note(bill: billNote, cents: cents)
     }
 }

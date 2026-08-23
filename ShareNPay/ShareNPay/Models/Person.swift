@@ -54,7 +54,7 @@ final class Person {
     }
 
     var kind: PersonKind {
-        get { PersonKind(rawValue: kindRaw) ?? .roommate }
+        get { PersonKind(rawValue: kindRaw) ?? .friend }
         set { kindRaw = newValue.rawValue }
     }
 

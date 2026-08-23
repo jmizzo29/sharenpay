@@ -27,8 +27,7 @@ struct PersonProfileView: View {
             SettleOutsideSheet(
                 payee: person,
                 cents: abs(net),
-                billNote: "House ledger",
-                household: service.householdName
+                billNote: "Shared bills"
             ) {
                 service.settleUp(with: person)
             }
@@ -79,7 +78,7 @@ struct PersonProfileView: View {
             payment.participants.contains(where: { $0.id == person.id })
         }
         return VStack(alignment: .leading, spacing: 10) {
-            Text("House bills")
+            Text("Shared bills")
                 .font(.headline)
             if mine.isEmpty {
                 Text("No bills yet.")

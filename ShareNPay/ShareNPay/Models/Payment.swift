@@ -81,4 +81,29 @@ final class Payment {
     var recipient: Person? {
         participants.first { $0.id != payer?.id }
     }
+
+    /// Plain-language split: who covered it, who still owes whom.
+    func oweLines(viewer: Person?) -> [String] {
+        sortedSplits.compactMap { oweLine(for: $0, viewer: viewer) }
+    }
+
+    func oweLine(for share: SplitShare, viewer: Person?) -> String? {
+        guard let person = share.person, let payer else { return nil }
+        let debtor = person.id == viewer?.id ? "You" : person.firstName
+        let payee = payer.id == viewer?.id ? "you" : payer.firstName
+        if person.id == payer.id {
+            return "\(debtor) paid the bill"
+        }
+        let amount = LedgerMath.currencyString(cents: share.amountCents)
+        if share.settled {
+            return "\(debtor) paid \(payee) \(amount)"
+        }
+        if person.id == viewer?.id {
+            return "You owe \(payer.firstName) \(amount)"
+        }
+        if payer.id == viewer?.id {
+            return "\(person.firstName) owes you \(amount)"
+        }
+        return "\(person.firstName) owes \(payer.firstName) \(amount)"
+    }
 }

@@ -5,7 +5,8 @@ import SwiftData
 final class AppAccount {
     var displayName: String
     var handle: String
-    var householdName: String = "300 West"
+    /// Stored for SwiftData compatibility. The product is any shared bill, not one household.
+    var householdName: String = ""
     var notificationsEnabled: Bool
     var hasCompletedOnboarding: Bool
     var createdAt: Date
@@ -13,7 +14,7 @@ final class AppAccount {
     init(
         displayName: String,
         handle: String,
-        householdName: String = "300 West",
+        householdName: String = "",
         notificationsEnabled: Bool = true,
         hasCompletedOnboarding: Bool = false,
         createdAt: Date = .now

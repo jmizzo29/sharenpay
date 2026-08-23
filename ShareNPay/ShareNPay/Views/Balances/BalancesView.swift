@@ -3,7 +3,7 @@ import SwiftUI
 struct BalancesView: View {
     @Environment(PaymentService.self) private var service
     @State private var path: [UUID] = []
-    @State private var settleRoommate: Person?
+    @State private var settlePerson: Person?
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -23,21 +23,20 @@ struct BalancesView: View {
             .navigationTitle("Ledger")
             .navigationBarTitleDisplayMode(.inline)
             .navigationDestination(for: UUID.self) { id in
-                if let person = service.household.first(where: { $0.id == id }) {
+                if let person = service.people.first(where: { $0.id == id }) {
                     PersonProfileView(person: person)
                 }
             }
             .sheet(isPresented: Binding(
-                get: { settleRoommate != nil },
-                set: { if !$0 { settleRoommate = nil } }
+                get: { settlePerson != nil },
+                set: { if !$0 { settlePerson = nil } }
             )) {
-                if let person = settleRoommate {
+                if let person = settlePerson {
                     let net = service.netCents(with: person)
                     SettleOutsideSheet(
                         payee: person,
                         cents: abs(net),
-                        billNote: "House ledger",
-                        household: service.householdName
+                        billNote: "Shared bills"
                     ) {
                         service.settleUp(with: person)
                     }
@@ -91,7 +90,7 @@ struct BalancesView: View {
                     .buttonStyle(.plain)
                     if row.cents < 0 {
                         Button("Pay outside") {
-                            settleRoommate = row.person
+                            settlePerson = row.person
                         }
                         .font(.subheadline.weight(.semibold))
                         .frame(maxWidth: .infinity)

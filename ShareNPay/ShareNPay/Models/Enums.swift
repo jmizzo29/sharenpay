@@ -12,14 +12,17 @@ enum PersonKind: String, Codable, CaseIterable, Identifiable {
     var sectionTitle: String {
         switch self {
         case .you: "You"
-        case .roommate, .friend: "Roommates"
-        case .family: "Family"
+        case .roommate: "Roommates"
+        case .friend, .family: "Friends"
         case .business: "Business"
         }
     }
 }
 
 enum ExpenseCategory: String, Codable, CaseIterable, Identifiable {
+    case dinner
+    case ride
+    case tickets
     case rent
     case electric
     case internet
@@ -33,17 +36,19 @@ enum ExpenseCategory: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
-    static var householdCases: [ExpenseCategory] {
-        [.rent, .electric, .internet, .groceries, .other]
+    static var splitCases: [ExpenseCategory] {
+        [.dinner, .ride, .tickets, .rent, .electric, .internet, .groceries, .other]
     }
 
     var title: String {
         switch self {
+        case .dinner, .restaurant: "Dinner"
+        case .ride: "Ride"
+        case .tickets: "Tickets"
         case .rent: "Rent"
         case .electric: "Electric"
         case .internet: "Internet"
-        case .groceries: "House groceries"
-        case .restaurant: "Restaurant"
+        case .groceries: "Groceries"
         case .salon: "Salon"
         case .vacation: "Vacation"
         case .club: "Club"
@@ -56,12 +61,14 @@ enum ExpenseCategory: String, Codable, CaseIterable, Identifiable {
 
     var symbol: String {
         switch self {
+        case .dinner, .restaurant: "fork.knife"
+        case .ride: "car.fill"
+        case .tickets: "ticket.fill"
         case .rent: "key.fill"
         case .electric: "bolt.fill"
         case .internet: "wifi"
         case .groceries: "cart.fill"
-        case .other: "square.grid.2x2.fill"
-        default: "house.fill"
+        default: "equal.circle.fill"
         }
     }
 
@@ -77,7 +84,7 @@ enum PaymentKind: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .sharedExpense: "House bill"
+        case .sharedExpense: "Bill"
         case .pay: "Pay"
         case .request: "Request"
         }
