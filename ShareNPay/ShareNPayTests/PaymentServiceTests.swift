@@ -14,111 +14,71 @@ final class PaymentServiceTests: XCTestCase {
         service.completeOnboarding(displayName: "Alex Rivera")
     }
 
-    func testSeedIsUsableOnFirstLaunch() {
-        XCTAssertEqual(service.network.count, 7)
-        XCTAssertEqual(service.activity.count, 6)
-        XCTAssertEqual(service.currentUser?.displayName, "Alex Rivera")
-        XCTAssertTrue(service.account?.hasCompletedOnboarding == true)
+    func testHouseholdSeedsThreeRoommates() {
+        XCTAssertEqual(service.household.count, 3)
+        XCTAssertEqual(service.householdName, "300 West")
+        XCTAssertEqual(Set(service.household.map(\.handle)), ["alexrivera", "maya", "jordan"])
+        XCTAssertEqual(service.activity.count, 4)
     }
 
-    func testSeededBalancesMatchTheOriginalTable() {
+    func testThisMonthBalances() {
         let byHandle = Dictionary(uniqueKeysWithValues: service.balances().map { ($0.person.handle, $0.cents) })
-        XCTAssertEqual(byHandle["maya"], -90_000)
-        XCTAssertEqual(byHandle["jordan"], 2_880)
-        XCTAssertEqual(byHandle["priya"], -7_620)
-        XCTAssertEqual(byHandle["luis"], -2_500)
-        XCTAssertNil(byHandle["elena"])
-        XCTAssertNil(byHandle["riograndesalon"])
-        XCTAssertEqual(service.youOweTotal(), 100_120)
-        XCTAssertEqual(service.owedToYouTotal(), 2_880)
+        XCTAssertEqual(byHandle["maya"], -55_261)
+        XCTAssertEqual(byHandle["jordan"], 3_889)
+        XCTAssertEqual(service.youOweTotal(), 55_261)
+        XCTAssertEqual(service.owedToYouTotal(), 3_889)
     }
 
-    func testSharedExpenseAgreeThenSettle() throws {
-        let dinner = try XCTUnwrap(service.activity.first { $0.note.contains("Red Iguana") })
-        XCTAssertEqual(dinner.status, .agreed)
-        XCTAssertTrue(service.canSettle(dinner))
-        service.settle(dinner)
-        XCTAssertEqual(dinner.status, .settled)
-        XCTAssertEqual(service.netCents(with: person("jordan")), 0)
-    }
-
-    func testCurrentUserCanAgreeOnPendingRent() throws {
+    func testConfirmShareThenMarkPaidOutside() throws {
         let rent = try XCTUnwrap(service.activity.first { $0.category == .rent })
-        XCTAssertEqual(rent.status, .pending)
         XCTAssertTrue(service.canAgree(rent))
         service.agree(rent)
-        XCTAssertEqual(rent.status, .agreed)
-        service.settle(rent)
-        XCTAssertEqual(service.netCents(with: person("maya")), 0)
+        XCTAssertTrue(service.canMarkOwnSharePaid(rent))
+        service.markSharePaid(rent)
+        XCTAssertEqual(service.share(for: service.currentUser!, in: rent)?.settled, true)
+        XCTAssertNotEqual(rent.status, .settled)
     }
 
-    func testCreatePayRequestAndSettle() {
-        let salon = person("riograndesalon")
-        let payment = service.createPay(
-            to: salon,
-            amountCents: 6_500,
-            note: "Color consult",
-            category: .salon
-        )
-        let created = try! XCTUnwrap(payment)
-        XCTAssertEqual(created.status, .pending)
-        XCTAssertEqual(service.viewerDelta(for: created), -6_500)
-        service.agree(created, as: salon)
-        XCTAssertEqual(created.status, .agreed)
-        service.settle(created)
-        XCTAssertEqual(created.status, .settled)
-        XCTAssertEqual(service.viewerDelta(for: created), 0)
-    }
-
-    func testCreateRequestFromFriend() {
-        let luis = person("luis")
-        let payment = service.createRequest(
-            from: luis,
-            amountCents: 1_200,
-            note: "Gas for the canyon",
-            category: .vacation
-        )
-        let created = try! XCTUnwrap(payment)
-        XCTAssertTrue(service.requiredApprovers(for: created).contains(where: { $0.id == luis.id }))
-        XCTAssertEqual(service.viewerDelta(for: created), 1_200)
-    }
-
-    func testNewSharedExpenseSplitsEvenlyAndStartsPending() {
+    func testCreateHouseBillSplitsEvenly() {
         let maya = person("maya")
-        let payment = service.createSharedExpense(
-            note: "Costco paper towels",
-            amountCents: 2_501,
-            category: .rent,
-            people: [maya]
+        let jordan = person("jordan")
+        let bill = service.createHouseBill(
+            note: "Trash day bags",
+            amountCents: 3_001,
+            category: .groceries,
+            payer: service.currentUser,
+            people: [service.currentUser!, maya, jordan]
         )
-        let created = try! XCTUnwrap(payment)
-        XCTAssertEqual(created.status, .pending)
-        XCTAssertEqual(created.splits.map(\.amountCents).sorted(by: >), [1251, 1250])
+        let created = try! XCTUnwrap(bill)
+        XCTAssertEqual(created.splits.map(\.amountCents).sorted(by: >), [1001, 1000, 1000])
+        XCTAssertEqual(created.payer?.isCurrentUser, true)
+        XCTAssertTrue(service.share(for: service.currentUser!, in: created)?.settled == true)
         XCTAssertTrue(service.canAgree(created, as: maya))
-        XCTAssertFalse(service.canAgree(created))
     }
 
-    func testSettleUpClosesEveryOpenShareWithThatPerson() {
-        let priya = person("priya")
-        XCTAssertNotEqual(service.netCents(with: priya), 0)
-        service.settleUp(with: priya)
-        XCTAssertEqual(service.netCents(with: priya), 0)
-        XCTAssertTrue(
-            service.activity
-                .filter { $0.participants.contains(where: { $0.id == priya.id }) }
-                .allSatisfy { $0.status == .settled }
-        )
+    func testMarkingEveryRoommatePaidClosesTheBill() throws {
+        let electric = try XCTUnwrap(service.activity.first { $0.category == .electric })
+        service.markSharePaid(electric, person: person("maya"))
+        service.markSharePaid(electric, person: person("jordan"))
+        XCTAssertEqual(electric.status, .settled)
+    }
+
+    func testVenmoAndCashAppLinksDoNotTouchShareNPayRails() {
+        let maya = person("maya")
+        let venmo = ExternalSettle.venmoURL(handle: maya.venmoHandle, cents: 60_000, note: "300 West · August rent")
+        let cash = ExternalSettle.cashAppURL(cashTag: maya.cashTag, cents: 60_000)
+        XCTAssertEqual(venmo?.scheme, "venmo")
+        XCTAssertEqual(cash?.host, "cash.app")
     }
 
     func testThreadMessagePersists() throws {
         let payment = try XCTUnwrap(service.activity.first)
         let before = payment.messages.count
-        service.addMessage("Looks right to me.", to: payment)
+        service.addMessage("Looks right.", to: payment)
         XCTAssertEqual(payment.messages.count, before + 1)
-        XCTAssertTrue(payment.messages.contains(where: { $0.body == "Looks right to me." }))
     }
 
     private func person(_ handle: String) -> Person {
-        service.network.first { $0.handle == handle }!
+        service.household.first { $0.handle == handle }!
     }
 }

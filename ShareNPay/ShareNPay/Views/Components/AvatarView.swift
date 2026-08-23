@@ -9,7 +9,7 @@ struct AvatarView: View {
             Circle()
                 .fill(fill)
             Text(person.initials)
-                .font(.system(size: size * 0.36, weight: .semibold, design: .rounded))
+                .font(.system(size: size * 0.36, weight: .semibold))
                 .foregroundStyle(.white)
         }
         .frame(width: size, height: size)
@@ -21,7 +21,12 @@ struct AvatarView: View {
 
     private var fill: Color {
         if person.isCurrentUser { return SNP.youTint }
-        return Color(hue: person.hue, saturation: 0.40, brightness: 0.58)
+        switch Int(person.hue * 8) % 4 {
+        case 0: return Color(hex: 0x1B2A4A)
+        case 1: return Color(hex: 0x3A3A3A)
+        case 2: return Color(hex: 0x555555)
+        default: return Color(hex: 0x2C2C2C)
+        }
     }
 }
 
@@ -42,7 +47,7 @@ struct AvatarStack: View {
                 ZStack {
                     Circle().fill(SNP.sandFill)
                     Text("+\(people.count - limit)")
-                        .font(.system(size: size * 0.32, weight: .semibold, design: .rounded))
+                        .font(.system(size: size * 0.32, weight: .semibold))
                         .foregroundStyle(SNP.textMuted)
                 }
                 .frame(width: size, height: size)

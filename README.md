@@ -1,8 +1,8 @@
 # ShareNPay
 
-A 2026 rebuild of John Mitchell’s Salt Lake City social-payments product (Share N Pay, Inc., ~2009–2017). This is the original idea — **record a shared expense like a tweet, talk it through, agree, then settle** — not a Venmo clone.
+A household bill-sharing app for roommates. Track rent, utilities, wifi, and house groceries. **ShareNPay never takes the money.**
 
-v1 is a native **SwiftUI iPhone app** with a **local mock ledger**. Nothing here moves real money.
+Settle outside the app — Venmo, Cash App, or Zelle — then mark the share paid. That is the resurrection path: a house ledger, not a money transmitter.
 
 ## Open and run
 
@@ -10,83 +10,58 @@ You need a Mac with **Xcode 15 or later** and the **iOS 17+** simulator.
 
 1. Clone this repo.
 2. Open `ShareNPay/ShareNPay.xcodeproj` in Xcode.
-3. Select the **ShareNPay** scheme and an **iPhone** simulator (iPhone 15 or newer is fine).
+3. Select the **ShareNPay** scheme and an iPhone simulator.
 4. Press Run.
 
-On first launch the app seeds a demo table: roommates, friends, family, and Rio Grande Salon. Sign in with any display name — it stays on the device.
+First launch opens the **300 West** household: you, Maya, and Jordan, with this month’s rent, electric, internet, and house groceries already on the ledger.
 
-Light and dark mode follow the system appearance. The UI is a cool slate scheme: blue accent `#2563EB`, teal for money owed to you `#0F766E`, background `#F4F6F8`, and slate text. Dark mode is cool slate, not brown.
+## What v1 is
 
-To run the ledger tests in Xcode: Product → Test (the **ShareNPayTests** target).
-
-## What works in v1
-
-| Flow | What it does |
+| Screen | What it does |
 | --- | --- |
-| Onboarding / sign-in | Local mock account, persisted with SwiftData |
-| Activity | Feed of shares with note, people, amount, and status |
-| New expense | Tweet-style composer (160-character note + amount + category + people). Even split. Starts **pending** |
-| Pay / request | One person, one amount, then the same agree → settle path |
-| Transaction detail | Thread to discuss, **Agree**, then **Settle on the mock ledger** |
-| Balances | Who you owe and who owes you, with settle-up |
-| People | Seeded friends, family, and one independent business |
-| You | Display name, notifications toggle stub, reset demo, sign out |
+| Home | Household name, this month’s totals, add a house bill, list of bills and who is unpaid |
+| Bill | Shares, “Yes, that’s my share”, **Pay outside** (Venmo / Cash App / Zelle / Mark paid), house thread |
+| Ledger | Who you owe and who owes you. Pay outside or mark paid |
+| Household | The roommates |
+| Profile | Name, household name, reset demo |
 
-2013 use cases live as categories: roommate rent, restaurant, salon/dentist, vacation, club dues, friends & family.
+Composer on Home: note, amount, category (rent / electric / internet / groceries / other), who paid, who splits.
 
-2011 ideas — classifieds, location deals, in-app browser for group activities — are **not built**. They appear as disabled “Coming later” rows on the People tab so the extension point is obvious.
+## What v1 is not
 
-## Mock vs future rails
+- Not a payment processor. No Stripe, PayPal, cards, or in-app rails.
+- Not a social Venmo feed. No salon, vacation, club dues, or classifieds in v1.
+- Friends-and-family dinners can come later.
 
-**Mock (this build)**
+## Mock vs real money
 
-- SwiftData on-device store
-- `PaymentService` is the only place balances move
-- Agree / settle / settle-up only change local numbers
-- No accounts, cards, PayPal, banks, or network calls
+**In this build**
 
-**Not in v1 — and must not be bolted on casually**
+- SwiftData on this iPhone
+- Confirming a share and marking paid only change the household ledger
+- Venmo / Cash App / Zelle buttons open those apps (or their sites) with an amount and note
+- If the other app is not installed, iOS will say so. Copy the Zelle note and pay in your bank app
 
-The 2010 product settled through PayPal or cards. A future `PaymentService` implementation could sit behind the same API. That is a regulated money-transmitter problem. This repo ships **no payment SDKs and no API keys**.
+**Never in this repo**
+
+Payment SDKs, API keys, or anything that moves funds through ShareNPay. Last time, compliance cost killed the company.
 
 ## Architecture
 
-SwiftUI + SwiftData + a small `PaymentService`, as hypothesized.
+SwiftUI + SwiftData + `PaymentService` (house ledger) + `ExternalSettle` (outbound links only).
 
-- **Models** — `Person`, `Payment`, `SplitShare`, `ThreadMessage`, `AppAccount`
-- **LedgerMath** — even splits (leftover pennies to the first seats) and net balances; Foundation-only so it is easy to test
-- **PaymentService** — create, comment, agree, settle, settle-up, seed, reset
-- **DemoCatalog** — first-launch people and six sample shares
+Statuses: **Open** (still confirming or unpaid) → **Confirmed** (roommates agreed the split) → **Paid** (every share marked paid). Money still leaves via Venmo / Zelle / Cash App.
 
-Statuses: **pending** (still talking) → **agreed** (everyone who must approve has tapped Agree) → **settled** (mock ledger closed).
+## Visual
 
-That conversation-and-approval loop is the product. The public-feed model is the thing this rebuild refuses to become.
-
-## Palette
-
-Cool and clean. Tokens live in `ShareNPay/Theme/Palette.swift`.
-
-| Token | Hex | Use |
-| --- | --- | --- |
-| Accent / primary | `#2563EB` | Wordmark N, buttons, you-owe, selection |
-| Accent deep | `#1D4ED8` | Agreed state, stronger actions |
-| Positive | `#0F766E` | Owed to you, settled |
-| Background | `#F4F6F8` | App canvas |
-| Card | `#FFFFFF` | Surfaces |
-| Sand fill | `#E8EDF2` | Quiet fills |
-| Text | `#0F172A` | Primary type |
-| Text muted | `#64748B` | Secondary type |
-| Hairline | `#E2E8F0` | Borders |
-| You tint | `#1D4ED8` | Current-user avatar |
-
-Dark mode uses cool slate (`#0B1220` canvas, `#1E293B` cards), not warm brown.
+White / near-white, black text, one ink accent `#1B2A4A`. Dark mark with a white N. White tab bar.
 
 ## Project layout
 
 ```
 ShareNPay/ShareNPay.xcodeproj
-ShareNPay/ShareNPay/          # app target
-ShareNPay/ShareNPayTests/     # ledger + service tests
+ShareNPay/ShareNPay/
+ShareNPay/ShareNPayTests/
 ```
 
-Bundle ID: `com.sharenpay.app`. Deployment target: iOS 17. iPhone only.
+Bundle ID: `com.sharenpay.app`. iOS 17. iPhone only.

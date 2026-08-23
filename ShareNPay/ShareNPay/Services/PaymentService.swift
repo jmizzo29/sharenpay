@@ -27,10 +27,25 @@ final class PaymentService {
     }
 
     var network: [Person] {
+        household
+    }
+
+    var household: [Person] {
         let descriptor = FetchDescriptor<Person>(
             sortBy: [SortDescriptor(\.displayName)]
         )
         return (try? context.fetch(descriptor)) ?? []
+    }
+
+    var householdName: String {
+        account?.householdName.isEmpty == false ? (account?.householdName ?? "300 West") : "300 West"
+    }
+
+    func updateHouseholdName(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        account?.householdName = trimmed
+        save()
     }
 
     var activity: [Payment] {
@@ -84,11 +99,23 @@ final class PaymentService {
         category: ExpenseCategory,
         people: [Person]
     ) -> Payment? {
+        createHouseBill(note: note, amountCents: amountCents, category: category, payer: currentUser, people: people)
+    }
+
+    @discardableResult
+    func createHouseBill(
+        note: String,
+        amountCents: Int,
+        category: ExpenseCategory,
+        payer: Person?,
+        people: [Person]
+    ) -> Payment? {
         guard let me = currentUser else { return nil }
         guard amountCents > 0 else { return nil }
+        let payerPerson = payer ?? me
         var participants = people
-        if !participants.contains(where: { $0.id == me.id }) {
-            participants.insert(me, at: 0)
+        if !participants.contains(where: { $0.id == payerPerson.id }) {
+            participants.insert(payerPerson, at: 0)
         }
         guard participants.count >= 2 else { return nil }
 
@@ -98,18 +125,19 @@ final class PaymentService {
             category: category,
             kind: .sharedExpense,
             status: .pending,
-            payer: me,
+            payer: payerPerson,
             participants: participants
         )
         context.insert(payment)
 
         let amounts = LedgerMath.evenSplit(totalCents: amountCents, participantCount: participants.count)
         for (person, cents) in zip(participants, amounts) {
+            let isPayer = person.id == payerPerson.id
             let share = SplitShare(
                 amountCents: cents,
                 person: person,
-                agreed: person.id == me.id,
-                settled: false
+                agreed: isPayer,
+                settled: isPayer
             )
             share.payment = payment
             context.insert(share)
@@ -117,7 +145,7 @@ final class PaymentService {
 
         addSystem(
             payment,
-            "\(me.firstName) covered \(LedgerMath.currencyString(cents: amountCents)) · split \(participants.count) ways."
+            "\(payerPerson.firstName) paid \(LedgerMath.currencyString(cents: amountCents)). Split \(participants.count) ways."
         )
         save()
         return payment
@@ -196,22 +224,33 @@ final class PaymentService {
         let actor = person ?? currentUser
         guard let actor, canAgree(payment, as: actor) else { return }
         share(for: actor, in: payment)?.agreed = true
-        addSystem(payment, "\(actor.firstName) agreed.")
+        addSystem(payment, "\(actor.firstName) confirmed that's their share.")
         refreshAgreement(payment)
         save()
     }
 
     func canSettle(_ payment: Payment) -> Bool {
-        payment.status == .agreed
+        canMarkOwnSharePaid(payment)
+    }
+
+    func canMarkOwnSharePaid(_ payment: Payment) -> Bool {
+        guard let me = currentUser, payment.status != .settled else { return false }
+        guard let mine = share(for: me, in: payment), !mine.settled else { return false }
+        return me.id != payment.payer?.id
+    }
+
+    func markSharePaid(_ payment: Payment, person: Person? = nil) {
+        let actor = person ?? currentUser
+        guard let actor, let share = share(for: actor, in: payment), !share.settled else { return }
+        share.settled = true
+        share.agreed = true
+        addSystem(payment, "\(actor.firstName) marked their share paid outside ShareNPay.")
+        refreshPaid(payment)
+        save()
     }
 
     func settle(_ payment: Payment) {
-        guard canSettle(payment) else { return }
-        payment.status = .settled
-        payment.settledAt = .now
-        payment.splits.forEach { $0.settled = true; $0.agreed = true }
-        addSystem(payment, "Settled on the mock ledger. No real money moved.")
-        save()
+        markSharePaid(payment)
     }
 
     func settleUp(with person: Person) {
@@ -226,7 +265,7 @@ final class PaymentService {
             payment.status = .settled
             payment.settledAt = .now
             payment.splits.forEach { $0.settled = true; $0.agreed = true }
-            addSystem(payment, "Settled up with \(person.firstName) on the mock ledger.")
+            addSystem(payment, "Settled up with \(person.firstName). Paid outside ShareNPay.")
         }
         save()
     }
@@ -305,6 +344,7 @@ final class PaymentService {
         if let account {
             account.displayName = displayName
             account.handle = DemoCatalog.handle(from: displayName)
+            account.householdName = "300 West"
             account.hasCompletedOnboarding = onboarded
             account.notificationsEnabled = notifications
         }
@@ -315,6 +355,16 @@ final class PaymentService {
         try? context.save()
     }
 
+    private func refreshPaid(_ payment: Payment) {
+        let others = payment.splits.filter { $0.person?.id != payment.payer?.id }
+        if !others.isEmpty, others.allSatisfy(\.settled) {
+            payment.status = .settled
+            payment.settledAt = .now
+            payment.splits.forEach { $0.settled = true }
+            addSystem(payment, "Bill is paid.")
+        }
+    }
+
     private func refreshAgreement(_ payment: Payment) {
         let required = requiredApprovers(for: payment)
         let allAgreed = required.allSatisfy { person in
@@ -322,7 +372,7 @@ final class PaymentService {
         }
         if allAgreed, payment.status == .pending {
             payment.status = .agreed
-            addSystem(payment, "Everyone at the table agreed. Ready to settle.")
+            addSystem(payment, "Everyone confirmed their share. Pay outside the app, then mark paid.")
         }
     }
 
@@ -334,7 +384,7 @@ final class PaymentService {
 
     private func cleanedNote(_ note: String) -> String {
         let trimmed = note.trimmingCharacters(in: .whitespacesAndNewlines)
-        return trimmed.isEmpty ? "Untitled share" : String(trimmed.prefix(160))
+        return trimmed.isEmpty ? "House bill" : String(trimmed.prefix(160))
     }
 
     private func openShares(viewer: Person, limitedTo payment: Payment? = nil) -> [LedgerMath.OpenShare] {

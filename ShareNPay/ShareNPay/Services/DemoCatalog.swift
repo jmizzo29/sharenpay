@@ -5,10 +5,6 @@ enum DemoIDs {
     static let you = UUID(uuidString: "A0000000-0000-4000-8000-000000000001")!
     static let maya = UUID(uuidString: "A0000000-0000-4000-8000-000000000002")!
     static let jordan = UUID(uuidString: "A0000000-0000-4000-8000-000000000003")!
-    static let priya = UUID(uuidString: "A0000000-0000-4000-8000-000000000004")!
-    static let luis = UUID(uuidString: "A0000000-0000-4000-8000-000000000005")!
-    static let elena = UUID(uuidString: "A0000000-0000-4000-8000-000000000006")!
-    static let salon = UUID(uuidString: "A0000000-0000-4000-8000-000000000007")!
 }
 
 enum DemoCatalog {
@@ -22,161 +18,108 @@ enum DemoCatalog {
             handle: handle(from: displayName),
             kind: .you,
             hue: 0.62,
-            blurb: "Salt Lake City · sharing the table since 2010",
-            isCurrentUser: true
+            blurb: "Roommate at 300 West.",
+            isCurrentUser: true,
+            venmoHandle: "alex-rivera",
+            cashTag: "alexrivera",
+            zelleHint: displayName
         )
         let maya = Person(
             id: DemoIDs.maya,
             displayName: "Maya Chen",
             handle: "maya",
-            kind: .friend,
+            kind: .roommate,
             hue: 0.56,
-            blurb: "Roommate on 300 West. Pays rent like clockwork — after the thread."
+            blurb: "Pays the landlord. Lives down the hall.",
+            venmoHandle: "maya-chen",
+            cashTag: "mayachen",
+            zelleHint: "Maya Chen"
         )
         let jordan = Person(
             id: DemoIDs.jordan,
             displayName: "Jordan Hale",
             handle: "jordan",
-            kind: .friend,
-            hue: 0.60,
-            blurb: "Dinner captain. Always down for Red Iguana."
-        )
-        let priya = Person(
-            id: DemoIDs.priya,
-            displayName: "Priya Shah",
-            handle: "priya",
-            kind: .friend,
-            hue: 0.70,
-            blurb: "Plans the cabin. Collects the deposit. Keeps the group honest."
-        )
-        let luis = Person(
-            id: DemoIDs.luis,
-            displayName: "Luis Ortega",
-            handle: "luis",
-            kind: .friend,
-            hue: 0.48,
-            blurb: "Sunday league treasurer and unofficial DJ."
-        )
-        let elena = Person(
-            id: DemoIDs.elena,
-            displayName: "Elena Mitchell",
-            handle: "elena",
-            kind: .family,
-            hue: 0.66,
-            blurb: "Family. Birthday flowers, holiday gas, the quiet IOUs."
-        )
-        let salon = Person(
-            id: DemoIDs.salon,
-            displayName: "Rio Grande Salon",
-            handle: "riograndesalon",
-            kind: .business,
-            hue: 0.54,
-            blurb: "Independent salon on Rio Grande. Book, split, settle — no front-desk math."
+            kind: .roommate,
+            hue: 0.18,
+            blurb: "Put the internet in their name.",
+            venmoHandle: "jordanhale",
+            cashTag: "jordanhale",
+            zelleHint: "Jordan Hale"
         )
 
-        [you, maya, jordan, priya, luis, elena, salon].forEach(context.insert)
+        [you, maya, jordan].forEach(context.insert)
 
         let account = AppAccount(
             displayName: displayName,
             handle: you.handle,
+            householdName: "300 West",
             notificationsEnabled: true,
             hasCompletedOnboarding: false
         )
         context.insert(account)
 
         let now = Date.now
+        let house = [you, maya, jordan]
 
-        addSharedExpense(
+        addBill(
             context: context,
-            note: "April rent — the 300 West place",
+            note: "August rent",
             amountCents: 180_000,
             category: .rent,
-            createdAt: now.addingTimeInterval(-60 * 60 * 26),
+            createdAt: now.addingTimeInterval(-60 * 60 * 40),
             payer: maya,
-            people: [you, maya],
-            status: .pending,
+            people: house,
+            settledIDs: [maya.id],
             agreedIDs: [maya.id],
             messages: [
-                (maya, "Posted the rent like we used to on the old site — short note, even split.", -60 * 60 * 26),
-                (maya, "Landlord wants it Friday. Tap agree when the number looks right?", -60 * 60 * 20)
+                (maya, "Paid the landlord on the 1st. $600 each.", -60 * 60 * 40)
             ]
         )
 
-        addSharedExpense(
+        addBill(
             context: context,
-            note: "Red Iguana after the game",
-            amountCents: 8_640,
-            category: .restaurant,
-            createdAt: now.addingTimeInterval(-60 * 60 * 8),
+            note: "Rocky Mountain Power",
+            amountCents: 14_217,
+            category: .electric,
+            createdAt: now.addingTimeInterval(-60 * 60 * 20),
             payer: you,
-            people: [you, jordan, priya],
-            status: .agreed,
-            agreedIDs: [you.id, jordan.id, priya.id],
+            people: house,
+            settledIDs: [you.id],
+            agreedIDs: [you.id, jordan.id],
             messages: [
-                (you, "Christmas enchiladas + the big horchata. Splitting three ways.", -60 * 60 * 8),
-                (jordan, "I owe the extra chile — still looks even to me. Agreed.", -60 * 60 * 7),
-                (priya, "Same. Settle whenever.", -60 * 60 * 6)
+                (you, "Paid the electric bill. Same even split.", -60 * 60 * 20),
+                (jordan, "That's my share.", -60 * 60 * 12)
             ]
         )
 
-        addPay(
+        addBill(
             context: context,
-            note: "Blowout after the hike",
-            amountCents: 4_800,
-            category: .salon,
-            createdAt: now.addingTimeInterval(-60 * 60 * 72),
-            from: you,
-            to: salon,
-            status: .settled,
+            note: "CenturyLink wifi",
+            amountCents: 8_999,
+            category: .internet,
+            createdAt: now.addingTimeInterval(-60 * 60 * 10),
+            payer: jordan,
+            people: house,
+            settledIDs: [jordan.id],
+            agreedIDs: [jordan.id],
             messages: [
-                (you, "Paying the chair directly — no more passing a card around the bowl.", -60 * 60 * 72),
-                (salon, "Received on the mock ledger. See you next Thursday.", -60 * 60 * 71)
+                (jordan, "Auto-pay hit my card. $30-ish each.", -60 * 60 * 10)
             ]
         )
 
-        addSharedExpense(
+        addBill(
             context: context,
-            note: "Moab cabin deposit",
-            amountCents: 42_000,
-            category: .vacation,
-            createdAt: now.addingTimeInterval(-60 * 60 * 5),
-            payer: priya,
-            people: [you, priya, jordan, luis],
-            status: .pending,
-            agreedIDs: [priya.id, jordan.id],
+            note: "Costco house staples",
+            amountCents: 6_450,
+            category: .groceries,
+            createdAt: now.addingTimeInterval(-60 * 60 * 6),
+            payer: you,
+            people: house,
+            settledIDs: [you.id, maya.id],
+            agreedIDs: [you.id, maya.id],
             messages: [
-                (priya, "I put the deposit down. Four ways, even split — leftover pennies on me.", -60 * 60 * 5),
-                (jordan, "Dates still 19th–22nd? If yes, agreed.", -60 * 60 * 4),
-                (priya, "Yes. Luis, Alex — look at the number and tap agree.", -60 * 60 * 3)
-            ]
-        )
-
-        addRequest(
-            context: context,
-            note: "Sunday pickup league dues",
-            amountCents: 2_500,
-            category: .club,
-            createdAt: now.addingTimeInterval(-60 * 60 * 14),
-            from: you,
-            to: luis,
-            status: .pending,
-            messages: [
-                (luis, "Field + balls for April. Same as last season.", -60 * 60 * 14)
-            ]
-        )
-
-        addPay(
-            context: context,
-            note: "Birthday flowers for Mom",
-            amountCents: 4_000,
-            category: .friendsFamily,
-            createdAt: now.addingTimeInterval(-60 * 60 * 96),
-            from: you,
-            to: elena,
-            status: .settled,
-            messages: [
-                (you, "I grabbed the peonies. Logging it so we remember who covered what.", -60 * 60 * 96),
-                (elena, "They're on the table. Love you.", -60 * 60 * 95)
+                (you, "Toilet paper, trash bags, coffee.", -60 * 60 * 6),
+                (maya, "Sent you Venmo. Mark me paid.", -60 * 60 * 4)
             ]
         )
 
@@ -191,7 +134,7 @@ enum DemoCatalog {
         return compact.isEmpty ? "you" : String(compact.prefix(16))
     }
 
-    private static func addSharedExpense(
+    private static func addBill(
         context: ModelContext,
         note: String,
         amountCents: Int,
@@ -199,160 +142,36 @@ enum DemoCatalog {
         createdAt: Date,
         payer: Person,
         people: [Person],
-        status: PaymentStatus,
+        settledIDs: Set<UUID>,
         agreedIDs: Set<UUID>,
         messages: [(Person, String, TimeInterval)]
     ) {
+        let allPaid = people.allSatisfy { settledIDs.contains($0.id) || $0.id == payer.id }
         let payment = Payment(
             note: note,
             amountCents: amountCents,
             category: category,
             kind: .sharedExpense,
-            status: status,
+            status: allPaid ? .settled : .pending,
             createdAt: createdAt,
             payer: payer,
             participants: people
         )
-        if status == .settled { payment.settledAt = createdAt }
         context.insert(payment)
 
         let amounts = LedgerMath.evenSplit(totalCents: amountCents, participantCount: people.count)
         for (person, cents) in zip(people, amounts) {
+            let paid = settledIDs.contains(person.id) || person.id == payer.id
             let share = SplitShare(
                 amountCents: cents,
                 person: person,
                 agreed: agreedIDs.contains(person.id) || person.id == payer.id,
-                settled: status == .settled
+                settled: paid
             )
             share.payment = payment
             context.insert(share)
         }
 
-        addMessages(context: context, payment: payment, messages: messages)
-        addSystem(
-            context: context,
-            payment: payment,
-            at: createdAt,
-            body: "\(payer.firstName) covered \(LedgerMath.currencyString(cents: amountCents)) · split \(people.count) ways."
-        )
-        if status == .agreed {
-            addSystem(context: context, payment: payment, at: createdAt.addingTimeInterval(90), body: "Everyone at the table agreed.")
-        }
-        if status == .settled {
-            addSystem(context: context, payment: payment, at: createdAt.addingTimeInterval(180), body: "Settled on the mock ledger.")
-        }
-    }
-
-    private static func addPay(
-        context: ModelContext,
-        note: String,
-        amountCents: Int,
-        category: ExpenseCategory,
-        createdAt: Date,
-        from: Person,
-        to: Person,
-        status: PaymentStatus,
-        messages: [(Person, String, TimeInterval)]
-    ) {
-        let payment = Payment(
-            note: note,
-            amountCents: amountCents,
-            category: category,
-            kind: .pay,
-            status: status,
-            createdAt: createdAt,
-            payer: from,
-            participants: [from, to]
-        )
-        if status == .settled { payment.settledAt = createdAt }
-        context.insert(payment)
-
-        let outgoing = SplitShare(
-            amountCents: amountCents,
-            person: from,
-            agreed: true,
-            settled: status == .settled
-        )
-        outgoing.payment = payment
-        context.insert(outgoing)
-
-        let incoming = SplitShare(
-            amountCents: amountCents,
-            person: to,
-            agreed: status != .pending,
-            settled: status == .settled
-        )
-        incoming.payment = payment
-        context.insert(incoming)
-
-        addMessages(context: context, payment: payment, messages: messages)
-        addSystem(
-            context: context,
-            payment: payment,
-            at: createdAt,
-            body: "\(from.firstName) offered \(LedgerMath.currencyString(cents: amountCents)) to \(to.firstName)."
-        )
-        if status == .settled {
-            addSystem(context: context, payment: payment, at: createdAt.addingTimeInterval(120), body: "Settled on the mock ledger.")
-        }
-    }
-
-    private static func addRequest(
-        context: ModelContext,
-        note: String,
-        amountCents: Int,
-        category: ExpenseCategory,
-        createdAt: Date,
-        from: Person,
-        to: Person,
-        status: PaymentStatus,
-        messages: [(Person, String, TimeInterval)]
-    ) {
-        let payment = Payment(
-            note: note,
-            amountCents: amountCents,
-            category: category,
-            kind: .request,
-            status: status,
-            createdAt: createdAt,
-            payer: from,
-            participants: [from, to]
-        )
-        if status == .settled { payment.settledAt = createdAt }
-        context.insert(payment)
-
-        let payerShare = SplitShare(
-            amountCents: amountCents,
-            person: from,
-            agreed: status != .pending,
-            settled: status == .settled
-        )
-        payerShare.payment = payment
-        context.insert(payerShare)
-
-        let payeeShare = SplitShare(
-            amountCents: amountCents,
-            person: to,
-            agreed: true,
-            settled: status == .settled
-        )
-        payeeShare.payment = payment
-        context.insert(payeeShare)
-
-        addMessages(context: context, payment: payment, messages: messages)
-        addSystem(
-            context: context,
-            payment: payment,
-            at: createdAt,
-            body: "\(to.firstName) requested \(LedgerMath.currencyString(cents: amountCents)) from \(from.firstName)."
-        )
-    }
-
-    private static func addMessages(
-        context: ModelContext,
-        payment: Payment,
-        messages: [(Person, String, TimeInterval)]
-    ) {
         for (author, body, offset) in messages {
             let message = ThreadMessage(
                 body: body,
@@ -363,16 +182,13 @@ enum DemoCatalog {
             message.payment = payment
             context.insert(message)
         }
-    }
 
-    private static func addSystem(
-        context: ModelContext,
-        payment: Payment,
-        at date: Date,
-        body: String
-    ) {
-        let message = ThreadMessage(body: body, createdAt: date, isSystem: true)
-        message.payment = payment
-        context.insert(message)
+        let system = ThreadMessage(
+            body: "\(payer.firstName) paid \(LedgerMath.currencyString(cents: amountCents)). Split \(people.count) ways.",
+            createdAt: createdAt,
+            isSystem: true
+        )
+        system.payment = payment
+        context.insert(system)
     }
 }

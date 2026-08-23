@@ -4,13 +4,8 @@ import SwiftUI
 struct ActivityView: View {
     @Environment(PaymentService.self) private var service
     @Query(sort: \Payment.createdAt, order: .reverse) private var payments: [Payment]
-    @State private var composer: ComposerMode?
+    @State private var showProfile = false
     @State private var path: [UUID] = []
-
-    enum ComposerMode: String, Identifiable {
-        case share, pay, request
-        var id: String { rawValue }
-    }
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -18,131 +13,239 @@ struct ActivityView: View {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 18) {
-                        header
-                        snapshot
-                        feed
+                        householdHeader
+                        monthSummary
+                        HomeComposer { payment in
+                            if let payment { path.append(payment.id) }
+                        }
+                        bills
                     }
-                    .padding(20)
+                    .padding(16)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Wordmark(size: 22)
+                    Wordmark(size: 20)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Menu {
-                        Button("Shared expense", systemImage: "text.bubble") { composer = .share }
-                        Button("Pay someone", systemImage: "arrow.up.right") { composer = .pay }
-                        Button("Request", systemImage: "arrow.down.left") { composer = .request }
-                    } label: {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.title2)
-                            .foregroundStyle(SNP.accent)
-                            .accessibilityLabel("New share")
+                    Button { showProfile = true } label: {
+                        if let me = service.currentUser {
+                            AvatarView(person: me, size: 28)
+                        }
                     }
+                    .accessibilityLabel("Profile")
                 }
             }
+            .toolbarBackground(SNP.background, for: .navigationBar)
+            .toolbarBackground(.visible, for: .navigationBar)
             .navigationDestination(for: UUID.self) { id in
                 if let payment = payments.first(where: { $0.id == id }) {
                     PaymentDetailView(payment: payment)
                 }
             }
-            .sheet(item: $composer) { mode in
-                switch mode {
-                case .share:
-                    ComposerView { payment in
-                        if let payment { path.append(payment.id) }
-                    }
-                case .pay:
-                    PayRequestView(kind: .pay) { payment in
-                        if let payment { path.append(payment.id) }
-                    }
-                case .request:
-                    PayRequestView(kind: .request) { payment in
-                        if let payment { path.append(payment.id) }
-                    }
-                }
+            .sheet(isPresented: $showProfile) {
+                YouView()
             }
         }
     }
 
-    private var header: some View {
-        VStack(alignment: .leading, spacing: 6) {
-            Text(greeting)
-                .font(.subheadline.weight(.medium))
-                .foregroundStyle(SNP.textMuted)
-            Text("The table")
-                .font(.system(size: 32, weight: .bold, design: .rounded))
+    private var householdHeader: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(service.householdName)
+                .font(.title2.weight(.bold))
                 .foregroundStyle(SNP.text)
-            Text("Notes, people, amounts — and a thread until everyone agrees.")
+            Text(service.household.map(\.firstName).joined(separator: " · "))
                 .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
         }
     }
 
-    private var snapshot: some View {
+    private var monthSummary: some View {
         HStack(spacing: 12) {
-            snapshotCard(
-                title: "You owe",
-                cents: service.youOweTotal(),
-                tint: SNP.accent
-            )
-            snapshotCard(
-                title: "Owed to you",
-                cents: service.owedToYouTotal(),
-                tint: SNP.positive
-            )
+            summaryCard("You owe", service.youOweTotal())
+            summaryCard("Owed to you", service.owedToYouTotal())
         }
     }
 
-    private func snapshotCard(title: String, cents: Int, tint: Color) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
+    private func summaryCard(_ title: String, _ cents: Int) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
             Text(title)
-                .font(.caption.weight(.semibold))
+                .font(.caption)
                 .foregroundStyle(SNP.textMuted)
-            MoneyLabel(cents: cents, size: 22, tint: tint)
+            MoneyLabel(cents: cents, size: 22)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(16)
-        .background(SNP.card, in: RoundedRectangle(cornerRadius: 20, style: .continuous))
+        .padding(12)
         .overlay {
-            RoundedRectangle(cornerRadius: 20, style: .continuous)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .strokeBorder(SNP.hairline, lineWidth: 1)
         }
     }
 
-    private var feed: some View {
-        VStack(alignment: .leading, spacing: 10) {
-            Text("Activity")
+    private var bills: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text("This month")
                 .font(.headline)
                 .foregroundStyle(SNP.text)
             if payments.isEmpty {
-                CardSurface {
-                    Text("Nothing at the table yet. Post a share like a tweet.")
-                        .foregroundStyle(SNP.textMuted)
-                }
+                Text("No house bills yet.")
+                    .foregroundStyle(SNP.textMuted)
             } else {
                 ForEach(payments, id: \.id) { payment in
                     NavigationLink(value: payment.id) {
-                        CardSurface {
-                            ActivityRow(payment: payment, delta: service.viewerDelta(for: payment))
-                        }
+                        ActivityRow(payment: payment, delta: service.viewerDelta(for: payment))
+                            .padding(.vertical, 10)
                     }
                     .buttonStyle(.plain)
+                    if payment.id != payments.last?.id {
+                        Divider().overlay(SNP.hairline)
+                    }
                 }
             }
         }
     }
+}
 
-    private var greeting: String {
-        let hour = Calendar.current.component(.hour, from: .now)
-        let name = service.currentUser?.firstName ?? "there"
-        switch hour {
-        case 5..<12: return "Good morning, \(name)"
-        case 12..<17: return "Good afternoon, \(name)"
-        default: return "Good evening, \(name)"
+struct HomeComposer: View {
+    @Environment(PaymentService.self) private var service
+    var onCreated: (Payment?) -> Void = { _ in }
+
+    @State private var note = ""
+    @State private var cents = 0
+    @State private var category: ExpenseCategory = .rent
+    @State private var payerID: UUID?
+    @State private var selected: Set<UUID> = []
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Text("Add a house bill")
+                .font(.subheadline.weight(.semibold))
+                .foregroundStyle(SNP.text)
+            TextField("What was paid?", text: $note)
+                .onChange(of: note) { _, value in
+                    if value.count > 160 { note = String(value.prefix(160)) }
+                }
+            HStack(alignment: .firstTextBaseline) {
+                AmountField(cents: $cents, size: 28)
+                Spacer()
+                Menu {
+                    ForEach(ExpenseCategory.householdCases) { item in
+                        Button(item.title) { category = item }
+                    }
+                } label: {
+                    HStack(spacing: 4) {
+                        Text(category.shortTitle)
+                        Image(systemName: "chevron.down")
+                            .font(.caption.weight(.semibold))
+                    }
+                    .font(.subheadline)
+                    .foregroundStyle(SNP.text)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 6)
+                    .background(SNP.fill, in: Capsule())
+                }
+            }
+            HStack {
+                Text("Paid by")
+                    .font(.caption)
+                    .foregroundStyle(SNP.textMuted)
+                Menu {
+                    ForEach(service.household, id: \.id) { person in
+                        Button(person.isCurrentUser ? "You" : person.firstName) {
+                            payerID = person.id
+                        }
+                    }
+                } label: {
+                    Text(payerLabel)
+                        .font(.subheadline.weight(.medium))
+                        .foregroundStyle(SNP.text)
+                }
+            }
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(service.household, id: \.id) { person in
+                        Button {
+                            if selected.contains(person.id) {
+                                if selected.count > 1 { selected.remove(person.id) }
+                            } else {
+                                selected.insert(person.id)
+                            }
+                        } label: {
+                            Text(person.isCurrentUser ? "You" : person.firstName)
+                                .font(.subheadline.weight(.medium))
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 6)
+                                .foregroundStyle(selected.contains(person.id) ? Color.white : SNP.text)
+                                .background(
+                                    Capsule().fill(selected.contains(person.id) ? SNP.accent : SNP.fill)
+                                )
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
+            HStack {
+                Text(splitCopy)
+                    .font(.caption)
+                    .foregroundStyle(SNP.textMuted)
+                Spacer()
+                Button("Add bill") { post() }
+                    .font(.subheadline.weight(.semibold))
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 8)
+                    .foregroundStyle(canPost ? Color.white : SNP.textMuted)
+                    .background(canPost ? SNP.accent : SNP.fill, in: Capsule())
+                    .disabled(!canPost)
+            }
         }
+        .padding(14)
+        .overlay {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .strokeBorder(SNP.hairline, lineWidth: 1)
+        }
+        .onAppear {
+            if selected.isEmpty {
+                selected = Set(service.household.map(\.id))
+            }
+            if payerID == nil {
+                payerID = service.currentUser?.id
+            }
+        }
+    }
+
+    private var payerLabel: String {
+        let person = service.household.first { $0.id == payerID }
+        if person?.isCurrentUser == true { return "You" }
+        return person?.firstName ?? "You"
+    }
+
+    private var splitCopy: String {
+        guard selected.count >= 2, cents > 0 else {
+            return "Split evenly among the house"
+        }
+        let parts = LedgerMath.evenSplit(totalCents: cents, participantCount: selected.count)
+        let each = parts.first ?? 0
+        return "\(selected.count) people · \(LedgerMath.currencyString(cents: each)) each"
+    }
+
+    private var canPost: Bool {
+        cents > 0 && selected.count >= 2 && !note.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+    }
+
+    private func post() {
+        let people = service.household.filter { selected.contains($0.id) }
+        let payer = service.household.first { $0.id == payerID }
+        let payment = service.createHouseBill(
+            note: note,
+            amountCents: cents,
+            category: category,
+            payer: payer,
+            people: people
+        )
+        note = ""
+        cents = 0
+        onCreated(payment)
     }
 }
 

@@ -9,7 +9,7 @@ struct MoneyLabel: View {
 
     var body: some View {
         Text(LedgerMath.currencyString(cents: cents, signed: signed))
-            .font(.system(size: size, weight: emphasize ? .semibold : .medium, design: .rounded))
+            .font(.system(size: size, weight: emphasize ? .semibold : .medium))
             .monospacedDigit()
             .foregroundStyle(color)
             .accessibilityLabel(accessibility)
@@ -18,9 +18,7 @@ struct MoneyLabel: View {
     private var color: Color {
         if let tint { return tint }
         guard signed else { return SNP.text }
-        if cents > 0 { return SNP.positive }
-        if cents < 0 { return SNP.accent }
-        return SNP.textMuted
+        return SNP.text
     }
 
     private var accessibility: String {
@@ -32,15 +30,16 @@ struct MoneyLabel: View {
 
 struct AmountField: View {
     @Binding var cents: Int
+    var size: CGFloat = 36
 
     var body: some View {
         HStack(alignment: .firstTextBaseline, spacing: 4) {
             Text("$")
-                .font(.system(size: 28, weight: .semibold, design: .rounded))
+                .font(.system(size: size * 0.64, weight: .semibold))
                 .foregroundStyle(SNP.textMuted)
             TextField("0.00", text: displayBinding)
                 .keyboardType(.decimalPad)
-                .font(.system(size: 44, weight: .semibold, design: .rounded))
+                .font(.system(size: size, weight: .semibold))
                 .monospacedDigit()
                 .foregroundStyle(SNP.text)
         }

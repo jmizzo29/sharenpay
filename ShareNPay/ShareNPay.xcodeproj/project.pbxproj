@@ -18,6 +18,7 @@
 		A00000000000000000000075 /* LedgerMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000074 /* LedgerMath.swift */; };
 		A00000000000000000000077 /* DemoCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000076 /* DemoCatalog.swift */; };
 		A00000000000000000000079 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000078 /* PaymentService.swift */; };
+		A000000000000000000000D1 /* ExternalSettle.swift in Sources */ = {isa = PBXBuildFile; fileRef = A000000000000000000000D0 /* ExternalSettle.swift */; };
 		A0000000000000000000007B /* Wordmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000007A /* Wordmark.swift */; };
 		A0000000000000000000007D /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000007C /* AvatarView.swift */; };
 		A0000000000000000000007F /* MoneyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000007E /* MoneyLabel.swift */; };
@@ -52,6 +53,7 @@
 		A00000000000000000000074 /* LedgerMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerMath.swift; sourceTree = "<group>"; };
 		A00000000000000000000076 /* DemoCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCatalog.swift; sourceTree = "<group>"; };
 		A00000000000000000000078 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		A000000000000000000000D0 /* ExternalSettle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalSettle.swift; sourceTree = "<group>"; };
 		A0000000000000000000007A /* Wordmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wordmark.swift; sourceTree = "<group>"; };
 		A0000000000000000000007C /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
 		A0000000000000000000007E /* MoneyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyLabel.swift; sourceTree = "<group>"; };
@@ -114,6 +116,7 @@
 				A00000000000000000000074 /* LedgerMath.swift */,
 				A00000000000000000000076 /* DemoCatalog.swift */,
 				A00000000000000000000078 /* PaymentService.swift */,
+				A000000000000000000000D0 /* ExternalSettle.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -363,6 +366,7 @@
 				A00000000000000000000075 /* LedgerMath.swift in Sources */,
 				A00000000000000000000077 /* DemoCatalog.swift in Sources */,
 				A00000000000000000000079 /* PaymentService.swift in Sources */,
+				A000000000000000000000D1 /* ExternalSettle.swift in Sources */,
 				A0000000000000000000007B /* Wordmark.swift in Sources */,
 				A0000000000000000000007D /* AvatarView.swift in Sources */,
 				A0000000000000000000007F /* MoneyLabel.swift in Sources */,

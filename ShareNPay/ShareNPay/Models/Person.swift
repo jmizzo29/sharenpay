@@ -10,6 +10,9 @@ final class Person {
     var hue: Double
     var blurb: String
     var isCurrentUser: Bool
+    var venmoHandle: String = ""
+    var cashTag: String = ""
+    var zelleHint: String = ""
 
     @Relationship(inverse: \Payment.participants)
     var participatingIn: [Payment] = []
@@ -30,7 +33,10 @@ final class Person {
         kind: PersonKind,
         hue: Double,
         blurb: String = "",
-        isCurrentUser: Bool = false
+        isCurrentUser: Bool = false,
+        venmoHandle: String = "",
+        cashTag: String = "",
+        zelleHint: String = ""
     ) {
         self.id = id
         self.displayName = displayName
@@ -39,10 +45,13 @@ final class Person {
         self.hue = hue
         self.blurb = blurb
         self.isCurrentUser = isCurrentUser
+        self.venmoHandle = venmoHandle
+        self.cashTag = cashTag
+        self.zelleHint = zelleHint
     }
 
     var kind: PersonKind {
-        get { PersonKind(rawValue: kindRaw) ?? .friend }
+        get { PersonKind(rawValue: kindRaw) ?? .roommate }
         set { kindRaw = newValue.rawValue }
     }
 

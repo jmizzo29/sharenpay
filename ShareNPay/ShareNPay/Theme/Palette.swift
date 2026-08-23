@@ -22,16 +22,18 @@ extension Color {
 }
 
 enum SNP {
-    static let accent = Color(hex: 0x2563EB)
-    static let accentDeep = Color(hex: 0x1D4ED8)
-    static let positive = Color(hex: 0x0F766E)
-    static let pending = Color(hex: 0x475569)
-    static let youTint = Color(hex: 0x1D4ED8)
+    /// Quiet ink. The only accent.
+    static let accent = Color(hex: 0x1B2A4A)
+    static let accentDeep = Color(hex: 0x1B2A4A)
+    static let youTint = Color(hex: 0x1B2A4A)
 
-    static let background = Color(light: Color(hex: 0xF4F6F8), dark: Color(hex: 0x0B1220))
-    static let card = Color(light: Color(hex: 0xFFFFFF), dark: Color(hex: 0x1E293B))
-    static let sandFill = Color(light: Color(hex: 0xE8EDF2), dark: Color(hex: 0x334155))
-    static let text = Color(light: Color(hex: 0x0F172A), dark: Color(hex: 0xF8FAFC))
-    static let textMuted = Color(light: Color(hex: 0x64748B), dark: Color(hex: 0x94A3B8))
-    static let hairline = Color(light: Color(hex: 0xE2E8F0), dark: Color(hex: 0x334155))
+    static let background = Color(light: Color(hex: 0xFFFFFF), dark: Color(hex: 0x0A0A0A))
+    static let card = Color(light: Color(hex: 0xFFFFFF), dark: Color(hex: 0x161616))
+    static let fill = Color(light: Color(hex: 0xF4F4F4), dark: Color(hex: 0x222222))
+    static let sandFill = fill
+    static let text = Color(light: Color(hex: 0x111111), dark: Color(hex: 0xF5F5F5))
+    static let textMuted = Color(light: Color(hex: 0x555555), dark: Color(hex: 0xA3A3A3))
+    static let hairline = Color(light: Color(hex: 0xE5E5E5), dark: Color(hex: 0x2E2E2E))
+    static let pending = textMuted
+    static let positive = text
 }

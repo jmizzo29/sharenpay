@@ -161,7 +161,7 @@ struct ComposerView: View {
             dismiss()
             onCreated(payment)
         } label: {
-            Text("Post to the table")
+            Text("Add bill")
                 .font(.headline)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 14)

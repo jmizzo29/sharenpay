@@ -2,7 +2,6 @@ import SwiftUI
 
 struct Wordmark: View {
     var size: CGFloat = 34
-    var alignment: HorizontalAlignment = .leading
 
     var body: some View {
         HStack(spacing: 0) {
@@ -11,9 +10,9 @@ struct Wordmark: View {
                 .foregroundStyle(SNP.accent)
             Text("Pay")
         }
-        .font(.system(size: size, weight: .bold, design: .rounded))
+        .font(.system(size: size, weight: .bold, design: .default))
         .foregroundStyle(SNP.text)
-        .tracking(-0.6)
+        .tracking(-0.4)
         .accessibilityLabel("ShareNPay")
     }
 }
@@ -23,12 +22,11 @@ struct BrandMark: View {
 
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                .fill(SNP.accent.gradient)
+            RoundedRectangle(cornerRadius: size * 0.18, style: .continuous)
+                .fill(SNP.accent)
                 .frame(width: size, height: size)
-                .shadow(color: SNP.accent.opacity(0.35), radius: 12, y: 6)
             Text("N")
-                .font(.system(size: size * 0.52, weight: .bold, design: .rounded))
+                .font(.system(size: size * 0.52, weight: .bold, design: .default))
                 .foregroundStyle(.white)
         }
         .accessibilityHidden(true)

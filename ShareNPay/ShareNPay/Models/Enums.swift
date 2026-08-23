@@ -2,6 +2,7 @@ import SwiftUI
 
 enum PersonKind: String, Codable, CaseIterable, Identifiable {
     case you
+    case roommate
     case friend
     case family
     case business
@@ -11,24 +12,18 @@ enum PersonKind: String, Codable, CaseIterable, Identifiable {
     var sectionTitle: String {
         switch self {
         case .you: "You"
-        case .friend: "Friends"
+        case .roommate, .friend: "Roommates"
         case .family: "Family"
-        case .business: "Independent businesses"
-        }
-    }
-
-    var symbol: String {
-        switch self {
-        case .you: "person.crop.circle"
-        case .friend: "person.2.fill"
-        case .family: "house.fill"
-        case .business: "storefront.fill"
+        case .business: "Business"
         }
     }
 }
 
 enum ExpenseCategory: String, Codable, CaseIterable, Identifiable {
     case rent
+    case electric
+    case internet
+    case groceries
     case restaurant
     case salon
     case vacation
@@ -38,53 +33,39 @@ enum ExpenseCategory: String, Codable, CaseIterable, Identifiable {
 
     var id: String { rawValue }
 
+    static var householdCases: [ExpenseCategory] {
+        [.rent, .electric, .internet, .groceries, .other]
+    }
+
     var title: String {
         switch self {
-        case .rent: "Roommate / rent"
+        case .rent: "Rent"
+        case .electric: "Electric"
+        case .internet: "Internet"
+        case .groceries: "House groceries"
         case .restaurant: "Restaurant"
-        case .salon: "Salon / dentist"
+        case .salon: "Salon"
         case .vacation: "Vacation"
-        case .club: "Club dues"
+        case .club: "Club"
         case .friendsFamily: "Friends & family"
         case .other: "Other"
         }
     }
 
-    var shortTitle: String {
-        switch self {
-        case .rent: "Rent"
-        case .restaurant: "Dinner"
-        case .salon: "Salon"
-        case .vacation: "Trip"
-        case .club: "Club"
-        case .friendsFamily: "Family"
-        case .other: "Other"
-        }
-    }
+    var shortTitle: String { title }
 
     var symbol: String {
         switch self {
         case .rent: "key.fill"
-        case .restaurant: "fork.knife"
-        case .salon: "scissors"
-        case .vacation: "airplane"
-        case .club: "sportscourt.fill"
-        case .friendsFamily: "heart.fill"
+        case .electric: "bolt.fill"
+        case .internet: "wifi"
+        case .groceries: "cart.fill"
         case .other: "square.grid.2x2.fill"
+        default: "house.fill"
         }
     }
 
-    var tint: Color {
-        switch self {
-        case .rent: Color(hex: 0x475569)
-        case .restaurant: Color(hex: 0x0369A1)
-        case .salon: Color(hex: 0x4F46E5)
-        case .vacation: Color(hex: 0x0E7490)
-        case .club: SNP.positive
-        case .friendsFamily: SNP.accent
-        case .other: Color(hex: 0x64748B)
-        }
-    }
+    var tint: Color { SNP.accent }
 }
 
 enum PaymentKind: String, Codable, CaseIterable, Identifiable {
@@ -96,15 +77,7 @@ enum PaymentKind: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .sharedExpense: "Shared expense"
-        case .pay: "Pay"
-        case .request: "Request"
-        }
-    }
-
-    var composerVerb: String {
-        switch self {
-        case .sharedExpense: "Share"
+        case .sharedExpense: "House bill"
         case .pay: "Pay"
         case .request: "Request"
         }
@@ -120,25 +93,25 @@ enum PaymentStatus: String, Codable, CaseIterable, Identifiable {
 
     var title: String {
         switch self {
-        case .pending: "Pending"
-        case .agreed: "Agreed"
-        case .settled: "Settled"
+        case .pending: "Open"
+        case .agreed: "Confirmed"
+        case .settled: "Paid"
         }
     }
 
     var tint: Color {
         switch self {
-        case .pending: SNP.pending
-        case .agreed: SNP.accentDeep
-        case .settled: SNP.positive
+        case .pending: SNP.textMuted
+        case .agreed: SNP.accent
+        case .settled: SNP.textMuted
         }
     }
 
     var symbol: String {
         switch self {
-        case .pending: "bubble.left.and.bubble.right.fill"
-        case .agreed: "checkmark.seal.fill"
-        case .settled: "checkmark.circle.fill"
+        case .pending: "circle"
+        case .agreed: "checkmark"
+        case .settled: "checkmark.circle"
         }
     }
 }
