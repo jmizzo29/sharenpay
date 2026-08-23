@@ -14,6 +14,7 @@ struct OnboardingView: View {
                     Text("Add a bill. Split it. See who owes what.")
                         .font(.title3)
                         .foregroundStyle(SNP.textMuted)
+                        .fixedSize(horizontal: false, vertical: true)
                 }
                 VStack(alignment: .leading, spacing: 8) {
                     Text("Your name")

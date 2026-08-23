@@ -49,10 +49,29 @@ struct CardSurface<Content: View>: View {
 }
 
 struct Hairline: View {
+    @Environment(\.displayScale) private var scale
+
     var body: some View {
         Rectangle()
             .fill(SNP.hairline)
-            .frame(height: 1)
+            .frame(height: 1 / scale)
+    }
+}
+
+struct FieldChrome<Content: View>: View {
+    @ViewBuilder var content: () -> Content
+
+    var body: some View {
+        content()
+            .padding(18)
+            .background {
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .fill(.ultraThinMaterial)
+            }
+            .overlay {
+                RoundedRectangle(cornerRadius: 22, style: .continuous)
+                    .strokeBorder(SNP.hairline, lineWidth: 1)
+            }
     }
 }
 

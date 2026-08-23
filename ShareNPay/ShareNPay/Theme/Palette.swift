@@ -42,8 +42,8 @@ enum SNP {
     }
 
     static func display(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
-        .system(size: size, weight: weight)
+        .system(size: size, weight: weight, design: .default)
     }
 
-    static let spring = Animation.spring(response: 0.38, dampingFraction: 0.86)
+    static let spring = Animation.spring(response: 0.34, dampingFraction: 0.88)
 }

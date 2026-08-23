@@ -11,8 +11,9 @@ struct MoneyLabel: View {
         Text(LedgerMath.currencyString(cents: cents, signed: signed))
             .font(SNP.money(size, weight: emphasize ? .semibold : .medium))
             .monospacedDigit()
+            .tracking(size >= 32 ? -0.8 : -0.2)
             .foregroundStyle(color)
-            .contentTransition(.numericText())
+            .contentTransition(.numericText(countsDown: cents < 0))
             .accessibilityLabel(accessibility)
     }
 

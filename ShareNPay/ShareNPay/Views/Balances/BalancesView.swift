@@ -52,7 +52,7 @@ struct BalancesView: View {
             Text(title)
                 .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
-            MoneyLabel(cents: cents, size: 34)
+            MoneyLabel(cents: cents, size: 40)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }

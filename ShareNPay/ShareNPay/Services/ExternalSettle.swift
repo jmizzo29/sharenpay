@@ -64,85 +64,74 @@ struct SettleOutsideSheet: View {
     @State private var copied = false
 
     var body: some View {
-        VStack(spacing: 28) {
-            Capsule()
-                .fill(SNP.hairline)
-                .frame(width: 36, height: 4)
-                .padding(.top, 10)
-
+        VStack(spacing: 24) {
             VStack(spacing: 6) {
                 Text("Pay \(payee.firstName)")
                     .font(.subheadline)
                     .foregroundStyle(SNP.textMuted)
-                MoneyLabel(cents: cents, size: 44)
-                Text(note)
-                    .font(.caption)
-                    .foregroundStyle(SNP.textMuted)
-                    .multilineTextAlignment(.center)
+                MoneyLabel(cents: cents, size: 48)
+                    .animation(SNP.spring, value: cents)
             }
+            .padding(.top, 8)
 
-            HStack(spacing: 10) {
-                if ExternalSettle.venmoURL(handle: payee.venmoHandle, cents: cents, note: note) != nil {
-                    provider("Venmo") {
-                        if let url = ExternalSettle.venmoURL(handle: payee.venmoHandle, cents: cents, note: note) {
-                            openURL(url)
-                        }
-                    }
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 10) {
+                provider("Venmo") {
+                    open(ExternalSettle.venmoURL(handle: payee.venmoHandle, cents: cents, note: note)
+                         ?? URL(string: "https://venmo.com/"))
                 }
-                if ExternalSettle.cashAppURL(cashTag: payee.cashTag, cents: cents) != nil {
-                    provider("Cash App") {
-                        if let url = ExternalSettle.cashAppURL(cashTag: payee.cashTag, cents: cents) {
-                            openURL(url)
-                        }
-                    }
+                provider("Cash App") {
+                    open(ExternalSettle.cashAppURL(cashTag: payee.cashTag, cents: cents)
+                         ?? URL(string: "https://cash.app/"))
                 }
-                if ExternalSettle.paypalURL(handle: payee.paypalHandle, cents: cents) != nil {
-                    provider("PayPal") {
-                        if let url = ExternalSettle.paypalURL(handle: payee.paypalHandle, cents: cents) {
-                            openURL(url)
-                        }
-                    }
+                provider("PayPal") {
+                    open(ExternalSettle.paypalURL(handle: payee.paypalHandle, cents: cents)
+                         ?? URL(string: "https://www.paypal.com/paypalme/"))
                 }
                 provider(copied ? "Copied" : "Zelle") {
                     UIPasteboard.general.string = "\(note) — \(payee.zelleHint.isEmpty ? payee.displayName : payee.zelleHint)"
                     copied = true
-                    if let url = ExternalSettle.zelleURL() {
-                        openURL(url)
-                    }
+                    open(ExternalSettle.zelleURL())
                 }
             }
 
-            VStack(spacing: 10) {
-                Button("Mark paid") {
-                    onMarkPaid()
-                    dismiss()
-                }
-                .buttonStyle(QuietButtonStyle(filled: true))
-                Text("ShareNPay never takes this money.")
-                    .font(.caption)
-                    .foregroundStyle(SNP.textMuted)
+            Button("Mark paid") {
+                UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+                onMarkPaid()
+                dismiss()
             }
+            .buttonStyle(QuietButtonStyle(filled: true))
+
+            Text("ShareNPay never takes this money.")
+                .font(.caption)
+                .foregroundStyle(SNP.textMuted)
         }
         .padding(.horizontal, 22)
-        .padding(.bottom, 20)
-        .presentationDetents([.height(390)])
-        .presentationDragIndicator(.hidden)
+        .padding(.bottom, 16)
+        .presentationDetents([.height(360)])
+        .presentationDragIndicator(.visible)
         .presentationBackground(.regularMaterial)
+        .presentationCornerRadius(28)
     }
 
     private var note: String {
         ExternalSettle.note(bill: billNote, cents: cents)
     }
 
+    private func open(_ url: URL?) {
+        guard let url else { return }
+        openURL(url)
+    }
+
     private func provider(_ title: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: 13, weight: .semibold))
+                .font(.system(size: 16, weight: .semibold))
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, 12)
+                .padding(.vertical, 16)
                 .foregroundStyle(SNP.text)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
                 .overlay {
-                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    RoundedRectangle(cornerRadius: 16, style: .continuous)
                         .strokeBorder(SNP.hairline, lineWidth: 1)
                 }
         }

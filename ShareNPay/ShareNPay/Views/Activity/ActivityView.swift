@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UIKit
 
 struct ActivityView: View {
     @Environment(PaymentService.self) private var service
@@ -12,7 +13,7 @@ struct ActivityView: View {
             ZStack {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 36) {
+                    VStack(alignment: .leading, spacing: 40) {
                         monthSummary
                         HomeComposer { payment in
                             if let payment { path.append(payment.id) }
@@ -20,9 +21,10 @@ struct ActivityView: View {
                         bills
                     }
                     .padding(.horizontal, 22)
-                    .padding(.top, 8)
-                    .padding(.bottom, 28)
+                    .padding(.top, 12)
+                    .padding(.bottom, 36)
                 }
+                .scrollDismissesKeyboard(.interactively)
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
@@ -63,7 +65,7 @@ struct ActivityView: View {
             Text(title)
                 .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
-            MoneyLabel(cents: cents, size: 34)
+            MoneyLabel(cents: cents, size: 40)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
     }
@@ -105,44 +107,30 @@ struct HomeComposer: View {
     @State private var selected: Set<UUID> = []
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 18) {
-            TextField("Dinner, Uber, rent, concert…", text: $note)
-                .font(SNP.display(20, weight: .regular))
-                .onChange(of: note) { _, value in
-                    if value.count > 160 { note = String(value.prefix(160)) }
-                }
-            HStack(alignment: .firstTextBaseline) {
-                AmountField(cents: $cents, size: 36)
-                Spacer(minLength: 12)
-                Menu {
-                    ForEach(ExpenseCategory.splitCases) { item in
-                        Button(item.title) { category = item }
+        FieldChrome {
+            VStack(alignment: .leading, spacing: 16) {
+                TextField("Dinner, Uber, rent, concert…", text: $note)
+                    .font(SNP.display(20, weight: .regular))
+                    .onChange(of: note) { _, value in
+                        if value.count > 160 { note = String(value.prefix(160)) }
                     }
-                } label: {
-                    HStack(spacing: 4) {
-                        Text(category.shortTitle)
-                        Image(systemName: "chevron.down")
-                            .font(.caption.weight(.semibold))
-                    }
-                    .font(.subheadline)
-                    .foregroundStyle(SNP.textMuted)
-                }
-            }
-            HStack(spacing: 16) {
-                Menu {
-                    ForEach(service.people, id: \.id) { person in
-                        Button(person.isCurrentUser ? "You" : person.firstName) {
-                            payerID = person.id
+                HStack(alignment: .firstTextBaseline) {
+                    AmountField(cents: $cents, size: 34)
+                    Spacer(minLength: 12)
+                    Menu {
+                        ForEach(ExpenseCategory.splitCases) { item in
+                            Button(item.title) { category = item }
                         }
-                    }
-                } label: {
-                    Text("Paid by \(payerLabel)")
+                    } label: {
+                        HStack(spacing: 3) {
+                            Text(category.shortTitle)
+                            Image(systemName: "chevron.down")
+                                .font(.caption2.weight(.semibold))
+                        }
                         .font(.subheadline)
                         .foregroundStyle(SNP.textMuted)
+                    }
                 }
-                Spacer()
-            }
-            ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(service.people, id: \.id) { person in
                         Button {
@@ -155,42 +143,43 @@ struct HomeComposer: View {
                             }
                         } label: {
                             Text(person.isCurrentUser ? "You" : person.firstName)
-                                .font(.subheadline.weight(.medium))
-                                .padding(.horizontal, 12)
-                                .padding(.vertical, 7)
-                                .foregroundStyle(selected.contains(person.id) ? Color.white : SNP.text)
-                                .background(
-                                    Capsule().fill(selected.contains(person.id) ? SNP.accent : Color.clear)
-                                )
-                                .overlay {
-                                    Capsule().strokeBorder(
-                                        selected.contains(person.id) ? SNP.accent : SNP.hairline,
-                                        lineWidth: 1
-                                    )
-                                }
+                                .font(.subheadline.weight(selected.contains(person.id) ? .semibold : .regular))
+                                .foregroundStyle(selected.contains(person.id) ? SNP.text : SNP.textMuted)
                         }
                         .buttonStyle(.plain)
                     }
+                    Spacer(minLength: 8)
+                    Menu {
+                        ForEach(service.people, id: \.id) { person in
+                            Button(person.isCurrentUser ? "You" : person.firstName) {
+                                payerID = person.id
+                            }
+                        }
+                    } label: {
+                        Text("Paid by \(payerLabel)")
+                            .font(.subheadline)
+                            .foregroundStyle(SNP.textMuted)
+                    }
+                }
+                HStack(alignment: .center) {
+                    Text(splitCopy)
+                        .font(.subheadline)
+                        .foregroundStyle(SNP.textMuted)
+                        .contentTransition(.opacity)
+                    Spacer()
+                    Button("Add") { post() }
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(canPost ? Color.white : SNP.textMuted)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 7)
+                        .background(canPost ? SNP.accent : Color.clear, in: Capsule())
+                        .overlay {
+                            Capsule().strokeBorder(canPost ? SNP.accent : SNP.hairline, lineWidth: 1)
+                        }
+                        .disabled(!canPost)
                 }
             }
-            HStack(alignment: .center) {
-                Text(splitCopy)
-                    .font(.subheadline)
-                    .foregroundStyle(SNP.textMuted)
-                Spacer()
-                Button("Add") { post() }
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(canPost ? Color.white : SNP.textMuted)
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(canPost ? SNP.accent : Color.clear, in: Capsule())
-                    .overlay {
-                        Capsule().strokeBorder(canPost ? SNP.accent : SNP.hairline, lineWidth: 1)
-                    }
-                    .disabled(!canPost)
-            }
         }
-        .padding(.vertical, 6)
         .onAppear {
             if selected.isEmpty, let me = service.currentUser {
                 selected = [me.id]
@@ -221,6 +210,7 @@ struct HomeComposer: View {
     }
 
     private func post() {
+        UIImpactFeedbackGenerator(style: .light).impactOccurred()
         let people = service.people.filter { selected.contains($0.id) }
         let payer = service.people.first { $0.id == payerID }
         let payment = service.createSharedExpense(
