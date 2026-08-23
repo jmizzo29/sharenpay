@@ -21,6 +21,24 @@ enum ExternalSettle {
         return URL(string: "https://cash.app/$\(tag)/\(amountString(cents))")
     }
 
+    /// Outbound paypal.me send-money link only. Not Checkout, Braintree, or any ShareNPay rail.
+    static func paypalURL(handle: String, cents: Int) -> URL? {
+        guard !handle.isEmpty else { return nil }
+        var slug = handle
+            .replacingOccurrences(of: "@", with: "")
+            .replacingOccurrences(of: "https://", with: "")
+            .replacingOccurrences(of: "http://", with: "")
+        if let range = slug.range(of: "paypal.me/", options: .caseInsensitive) {
+            slug = String(slug[range.upperBound...])
+        }
+        if let range = slug.range(of: "paypal.com/paypalme/", options: .caseInsensitive) {
+            slug = String(slug[range.upperBound...])
+        }
+        slug = slug.split(separator: "/").first.map(String.init) ?? slug
+        guard !slug.isEmpty else { return nil }
+        return URL(string: "https://www.paypal.com/paypalme/\(slug)/\(amountString(cents))")
+    }
+
     static func zelleURL() -> URL? {
         URL(string: "https://www.zellepay.com/")
     }
@@ -56,7 +74,7 @@ struct SettleOutsideSheet: View {
                         .font(.subheadline)
                         .foregroundStyle(SNP.textMuted)
                 } footer: {
-                    Text("ShareNPay never takes this money. Open Venmo, Cash App, or Zelle, then mark it paid here.")
+                    Text("ShareNPay never takes this money. Open Venmo, Cash App, PayPal, or Zelle, then mark it paid here.")
                 }
                 Section("Pay outside") {
                     if let url = ExternalSettle.venmoURL(handle: payee.venmoHandle, cents: cents, note: note) {
@@ -64,6 +82,9 @@ struct SettleOutsideSheet: View {
                     }
                     if let url = ExternalSettle.cashAppURL(cashTag: payee.cashTag, cents: cents) {
                         Button("Open Cash App") { openURL(url) }
+                    }
+                    if let url = ExternalSettle.paypalURL(handle: payee.paypalHandle, cents: cents) {
+                        Button("Open PayPal") { openURL(url) }
                     }
                     Button(copied ? "Copied for Zelle" : "Copy note for Zelle") {
                         UIPasteboard.general.string = "\(note) — \(payee.zelleHint.isEmpty ? payee.displayName : payee.zelleHint)"

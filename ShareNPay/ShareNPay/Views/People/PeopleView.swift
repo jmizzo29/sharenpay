@@ -13,7 +13,7 @@ struct PeopleView: View {
                     Section {
                         Text(service.householdName)
                             .font(.headline)
-                        Text("Roommates share rent, utilities, and house groceries. Pay each other on Venmo, Cash App, or Zelle.")
+                        Text("Roommates share rent, utilities, and house groceries. Pay each other on Venmo, Cash App, PayPal, or Zelle.")
                             .font(.subheadline)
                             .foregroundStyle(SNP.textMuted)
                     }

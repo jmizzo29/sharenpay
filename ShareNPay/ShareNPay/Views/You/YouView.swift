@@ -36,7 +36,7 @@ struct YouView: View {
                         }
                 }
                 Section {
-                    Text("ShareNPay does not move money. Track the house ledger here, then settle on Venmo, Cash App, or Zelle.")
+                    Text("ShareNPay does not move money. Track the house ledger here, then settle on Venmo, Cash App, PayPal, or Zelle.")
                         .font(.subheadline)
                         .foregroundStyle(SNP.textMuted)
                 }

@@ -22,6 +22,7 @@ enum DemoCatalog {
             isCurrentUser: true,
             venmoHandle: "alex-rivera",
             cashTag: "alexrivera",
+            paypalHandle: "alexrivera",
             zelleHint: displayName
         )
         let maya = Person(
@@ -33,6 +34,7 @@ enum DemoCatalog {
             blurb: "Pays the landlord. Lives down the hall.",
             venmoHandle: "maya-chen",
             cashTag: "mayachen",
+            paypalHandle: "mayachen",
             zelleHint: "Maya Chen"
         )
         let jordan = Person(
@@ -44,6 +46,7 @@ enum DemoCatalog {
             blurb: "Put the internet in their name.",
             venmoHandle: "jordanhale",
             cashTag: "jordanhale",
+            paypalHandle: "jordanhale",
             zelleHint: "Jordan Hale"
         )
 

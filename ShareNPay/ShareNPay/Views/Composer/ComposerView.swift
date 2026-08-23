@@ -19,7 +19,7 @@ struct ComposerView: View {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
                     VStack(alignment: .leading, spacing: 22) {
-                        Text("Like a tweet — a note, a category, an amount, the people at the table.")
+                        Text("Add a house bill.")
                             .font(.subheadline)
                             .foregroundStyle(SNP.textMuted)
                         noteEditor

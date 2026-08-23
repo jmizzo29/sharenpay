@@ -12,6 +12,7 @@ final class Person {
     var isCurrentUser: Bool
     var venmoHandle: String = ""
     var cashTag: String = ""
+    var paypalHandle: String = ""
     var zelleHint: String = ""
 
     @Relationship(inverse: \Payment.participants)
@@ -36,6 +37,7 @@ final class Person {
         isCurrentUser: Bool = false,
         venmoHandle: String = "",
         cashTag: String = "",
+        paypalHandle: String = "",
         zelleHint: String = ""
     ) {
         self.id = id
@@ -47,6 +49,7 @@ final class Person {
         self.isCurrentUser = isCurrentUser
         self.venmoHandle = venmoHandle
         self.cashTag = cashTag
+        self.paypalHandle = paypalHandle
         self.zelleHint = zelleHint
     }
 
