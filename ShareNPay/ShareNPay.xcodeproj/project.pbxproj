@@ -1,0 +1,614 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A00000000000000000000065 /* ShareNPayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000064 /* ShareNPayApp.swift */; };
+		A00000000000000000000067 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000066 /* Palette.swift */; };
+		A00000000000000000000069 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000068 /* Enums.swift */; };
+		A0000000000000000000006B /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000006A /* Person.swift */; };
+		A0000000000000000000006D /* Payment.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000006C /* Payment.swift */; };
+		A0000000000000000000006F /* SplitShare.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000006E /* SplitShare.swift */; };
+		A00000000000000000000071 /* ThreadMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000070 /* ThreadMessage.swift */; };
+		A00000000000000000000073 /* AppAccount.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000072 /* AppAccount.swift */; };
+		A00000000000000000000075 /* LedgerMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000074 /* LedgerMath.swift */; };
+		A00000000000000000000077 /* DemoCatalog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000076 /* DemoCatalog.swift */; };
+		A00000000000000000000079 /* PaymentService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000078 /* PaymentService.swift */; };
+		A0000000000000000000007B /* Wordmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000007A /* Wordmark.swift */; };
+		A0000000000000000000007D /* AvatarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000007C /* AvatarView.swift */; };
+		A0000000000000000000007F /* MoneyLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000007E /* MoneyLabel.swift */; };
+		A00000000000000000000081 /* StatusPill.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000080 /* StatusPill.swift */; };
+		A00000000000000000000083 /* PreviewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000082 /* PreviewContainer.swift */; };
+		A00000000000000000000085 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000084 /* RootView.swift */; };
+		A00000000000000000000087 /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000086 /* OnboardingView.swift */; };
+		A00000000000000000000089 /* ActivityRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000088 /* ActivityRow.swift */; };
+		A0000000000000000000008B /* ActivityView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000008A /* ActivityView.swift */; };
+		A0000000000000000000008D /* ComposerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000008C /* ComposerView.swift */; };
+		A0000000000000000000008F /* PayRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000008E /* PayRequestView.swift */; };
+		A00000000000000000000091 /* PaymentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000090 /* PaymentDetailView.swift */; };
+		A00000000000000000000093 /* BalancesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000092 /* BalancesView.swift */; };
+		A00000000000000000000095 /* PeopleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000094 /* PeopleView.swift */; };
+		A00000000000000000000097 /* PersonProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000096 /* PersonProfileView.swift */; };
+		A00000000000000000000099 /* YouView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000098 /* YouView.swift */; };
+		A0000000000000000000009B /* LedgerMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009A /* LedgerMathTests.swift */; };
+		A0000000000000000000009D /* PaymentServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000009C /* PaymentServiceTests.swift */; };
+		A000000000000000000000C8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000000B /* Assets.xcassets */; };
+		A000000000000000000000C9 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000000C /* Preview Assets.xcassets */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A00000000000000000000064 /* ShareNPayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNPayApp.swift; sourceTree = "<group>"; };
+		A00000000000000000000066 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
+		A00000000000000000000068 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
+		A0000000000000000000006A /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
+		A0000000000000000000006C /* Payment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Payment.swift; sourceTree = "<group>"; };
+		A0000000000000000000006E /* SplitShare.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitShare.swift; sourceTree = "<group>"; };
+		A00000000000000000000070 /* ThreadMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadMessage.swift; sourceTree = "<group>"; };
+		A00000000000000000000072 /* AppAccount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppAccount.swift; sourceTree = "<group>"; };
+		A00000000000000000000074 /* LedgerMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerMath.swift; sourceTree = "<group>"; };
+		A00000000000000000000076 /* DemoCatalog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DemoCatalog.swift; sourceTree = "<group>"; };
+		A00000000000000000000078 /* PaymentService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentService.swift; sourceTree = "<group>"; };
+		A0000000000000000000007A /* Wordmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wordmark.swift; sourceTree = "<group>"; };
+		A0000000000000000000007C /* AvatarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvatarView.swift; sourceTree = "<group>"; };
+		A0000000000000000000007E /* MoneyLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyLabel.swift; sourceTree = "<group>"; };
+		A00000000000000000000080 /* StatusPill.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusPill.swift; sourceTree = "<group>"; };
+		A00000000000000000000082 /* PreviewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewContainer.swift; sourceTree = "<group>"; };
+		A00000000000000000000084 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		A00000000000000000000086 /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
+		A00000000000000000000088 /* ActivityRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityRow.swift; sourceTree = "<group>"; };
+		A0000000000000000000008A /* ActivityView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityView.swift; sourceTree = "<group>"; };
+		A0000000000000000000008C /* ComposerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposerView.swift; sourceTree = "<group>"; };
+		A0000000000000000000008E /* PayRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PayRequestView.swift; sourceTree = "<group>"; };
+		A00000000000000000000090 /* PaymentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentDetailView.swift; sourceTree = "<group>"; };
+		A00000000000000000000092 /* BalancesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalancesView.swift; sourceTree = "<group>"; };
+		A00000000000000000000094 /* PeopleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeopleView.swift; sourceTree = "<group>"; };
+		A00000000000000000000096 /* PersonProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonProfileView.swift; sourceTree = "<group>"; };
+		A00000000000000000000098 /* YouView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YouView.swift; sourceTree = "<group>"; };
+		A0000000000000000000009A /* LedgerMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LedgerMathTests.swift; sourceTree = "<group>"; };
+		A0000000000000000000009C /* PaymentServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentServiceTests.swift; sourceTree = "<group>"; };
+		A00000000000000000000004 /* ShareNPay.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ShareNPay.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A00000000000000000000005 /* ShareNPayTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ShareNPayTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		A0000000000000000000000B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A0000000000000000000000C /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A00000000000000000000019 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A0000000000000000000009E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000068 /* Enums.swift */,
+				A0000000000000000000006A /* Person.swift */,
+				A0000000000000000000006C /* Payment.swift */,
+				A0000000000000000000006E /* SplitShare.swift */,
+				A00000000000000000000070 /* ThreadMessage.swift */,
+				A00000000000000000000072 /* AppAccount.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000009F /* Preview */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000082 /* PreviewContainer.swift */,
+			);
+			path = Preview;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A0 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000074 /* LedgerMath.swift */,
+				A00000000000000000000076 /* DemoCatalog.swift */,
+				A00000000000000000000078 /* PaymentService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A1 /* Theme */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000066 /* Palette.swift */,
+			);
+			path = Theme;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A3 /* Activity */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000088 /* ActivityRow.swift */,
+				A0000000000000000000008A /* ActivityView.swift */,
+			);
+			path = Activity;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A4 /* Balances */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000092 /* BalancesView.swift */,
+			);
+			path = Balances;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A5 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000007A /* Wordmark.swift */,
+				A0000000000000000000007C /* AvatarView.swift */,
+				A0000000000000000000007E /* MoneyLabel.swift */,
+				A00000000000000000000080 /* StatusPill.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A6 /* Composer */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000008C /* ComposerView.swift */,
+				A0000000000000000000008E /* PayRequestView.swift */,
+			);
+			path = Composer;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A7 /* Onboarding */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000086 /* OnboardingView.swift */,
+			);
+			path = Onboarding;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A8 /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000090 /* PaymentDetailView.swift */,
+			);
+			path = Payment;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000A9 /* People */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000094 /* PeopleView.swift */,
+				A00000000000000000000096 /* PersonProfileView.swift */,
+			);
+			path = People;
+			sourceTree = "<group>";
+		};
+		A000000000000000000000AA /* You */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000098 /* YouView.swift */,
+			);
+			path = You;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000012C /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000084 /* RootView.swift */,
+				A000000000000000000000A5 /* Components */,
+				A000000000000000000000A7 /* Onboarding */,
+				A000000000000000000000A3 /* Activity */,
+				A000000000000000000000A6 /* Composer */,
+				A000000000000000000000A8 /* Payment */,
+				A000000000000000000000A4 /* Balances */,
+				A000000000000000000000A9 /* People */,
+				A000000000000000000000AA /* You */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000000D /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000000C /* Preview Assets.xcassets */,
+			);
+			path = Preview Content;
+			sourceTree = "<group>";
+		};
+		A0000000000000000000000A /* ShareNPay */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000064 /* ShareNPayApp.swift */,
+				A000000000000000000000A1 /* Theme */,
+				A0000000000000000000009E /* Models */,
+				A000000000000000000000A0 /* Services */,
+				A0000000000000000000012C /* Views */,
+				A0000000000000000000009F /* Preview */,
+				A0000000000000000000000B /* Assets.xcassets */,
+				A0000000000000000000000D /* Preview Content */,
+			);
+			path = ShareNPay;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000007 /* ShareNPayTests */ = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000009A /* LedgerMathTests.swift */,
+				A0000000000000000000009C /* PaymentServiceTests.swift */,
+			);
+			path = ShareNPayTests;
+			sourceTree = "<group>";
+		};
+		A00000000000000000000008 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A00000000000000000000004 /* ShareNPay.app */,
+				A00000000000000000000005 /* ShareNPayTests.xctest */,
+			);
+			sourceTree = "<group>";
+		};
+		A00000000000000000000009 = {
+			isa = PBXGroup;
+			children = (
+				A0000000000000000000000A /* ShareNPay */,
+				A00000000000000000000007 /* ShareNPayTests */,
+				A00000000000000000000008 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A00000000000000000000002 /* ShareNPay */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000014 /* Build configuration list for PBXNativeTarget "ShareNPay" */;
+			buildPhases = (
+				A00000000000000000000016 /* Sources */,
+				A00000000000000000000019 /* Frameworks */,
+				A00000000000000000000018 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = ShareNPay;
+			productName = ShareNPay;
+			productReference = A00000000000000000000004 /* ShareNPay.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A00000000000000000000003 /* ShareNPayTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A00000000000000000000015 /* Build configuration list for PBXNativeTarget "ShareNPayTests" */;
+			buildPhases = (
+				A00000000000000000000017 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A00000000000000000000190 /* PBXTargetDependency */,
+			);
+			name = ShareNPayTests;
+			productName = ShareNPayTests;
+			productReference = A00000000000000000000005 /* ShareNPayTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A00000000000000000000001 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					A00000000000000000000002 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+					A00000000000000000000003 = {
+						CreatedOnToolsVersion = 15.4;
+						TestTargetID = A00000000000000000000002;
+					};
+				};
+			};
+			buildConfigurationList = A00000000000000000000191 /* Build configuration list for PBXProject "ShareNPay" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A00000000000000000000009;
+			productRefGroup = A00000000000000000000008 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A00000000000000000000002 /* ShareNPay */,
+				A00000000000000000000003 /* ShareNPayTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A00000000000000000000018 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A000000000000000000000C8 /* Assets.xcassets in Resources */,
+				A000000000000000000000C9 /* Preview Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A00000000000000000000016 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A00000000000000000000065 /* ShareNPayApp.swift in Sources */,
+				A00000000000000000000067 /* Palette.swift in Sources */,
+				A00000000000000000000069 /* Enums.swift in Sources */,
+				A0000000000000000000006B /* Person.swift in Sources */,
+				A0000000000000000000006D /* Payment.swift in Sources */,
+				A0000000000000000000006F /* SplitShare.swift in Sources */,
+				A00000000000000000000071 /* ThreadMessage.swift in Sources */,
+				A00000000000000000000073 /* AppAccount.swift in Sources */,
+				A00000000000000000000075 /* LedgerMath.swift in Sources */,
+				A00000000000000000000077 /* DemoCatalog.swift in Sources */,
+				A00000000000000000000079 /* PaymentService.swift in Sources */,
+				A0000000000000000000007B /* Wordmark.swift in Sources */,
+				A0000000000000000000007D /* AvatarView.swift in Sources */,
+				A0000000000000000000007F /* MoneyLabel.swift in Sources */,
+				A00000000000000000000081 /* StatusPill.swift in Sources */,
+				A00000000000000000000083 /* PreviewContainer.swift in Sources */,
+				A00000000000000000000085 /* RootView.swift in Sources */,
+				A00000000000000000000087 /* OnboardingView.swift in Sources */,
+				A00000000000000000000089 /* ActivityRow.swift in Sources */,
+				A0000000000000000000008B /* ActivityView.swift in Sources */,
+				A0000000000000000000008D /* ComposerView.swift in Sources */,
+				A0000000000000000000008F /* PayRequestView.swift in Sources */,
+				A00000000000000000000091 /* PaymentDetailView.swift in Sources */,
+				A00000000000000000000093 /* BalancesView.swift in Sources */,
+				A00000000000000000000095 /* PeopleView.swift in Sources */,
+				A00000000000000000000097 /* PersonProfileView.swift in Sources */,
+				A00000000000000000000099 /* YouView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A00000000000000000000017 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A0000000000000000000009B /* LedgerMathTests.swift in Sources */,
+				A0000000000000000000009D /* PaymentServiceTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A00000000000000000000190 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A00000000000000000000002 /* ShareNPay */;
+			targetProxy = A00000000000000000000192 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXContainerItemProxy section */
+		A00000000000000000000192 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A00000000000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A00000000000000000000002;
+			remoteInfo = ShareNPay;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin XCBuildConfiguration section */
+		A0000000000000000000001E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTORS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+
+			};
+			name = Debug;
+		};
+		A0000000000000000000001F /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTORS = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_VERSION = 5.0;
+				VALIDATE_PRODUCT = YES;
+
+			};
+			name = Release;
+		};
+		A00000000000000000000020 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"ShareNPay/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ShareNPay;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_UIColorName = LaunchBackground;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sharenpay.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				TARGETED_DEVICE_FAMILY = 1;
+
+			};
+			name = Debug;
+		};
+		A00000000000000000000021 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"ShareNPay/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = ShareNPay;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UILaunchScreen_UIColorName = LaunchBackground;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = UIInterfaceOrientationPortrait;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sharenpay.app;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				TARGETED_DEVICE_FAMILY = 1;
+
+			};
+			name = Release;
+		};
+		A00000000000000000000022 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sharenpay.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShareNPay.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShareNPay";
+
+			};
+			name = Debug;
+		};
+		A00000000000000000000023 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.sharenpay.app.tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_STRICT_CONCURRENCY = targeted;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ShareNPay.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/ShareNPay";
+
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A00000000000000000000191 /* Build configuration list for PBXProject "ShareNPay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A0000000000000000000001E /* Debug */,
+				A0000000000000000000001F /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000014 /* Build configuration list for PBXNativeTarget "ShareNPay" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000020 /* Debug */,
+				A00000000000000000000021 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A00000000000000000000015 /* Build configuration list for PBXNativeTarget "ShareNPayTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A00000000000000000000022 /* Debug */,
+				A00000000000000000000023 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A00000000000000000000001 /* Project object */;
+}
