@@ -26,6 +26,16 @@ struct ActivityRow: View {
                 .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
                 .lineLimit(2)
+            if payment.isRecurring, let due = Recurrence.dueCopy(
+                nextDueAt: payment.nextDueAt,
+                isRecurring: true,
+                settled: payment.status == .settled
+            ) {
+                Text(due)
+                    .font(.subheadline)
+                    .foregroundStyle(SNP.textMuted)
+                    .lineLimit(2)
+            }
         }
         .padding(.vertical, 20)
         .accessibilityElement(children: .combine)

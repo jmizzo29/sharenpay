@@ -11,6 +11,9 @@ final class Payment {
     var statusRaw: String
     var createdAt: Date
     var settledAt: Date?
+    var isRecurring: Bool = false
+    var recurrenceRaw: String = Recurrence.none.rawValue
+    var nextDueAt: Date?
 
     var payer: Person?
     var participants: [Person] = []
@@ -30,7 +33,9 @@ final class Payment {
         status: PaymentStatus = .pending,
         createdAt: Date = .now,
         payer: Person? = nil,
-        participants: [Person] = []
+        participants: [Person] = [],
+        isRecurring: Bool = false,
+        nextDueAt: Date? = nil
     ) {
         self.id = id
         self.note = note
@@ -42,6 +47,17 @@ final class Payment {
         self.settledAt = status == .settled ? createdAt : nil
         self.payer = payer
         self.participants = participants
+        self.isRecurring = isRecurring
+        self.recurrenceRaw = isRecurring ? Recurrence.monthly.rawValue : Recurrence.none.rawValue
+        self.nextDueAt = nextDueAt ?? (isRecurring ? Recurrence.nextDue(after: createdAt) : nil)
+    }
+
+    var recurrence: Recurrence {
+        get { Recurrence(rawValue: recurrenceRaw) ?? .none }
+        set {
+            recurrenceRaw = newValue.rawValue
+            isRecurring = newValue == .monthly
+        }
     }
 
     var category: ExpenseCategory {

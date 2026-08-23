@@ -50,6 +50,8 @@ struct CloudBill: Equatable, Codable {
     var participantIds: [String]
     var participantUIDs: [String]
     var ownerUID: String
+    var isRecurring: Bool
+    var nextDueAt: TimeInterval?
     var splits: [CloudSplit]
     var messages: [CloudMessage]
 }
@@ -95,6 +97,8 @@ enum CloudCodec {
             participantIds: payment.participants.map { $0.id.uuidString },
             participantUIDs: [ownerUID],
             ownerUID: ownerUID,
+            isRecurring: payment.isRecurring,
+            nextDueAt: payment.nextDueAt?.timeIntervalSince1970,
             splits: payment.splits.map { share in
                 CloudSplit(
                     personId: share.person?.id.uuidString ?? "",

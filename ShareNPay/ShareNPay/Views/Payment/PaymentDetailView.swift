@@ -53,6 +53,20 @@ struct PaymentDetailView: View {
             Text(storyline)
                 .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
+            if payment.isRecurring {
+                Text("Monthly")
+                    .font(.subheadline)
+                    .foregroundStyle(SNP.textMuted)
+            }
+            if let due = Recurrence.dueCopy(
+                nextDueAt: payment.nextDueAt,
+                isRecurring: payment.isRecurring,
+                settled: payment.status == .settled
+            ) {
+                Text(due)
+                    .font(.body)
+                    .foregroundStyle(SNP.text)
+            }
         }
     }
 

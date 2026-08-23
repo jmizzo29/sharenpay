@@ -80,6 +80,7 @@ final class PaymentService {
             }
             account.notificationsEnabled = notificationsEnabled
         }
+        if notificationsEnabled { DueReminders.requestIfNeeded() }
         save()
     }
 
@@ -89,7 +90,8 @@ final class PaymentService {
         amountCents: Int,
         category: ExpenseCategory,
         payer: Person? = nil,
-        people: [Person]
+        people: [Person],
+        isRecurring: Bool = false
     ) -> Payment? {
         guard let me = currentUser else { return nil }
         guard amountCents > 0 else { return nil }
@@ -107,7 +109,8 @@ final class PaymentService {
             kind: .sharedExpense,
             status: .pending,
             payer: payerPerson,
-            participants: participants
+            participants: participants,
+            isRecurring: isRecurring
         )
         context.insert(payment)
 
@@ -128,6 +131,9 @@ final class PaymentService {
             payment,
             "\(payerPerson.firstName) paid \(LedgerMath.currencyString(cents: amountCents)). Split \(participants.count) ways."
         )
+        if isRecurring {
+            addSystem(payment, "Monthly. Next due \(Recurrence.nextDue(after: payment.createdAt).formatted(date: .abbreviated, time: .omitted)). Nobody is charged in the app.")
+        }
         save()
         return payment
     }
@@ -366,6 +372,7 @@ final class PaymentService {
 
     func save(syncCloud: Bool = true) {
         try? context.save()
+        DueReminders.sync(payments: activity, enabled: account?.notificationsEnabled == true)
         guard syncCloud, CloudStore.shared.isAvailable, !cloudUID.isEmpty else { return }
         let snapshot = exportSnapshot()
         Task { [snapshot] in
@@ -422,7 +429,9 @@ final class PaymentService {
                 status: PaymentStatus(rawValue: record.status) ?? .pending,
                 createdAt: Date(timeIntervalSince1970: record.createdAt),
                 payer: payer,
-                participants: participants
+                participants: participants,
+                isRecurring: record.isRecurring,
+                nextDueAt: record.nextDueAt.map { Date(timeIntervalSince1970: $0) }
             )
             payment.settledAt = record.settledAt.map { Date(timeIntervalSince1970: $0) }
             context.insert(payment)

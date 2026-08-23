@@ -87,7 +87,8 @@ enum DemoCatalog {
             agreedIDs: [maya.id],
             messages: [
                 (maya, "Paid the landlord. $600 each.", -60 * 60 * 40)
-            ]
+            ],
+            isRecurring: true
         )
 
         addBill(
@@ -157,7 +158,8 @@ enum DemoCatalog {
         people: [Person],
         settledIDs: Set<UUID>,
         agreedIDs: Set<UUID>,
-        messages: [(Person, String, TimeInterval)]
+        messages: [(Person, String, TimeInterval)],
+        isRecurring: Bool = false
     ) {
         let allPaid = people.allSatisfy { settledIDs.contains($0.id) || $0.id == payer.id }
         let payment = Payment(
@@ -168,7 +170,8 @@ enum DemoCatalog {
             status: allPaid ? .settled : .pending,
             createdAt: createdAt,
             payer: payer,
-            participants: people
+            participants: people,
+            isRecurring: isRecurring
         )
         context.insert(payment)
 

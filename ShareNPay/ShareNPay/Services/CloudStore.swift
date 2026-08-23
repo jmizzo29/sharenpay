@@ -146,6 +146,8 @@ final class CloudStore {
             "participantIds": bill.participantIds,
             "participantUIDs": bill.participantUIDs,
             "ownerUID": bill.ownerUID,
+            "isRecurring": bill.isRecurring,
+            "nextDueAt": bill.nextDueAt as Any,
             "splits": bill.splits.map {
                 [
                     "personId": $0.personId,
@@ -213,6 +215,8 @@ final class CloudStore {
             participantIds: data["participantIds"] as? [String] ?? [],
             participantUIDs: data["participantUIDs"] as? [String] ?? [],
             ownerUID: data["ownerUID"] as? String ?? "",
+            isRecurring: data["isRecurring"] as? Bool ?? false,
+            nextDueAt: data["nextDueAt"] as? TimeInterval,
             splits: splits,
             messages: messages
         )

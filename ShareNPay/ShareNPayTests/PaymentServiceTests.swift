@@ -90,7 +90,7 @@ final class PaymentServiceTests: XCTestCase {
         let venmo = ExternalSettle.venmoURL(handle: maya.venmoHandle, cents: 60_000, note: note)
         let cash = ExternalSettle.cashAppURL(cashTag: maya.cashTag, cents: 60_000)
         let paypal = ExternalSettle.paypalURL(handle: maya.paypalHandle, cents: 60_000)
-        XCTAssertEqual(note, "ShareNPay · August rent · $600.00")
+        XCTAssertEqual(note, "August rent · your share $600.00")
         XCTAssertEqual(venmo?.scheme, "venmo")
         XCTAssertEqual(cash?.host, "cash.app")
         XCTAssertEqual(paypal?.host, "www.paypal.com")

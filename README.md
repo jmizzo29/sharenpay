@@ -72,13 +72,17 @@ Sign out is on Profile.
 | --- | --- |
 | Setup | Shown when GoogleService-Info.plist is missing or still the placeholder |
 | Sign in | Sign in with Google only. No email/password |
-| Home | You owe / owed to you, add a bill, list of bills and who is unpaid |
-| Bill | Even split, who owes whom, “Yes, that’s my share”, **Pay outside** (Venmo / Cash App / PayPal / Zelle / Mark paid), thread |
+| Home | You owe / owed to you, natural-language composer, receipt capture, list of bills |
+| Bill | Even split, who owes whom, due copy, **Pay outside** (Venmo / Cash App / PayPal / Zelle / Mark paid), thread |
 | Ledger | Who you owe and who owes you. Pay outside or mark paid |
 | People | Anyone you split with — roommates, friends, whoever is on the bill |
 | Profile | Name, Google account, reminders, reset demo, **Sign out** |
 
-Composer on Home: note, amount, category, who paid, who splits.
+Composer on Home: type **What’s the bill?** — `April rent 1800 with Maya` or `dinner 86.40 Maya Jordan` fills amount, people, and title. Confirm **Looks right** before it posts. Camera / photo reads a receipt on-device (Vision) for merchant + total; you confirm, then split.
+
+A bill can be **monthly** (rent, wifi, electric). The app shows next due and optional local reminders. It never auto-charges anyone.
+
+Opening Venmo / PayPal / Cash App / Zelle prefills `April rent · your share $900.00`.
 
 ## What v1 is not
 

@@ -44,7 +44,7 @@ enum ExternalSettle {
     }
 
     static func note(bill: String, cents: Int) -> String {
-        "ShareNPay · \(bill) · \(LedgerMath.currencyString(cents: cents))"
+        "\(bill) · your share \(LedgerMath.currencyString(cents: cents))"
     }
 
     static func amountString(_ cents: Int) -> String {
@@ -71,6 +71,10 @@ struct SettleOutsideSheet: View {
                     .foregroundStyle(SNP.textMuted)
                 MoneyLabel(cents: cents, size: 48)
                     .animation(SNP.spring, value: cents)
+                Text(note)
+                    .font(.subheadline)
+                    .foregroundStyle(SNP.textMuted)
+                    .multilineTextAlignment(.center)
             }
             .padding(.top, 8)
 
@@ -107,7 +111,7 @@ struct SettleOutsideSheet: View {
         }
         .padding(.horizontal, 22)
         .padding(.bottom, 16)
-        .presentationDetents([.height(360)])
+        .presentationDetents([.height(400)])
         .presentationDragIndicator(.visible)
         .presentationBackground(.regularMaterial)
         .presentationCornerRadius(28)

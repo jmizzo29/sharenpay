@@ -26,14 +26,14 @@ struct YouView: View {
                             .font(.subheadline)
                             .foregroundStyle(SNP.textMuted)
                     }
-                    Toggle("Reminders", isOn: $notifications)
+                    Toggle("Local due reminders", isOn: $notifications)
                         .tint(SNP.accent)
                         .onChange(of: notifications) { _, value in
                             service.updateProfile(displayName: name, notificationsEnabled: value)
                         }
                 }
                 Section {
-                    Text("ShareNPay does the split. It does not take the money. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid. Bills are stored on your Google account.")
+                    Text("ShareNPay does the split. It does not take the money. Optional reminders stay on this iPhone. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid.")
                         .font(.body)
                         .foregroundStyle(SNP.textMuted)
                         .listRowBackground(Color.clear)

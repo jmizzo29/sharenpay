@@ -49,6 +49,11 @@
 		A00000000000000000000F21 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000F11 /* FirebaseAuth */; };
 		A00000000000000000000F22 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000F12 /* FirebaseFirestore */; };
 		A00000000000000000000F23 /* GoogleSignIn in Frameworks */ = {isa = PBXBuildFile; productRef = A00000000000000000000F13 /* GoogleSignIn */; };
+		A00000000000000000001011 /* BillParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001001 /* BillParser.swift */; };
+		A00000000000000000001012 /* ReceiptReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001002 /* ReceiptReader.swift */; };
+		A00000000000000000001013 /* DueReminders.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001003 /* DueReminders.swift */; };
+		A00000000000000000001014 /* CameraPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001004 /* CameraPicker.swift */; };
+		A00000000000000000001015 /* BillParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000001005 /* BillParserTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -94,6 +99,11 @@
 		A00000000000000000000E06 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		A00000000000000000000E07 /* FirebaseConfigTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseConfigTests.swift; sourceTree = "<group>"; };
 		A00000000000000000000E08 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A00000000000000000001001 /* BillParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillParser.swift; sourceTree = "<group>"; };
+		A00000000000000000001002 /* ReceiptReader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReceiptReader.swift; sourceTree = "<group>"; };
+		A00000000000000000001003 /* DueReminders.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DueReminders.swift; sourceTree = "<group>"; };
+		A00000000000000000001004 /* CameraPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPicker.swift; sourceTree = "<group>"; };
+		A00000000000000000001005 /* BillParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BillParserTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -142,6 +152,9 @@
 				A00000000000000000000E02 /* CloudRecords.swift */,
 				A00000000000000000000E03 /* CloudStore.swift */,
 				A00000000000000000000E04 /* SessionStore.swift */,
+				A00000000000000000001001 /* BillParser.swift */,
+				A00000000000000000001002 /* ReceiptReader.swift */,
+				A00000000000000000001003 /* DueReminders.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -178,6 +191,7 @@
 				A0000000000000000000007C /* AvatarView.swift */,
 				A0000000000000000000007E /* MoneyLabel.swift */,
 				A00000000000000000000080 /* StatusPill.swift */,
+				A00000000000000000001004 /* CameraPicker.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -271,6 +285,7 @@
 				A0000000000000000000009A /* LedgerMathTests.swift */,
 				A0000000000000000000009C /* PaymentServiceTests.swift */,
 				A00000000000000000000E07 /* FirebaseConfigTests.swift */,
+				A00000000000000000001005 /* BillParserTests.swift */,
 			);
 			path = ShareNPayTests;
 			sourceTree = "<group>";
@@ -409,6 +424,10 @@
 				A00000000000000000000E12 /* CloudRecords.swift in Sources */,
 				A00000000000000000000E13 /* CloudStore.swift in Sources */,
 				A00000000000000000000E14 /* SessionStore.swift in Sources */,
+				A00000000000000000001011 /* BillParser.swift in Sources */,
+				A00000000000000000001012 /* ReceiptReader.swift in Sources */,
+				A00000000000000000001013 /* DueReminders.swift in Sources */,
+				A00000000000000000001014 /* CameraPicker.swift in Sources */,
 				A0000000000000000000007B /* Wordmark.swift in Sources */,
 				A0000000000000000000007D /* AvatarView.swift in Sources */,
 				A0000000000000000000007F /* MoneyLabel.swift in Sources */,
@@ -435,6 +454,7 @@
 				A0000000000000000000009B /* LedgerMathTests.swift in Sources */,
 				A0000000000000000000009D /* PaymentServiceTests.swift in Sources */,
 				A00000000000000000000E17 /* FirebaseConfigTests.swift in Sources */,
+				A00000000000000000001015 /* BillParserTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
