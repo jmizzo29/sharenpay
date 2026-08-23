@@ -12,20 +12,22 @@ struct ActivityView: View {
             ZStack {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 18) {
+                    VStack(alignment: .leading, spacing: 36) {
                         monthSummary
                         HomeComposer { payment in
                             if let payment { path.append(payment.id) }
                         }
                         bills
                     }
-                    .padding(16)
+                    .padding(.horizontal, 22)
+                    .padding(.top, 8)
+                    .padding(.bottom, 28)
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
-                    Wordmark(size: 20)
+                    Wordmark(size: 22)
                 }
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showProfile = true } label: {
@@ -50,44 +52,41 @@ struct ActivityView: View {
     }
 
     private var monthSummary: some View {
-        HStack(spacing: 12) {
-            summaryCard("You owe", service.youOweTotal())
-            summaryCard("Owed to you", service.owedToYouTotal())
+        HStack(alignment: .top, spacing: 28) {
+            summaryColumn("You owe", service.youOweTotal())
+            summaryColumn("Owed to you", service.owedToYouTotal())
         }
     }
 
-    private func summaryCard(_ title: String, _ cents: Int) -> some View {
-        VStack(alignment: .leading, spacing: 4) {
+    private func summaryColumn(_ title: String, _ cents: Int) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .font(.caption)
+                .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
-            MoneyLabel(cents: cents, size: 22)
+            MoneyLabel(cents: cents, size: 34)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(12)
-        .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(SNP.hairline, lineWidth: 1)
-        }
     }
 
     private var bills: some View {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 0) {
             Text("Bills")
-                .font(.headline)
+                .font(SNP.display(20))
                 .foregroundStyle(SNP.text)
+                .padding(.bottom, 4)
             if payments.isEmpty {
                 Text("No bills yet.")
+                    .font(.body)
                     .foregroundStyle(SNP.textMuted)
+                    .padding(.top, 16)
             } else {
                 ForEach(payments, id: \.id) { payment in
                     NavigationLink(value: payment.id) {
                         ActivityRow(payment: payment, delta: service.viewerDelta(for: payment))
-                            .padding(.vertical, 10)
                     }
                     .buttonStyle(.plain)
                     if payment.id != payments.last?.id {
-                        Divider().overlay(SNP.hairline)
+                        Hairline()
                     }
                 }
             }
@@ -106,17 +105,15 @@ struct HomeComposer: View {
     @State private var selected: Set<UUID> = []
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Add a bill")
-                .font(.subheadline.weight(.semibold))
-                .foregroundStyle(SNP.text)
+        VStack(alignment: .leading, spacing: 18) {
             TextField("Dinner, Uber, rent, concert…", text: $note)
+                .font(SNP.display(20, weight: .regular))
                 .onChange(of: note) { _, value in
                     if value.count > 160 { note = String(value.prefix(160)) }
                 }
             HStack(alignment: .firstTextBaseline) {
-                AmountField(cents: $cents, size: 28)
-                Spacer()
+                AmountField(cents: $cents, size: 36)
+                Spacer(minLength: 12)
                 Menu {
                     ForEach(ExpenseCategory.splitCases) { item in
                         Button(item.title) { category = item }
@@ -128,16 +125,10 @@ struct HomeComposer: View {
                             .font(.caption.weight(.semibold))
                     }
                     .font(.subheadline)
-                    .foregroundStyle(SNP.text)
-                    .padding(.horizontal, 10)
-                    .padding(.vertical, 6)
-                    .background(SNP.fill, in: Capsule())
+                    .foregroundStyle(SNP.textMuted)
                 }
             }
-            HStack {
-                Text("Paid by")
-                    .font(.caption)
-                    .foregroundStyle(SNP.textMuted)
+            HStack(spacing: 16) {
                 Menu {
                     ForEach(service.people, id: \.id) { person in
                         Button(person.isCurrentUser ? "You" : person.firstName) {
@@ -145,56 +136,61 @@ struct HomeComposer: View {
                         }
                     }
                 } label: {
-                    Text(payerLabel)
-                        .font(.subheadline.weight(.medium))
-                        .foregroundStyle(SNP.text)
+                    Text("Paid by \(payerLabel)")
+                        .font(.subheadline)
+                        .foregroundStyle(SNP.textMuted)
                 }
+                Spacer()
             }
-            Text("Who splits")
-                .font(.caption)
-                .foregroundStyle(SNP.textMuted)
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 8) {
                     ForEach(service.people, id: \.id) { person in
                         Button {
-                            if selected.contains(person.id) {
-                                if selected.count > 1 { selected.remove(person.id) }
-                            } else {
-                                selected.insert(person.id)
+                            withAnimation(SNP.spring) {
+                                if selected.contains(person.id) {
+                                    if selected.count > 1 { selected.remove(person.id) }
+                                } else {
+                                    selected.insert(person.id)
+                                }
                             }
                         } label: {
                             Text(person.isCurrentUser ? "You" : person.firstName)
                                 .font(.subheadline.weight(.medium))
-                                .padding(.horizontal, 10)
-                                .padding(.vertical, 6)
+                                .padding(.horizontal, 12)
+                                .padding(.vertical, 7)
                                 .foregroundStyle(selected.contains(person.id) ? Color.white : SNP.text)
                                 .background(
-                                    Capsule().fill(selected.contains(person.id) ? SNP.accent : SNP.fill)
+                                    Capsule().fill(selected.contains(person.id) ? SNP.accent : Color.clear)
                                 )
+                                .overlay {
+                                    Capsule().strokeBorder(
+                                        selected.contains(person.id) ? SNP.accent : SNP.hairline,
+                                        lineWidth: 1
+                                    )
+                                }
                         }
                         .buttonStyle(.plain)
                     }
                 }
             }
-            HStack {
+            HStack(alignment: .center) {
                 Text(splitCopy)
-                    .font(.caption)
+                    .font(.subheadline)
                     .foregroundStyle(SNP.textMuted)
                 Spacer()
-                Button("Add bill") { post() }
+                Button("Add") { post() }
                     .font(.subheadline.weight(.semibold))
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 8)
                     .foregroundStyle(canPost ? Color.white : SNP.textMuted)
-                    .background(canPost ? SNP.accent : SNP.fill, in: Capsule())
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(canPost ? SNP.accent : Color.clear, in: Capsule())
+                    .overlay {
+                        Capsule().strokeBorder(canPost ? SNP.accent : SNP.hairline, lineWidth: 1)
+                    }
                     .disabled(!canPost)
             }
         }
-        .padding(14)
-        .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(SNP.hairline, lineWidth: 1)
-        }
+        .padding(.vertical, 6)
         .onAppear {
             if selected.isEmpty, let me = service.currentUser {
                 selected = [me.id]
@@ -207,17 +203,17 @@ struct HomeComposer: View {
 
     private var payerLabel: String {
         let person = service.people.first { $0.id == payerID }
-        if person?.isCurrentUser == true { return "You" }
-        return person?.firstName ?? "You"
+        if person?.isCurrentUser == true { return "you" }
+        return person?.firstName ?? "you"
     }
 
     private var splitCopy: String {
         guard selected.count >= 2, cents > 0 else {
-            return "Pick who split this. Even split."
+            return "Who splits · even"
         }
         let parts = LedgerMath.evenSplit(totalCents: cents, participantCount: selected.count)
         let each = parts.first ?? 0
-        return "\(selected.count) people · \(LedgerMath.currencyString(cents: each)) each"
+        return "\(selected.count) · \(LedgerMath.currencyString(cents: each)) each"
     }
 
     private var canPost: Bool {

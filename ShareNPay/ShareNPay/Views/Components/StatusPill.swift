@@ -5,14 +5,8 @@ struct StatusPill: View {
 
     var body: some View {
         Text(status.title)
-            .font(.system(size: 11, weight: .semibold))
-            .padding(.horizontal, 8)
-            .padding(.vertical, 4)
+            .font(.system(size: 12, weight: .medium))
             .foregroundStyle(status == .settled ? SNP.textMuted : SNP.text)
-            .background(SNP.fill, in: Capsule())
-            .overlay {
-                Capsule().strokeBorder(SNP.hairline, lineWidth: 1)
-            }
     }
 }
 
@@ -30,11 +24,11 @@ struct CategoryChip: View {
                 Text(category.shortTitle)
             }
             .font(.system(size: 13, weight: .medium))
-            .padding(.horizontal, 10)
-            .padding(.vertical, 6)
+            .padding(.horizontal, 12)
+            .padding(.vertical, 7)
             .foregroundStyle(selected ? Color.white : SNP.text)
             .background(
-                Capsule().fill(selected ? SNP.accent : SNP.fill)
+                Capsule().fill(selected ? SNP.accent : Color.clear)
             )
             .overlay {
                 Capsule().strokeBorder(selected ? SNP.accent : SNP.hairline, lineWidth: 1)
@@ -50,11 +44,39 @@ struct CardSurface<Content: View>: View {
 
     var body: some View {
         content()
-            .padding(14)
-            .background(SNP.card, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .padding(.vertical, 4)
+    }
+}
+
+struct Hairline: View {
+    var body: some View {
+        Rectangle()
+            .fill(SNP.hairline)
+            .frame(height: 1)
+    }
+}
+
+struct QuietButtonStyle: ButtonStyle {
+    var filled: Bool = false
+    var enabled: Bool = true
+
+    func makeBody(configuration: Configuration) -> some View {
+        configuration.label
+            .font(.system(size: 16, weight: .semibold))
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 14)
+            .foregroundStyle(filled && enabled ? Color.white : (enabled ? SNP.text : SNP.textMuted))
+            .background(
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(filled && enabled ? SNP.accent : Color.clear)
+            )
             .overlay {
-                RoundedRectangle(cornerRadius: 12, style: .continuous)
-                    .strokeBorder(SNP.hairline, lineWidth: 1)
+                if !filled {
+                    RoundedRectangle(cornerRadius: 14, style: .continuous)
+                        .strokeBorder(SNP.hairline, lineWidth: 1)
+                }
             }
+            .opacity(configuration.isPressed ? 0.72 : 1)
+            .animation(.easeOut(duration: 0.16), value: configuration.isPressed)
     }
 }

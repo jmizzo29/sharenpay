@@ -47,11 +47,18 @@ struct MainTabs: View {
     init() {
         let appearance = UITabBarAppearance()
         appearance.configureWithOpaqueBackground()
-        appearance.backgroundColor = UIColor.white
-        appearance.shadowColor = UIColor(white: 0.90, alpha: 1)
+        appearance.backgroundColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? UIColor(white: 0.04, alpha: 1) : UIColor.white
+        }
+        appearance.shadowColor = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? UIColor(white: 0.18, alpha: 1) : UIColor(white: 0.90, alpha: 1)
+        }
         let ink = UIColor(red: 0.106, green: 0.165, blue: 0.290, alpha: 1)
-        appearance.stackedLayoutAppearance.selected.iconColor = ink
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: ink]
+        let selected = UIColor { trait in
+            trait.userInterfaceStyle == .dark ? UIColor.white : ink
+        }
+        appearance.stackedLayoutAppearance.selected.iconColor = selected
+        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [.foregroundColor: selected]
         appearance.stackedLayoutAppearance.normal.iconColor = UIColor(white: 0.45, alpha: 1)
         appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
             .foregroundColor: UIColor(white: 0.45, alpha: 1)

@@ -9,35 +9,29 @@ struct PeopleView: View {
         NavigationStack(path: $path) {
             ZStack {
                 SNP.background.ignoresSafeArea()
-                List {
-                    Section {
+                ScrollView {
+                    VStack(alignment: .leading, spacing: 28) {
                         Text("Anyone you split a bill with. Rent, dinner, a ride — same math.")
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(SNP.textMuted)
-                    }
-                    ForEach(sections, id: \.self) { kind in
-                        let people = service.people.filter { $0.kind == kind }
-                        if !people.isEmpty {
-                            Section(kind.sectionTitle) {
-                                ForEach(people, id: \.id) { person in
-                                    personRow(person)
-                                }
+                        ForEach(sections, id: \.self) { kind in
+                            let people = service.people.filter { $0.kind == kind }
+                            if !people.isEmpty {
+                                section(kind.sectionTitle, people)
                             }
                         }
-                    }
-                    let you = service.people.filter(\.isCurrentUser)
-                    if !you.isEmpty {
-                        Section("You") {
-                            ForEach(you, id: \.id) { person in
-                                personRow(person)
-                            }
+                        let you = service.people.filter(\.isCurrentUser)
+                        if !you.isEmpty {
+                            section("You", you)
                         }
                     }
+                    .padding(.horizontal, 22)
+                    .padding(.top, 8)
+                    .padding(.bottom, 28)
                 }
-                .listStyle(.insetGrouped)
-                .scrollContentBackground(.hidden)
             }
             .navigationTitle("People")
+            .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button { showProfile = true } label: {
@@ -61,18 +55,32 @@ struct PeopleView: View {
 
     private var sections: [PersonKind] { [.roommate, .friend, .family, .business] }
 
+    private func section(_ title: String, _ people: [Person]) -> some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text(title)
+                .font(.subheadline)
+                .foregroundStyle(SNP.textMuted)
+                .padding(.bottom, 4)
+            ForEach(people, id: \.id) { person in
+                personRow(person)
+                if person.id != people.last?.id {
+                    Hairline()
+                }
+            }
+        }
+    }
+
     private func personRow(_ person: Person) -> some View {
         Button {
             path.append(person.id)
         } label: {
-            HStack(spacing: 12) {
-                AvatarView(person: person, size: 36)
-                VStack(alignment: .leading, spacing: 2) {
+            HStack(alignment: .firstTextBaseline, spacing: 16) {
+                VStack(alignment: .leading, spacing: 4) {
                     Text(person.isCurrentUser ? "You" : person.displayName)
-                        .font(.body.weight(.medium))
+                        .font(SNP.display(22))
                         .foregroundStyle(SNP.text)
                     Text(person.blurb)
-                        .font(.caption)
+                        .font(.subheadline)
                         .foregroundStyle(SNP.textMuted)
                         .lineLimit(1)
                 }
@@ -80,11 +88,13 @@ struct PeopleView: View {
                 if !person.isCurrentUser {
                     let net = service.netCents(with: person)
                     if net != 0 {
-                        MoneyLabel(cents: net, signed: true, size: 15)
+                        MoneyLabel(cents: net, signed: true, size: 22)
                     }
                 }
             }
+            .padding(.vertical, 16)
         }
+        .buttonStyle(.plain)
     }
 }
 

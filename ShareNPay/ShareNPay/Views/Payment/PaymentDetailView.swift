@@ -13,18 +13,19 @@ struct PaymentDetailView: View {
             SNP.background.ignoresSafeArea()
             VStack(spacing: 0) {
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
+                    VStack(alignment: .leading, spacing: 32) {
                         header
-                        splitCard
+                        whoOwes
                         actions
                         thread
                     }
-                    .padding(16)
+                    .padding(.horizontal, 22)
+                    .padding(.top, 8)
+                    .padding(.bottom, 28)
                 }
                 composer
             }
         }
-        .navigationTitle(payment.category.shortTitle)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showSettle) {
             if let payee = payment.payer, let me = service.currentUser, let share = service.share(for: me, in: payment) {
@@ -40,17 +41,14 @@ struct PaymentDetailView: View {
     }
 
     private var header: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            HStack {
-                Text(payment.category.shortTitle)
-                    .font(.caption.weight(.semibold))
-                    .foregroundStyle(SNP.textMuted)
-                StatusPill(status: payment.status)
-            }
+        VStack(alignment: .leading, spacing: 10) {
+            Text(payment.category.shortTitle)
+                .font(.subheadline)
+                .foregroundStyle(SNP.textMuted)
             Text(payment.note)
-                .font(.title3.weight(.bold))
+                .font(SNP.display(34))
                 .foregroundStyle(SNP.text)
-            MoneyLabel(cents: payment.amountCents, size: 32)
+            MoneyLabel(cents: payment.amountCents, size: 40)
             Text(storyline)
                 .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
@@ -63,34 +61,37 @@ struct PaymentDetailView: View {
         return "\(payer) paid · \(when)"
     }
 
-    private var splitCard: some View {
-        CardSurface {
-            VStack(alignment: .leading, spacing: 12) {
-                Text("Who owes")
-                    .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(SNP.textMuted)
-                ForEach(payment.sortedSplits, id: \.persistentModelID) { share in
-                    if let person = share.person {
-                        HStack(alignment: .top, spacing: 10) {
-                            AvatarView(person: person, size: 32)
-                            VStack(alignment: .leading, spacing: 4) {
-                                Text(person.isCurrentUser ? "You" : person.displayName)
-                                    .font(.body.weight(.medium))
-                                    .foregroundStyle(SNP.text)
-                                Text(payment.oweLine(for: share, viewer: service.currentUser) ?? "")
-                                    .font(.caption)
-                                    .foregroundStyle(SNP.textMuted)
-                                if canCollect(from: person, share: share) {
-                                    Button("Mark paid") {
+    private var whoOwes: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            Text("Who owes")
+                .font(SNP.display(20))
+                .padding(.bottom, 8)
+            ForEach(payment.sortedSplits, id: \.persistentModelID) { share in
+                if let person = share.person {
+                    HStack(alignment: .firstTextBaseline, spacing: 12) {
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text(person.isCurrentUser ? "You" : person.displayName)
+                                .font(.body.weight(.medium))
+                                .foregroundStyle(SNP.text)
+                            Text(payment.oweLine(for: share, viewer: service.currentUser) ?? "")
+                                .font(.subheadline)
+                                .foregroundStyle(SNP.textMuted)
+                            if canCollect(from: person, share: share) {
+                                Button("Mark paid") {
+                                    withAnimation(SNP.spring) {
                                         service.markSharePaid(payment, person: person)
                                     }
-                                    .font(.caption.weight(.semibold))
-                                    .foregroundStyle(SNP.accent)
                                 }
+                                .font(.subheadline.weight(.semibold))
+                                .foregroundStyle(SNP.accent)
                             }
-                            Spacer()
-                            MoneyLabel(cents: share.amountCents, size: 16)
                         }
+                        Spacer()
+                        MoneyLabel(cents: share.amountCents, size: 20)
+                    }
+                    .padding(.vertical, 16)
+                    if share.persistentModelID != payment.sortedSplits.last?.persistentModelID {
+                        Hairline()
                     }
                 }
             }
@@ -110,13 +111,9 @@ struct PaymentDetailView: View {
                 UIImpactFeedbackGenerator(style: .medium).impactOccurred()
                 service.agree(payment)
             } label: {
-                Text("Yes, that's my share")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
+                Text("Yes, that’s my share")
             }
-            .buttonStyle(.borderedProminent)
-            .tint(SNP.accent)
+            .buttonStyle(QuietButtonStyle(filled: true))
         }
 
         if service.canMarkOwnSharePaid(payment) {
@@ -124,21 +121,17 @@ struct PaymentDetailView: View {
                 showSettle = true
             } label: {
                 Text("Pay outside")
-                    .font(.headline)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 12)
             }
-            .buttonStyle(.borderedProminent)
-            .tint(SNP.accent)
+            .buttonStyle(QuietButtonStyle(filled: true))
         }
 
         if payment.status == .settled {
             Text("This bill is paid.")
-                .font(.footnote)
+                .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
         } else if payment.status == .pending, !service.canAgree(payment), !service.canMarkOwnSharePaid(payment) {
             Text(waitingCopy)
-                .font(.footnote)
+                .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
         }
     }
@@ -152,10 +145,9 @@ struct PaymentDetailView: View {
     }
 
     private var thread: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Discuss")
-                .font(.headline)
-                .foregroundStyle(SNP.text)
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Notes")
+                .font(SNP.display(20))
             ForEach(payment.sortedMessages, id: \.persistentModelID) { message in
                 threadBubble(message)
             }
@@ -168,54 +160,46 @@ struct PaymentDetailView: View {
             Text(message.body)
                 .font(.caption)
                 .foregroundStyle(SNP.textMuted)
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
         } else {
             let mine = message.author?.isCurrentUser == true
-            HStack(alignment: .bottom, spacing: 8) {
-                if mine { Spacer(minLength: 36) }
-                if !mine, let author = message.author {
-                    AvatarView(person: author, size: 26)
-                }
-                VStack(alignment: mine ? .trailing : .leading, spacing: 4) {
-                    if !mine {
-                        Text(message.author?.firstName ?? "")
-                            .font(.caption2)
-                            .foregroundStyle(SNP.textMuted)
-                    }
-                    Text(message.body)
-                        .font(.body)
-                        .foregroundStyle(mine ? Color.white : SNP.text)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(
-                            mine ? SNP.accent : SNP.fill,
-                            in: RoundedRectangle(cornerRadius: 12, style: .continuous)
-                        )
-                }
-                if !mine { Spacer(minLength: 36) }
+            VStack(alignment: .leading, spacing: 4) {
+                Text(mine ? "You" : (message.author?.firstName ?? ""))
+                    .font(.caption)
+                    .foregroundStyle(SNP.textMuted)
+                Text(message.body)
+                    .font(.body)
+                    .foregroundStyle(SNP.text)
             }
         }
     }
 
     private var composer: some View {
-        HStack(spacing: 10) {
+        HStack(spacing: 12) {
             TextField("Add a note", text: $draft, axis: .vertical)
                 .lineLimit(1...3)
-                .padding(10)
-                .background(SNP.fill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+                .font(.body)
             Button {
                 service.addMessage(draft, to: payment)
                 draft = ""
             } label: {
-                Image(systemName: "arrow.up.circle.fill")
-                    .font(.system(size: 28))
-                    .foregroundStyle(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? SNP.hairline : SNP.accent)
+                Image(systemName: "arrow.up")
+                    .font(.system(size: 14, weight: .semibold))
+                    .foregroundStyle(canSend ? Color.white : SNP.textMuted)
+                    .frame(width: 32, height: 32)
+                    .background(canSend ? SNP.accent : Color.clear, in: Circle())
+                    .overlay {
+                        Circle().strokeBorder(canSend ? SNP.accent : SNP.hairline, lineWidth: 1)
+                    }
             }
-            .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            .disabled(!canSend)
             .accessibilityLabel("Send")
         }
-        .padding(12)
-        .background(SNP.background)
+        .padding(.horizontal, 22)
+        .padding(.vertical, 14)
+        .background(.bar)
+    }
+
+    private var canSend: Bool {
+        !draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
     }
 }

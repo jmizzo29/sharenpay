@@ -11,19 +11,15 @@ struct YouView: View {
         NavigationStack {
             List {
                 Section {
-                    if let me = service.currentUser {
-                        HStack(spacing: 12) {
-                            AvatarView(person: me, size: 44)
-                            TextField("Name", text: $name)
-                                .textInputAutocapitalization(.words)
-                                .onChange(of: name) { _, value in
-                                    service.updateProfile(
-                                        displayName: value,
-                                        notificationsEnabled: notifications
-                                    )
-                                }
+                    TextField("Name", text: $name)
+                        .font(SNP.display(28, weight: .regular))
+                        .textInputAutocapitalization(.words)
+                        .onChange(of: name) { _, value in
+                            service.updateProfile(
+                                displayName: value,
+                                notificationsEnabled: notifications
+                            )
                         }
-                    }
                     Toggle("Reminders", isOn: $notifications)
                         .tint(SNP.accent)
                         .onChange(of: notifications) { _, value in
@@ -32,13 +28,17 @@ struct YouView: View {
                 }
                 Section {
                     Text("ShareNPay does the split. It does not take the money. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid.")
-                        .font(.subheadline)
+                        .font(.body)
                         .foregroundStyle(SNP.textMuted)
+                        .listRowBackground(Color.clear)
                 }
                 Section {
                     Button("Reset demo data") { confirmReset = true }
                 }
             }
+            .listStyle(.plain)
+            .scrollContentBackground(.hidden)
+            .background(SNP.background)
             .navigationTitle("Profile")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {

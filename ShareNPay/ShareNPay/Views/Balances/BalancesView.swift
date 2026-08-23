@@ -10,18 +10,20 @@ struct BalancesView: View {
             ZStack {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 16) {
-                        HStack(spacing: 12) {
-                            totalCard("You owe", service.youOweTotal())
-                            totalCard("Owed to you", service.owedToYouTotal())
+                    VStack(alignment: .leading, spacing: 36) {
+                        HStack(alignment: .top, spacing: 28) {
+                            totalColumn("You owe", service.youOweTotal())
+                            totalColumn("Owed to you", service.owedToYouTotal())
                         }
                         openList
                     }
-                    .padding(16)
+                    .padding(.horizontal, 22)
+                    .padding(.top, 8)
+                    .padding(.bottom, 28)
                 }
             }
             .navigationTitle("Ledger")
-            .navigationBarTitleDisplayMode(.inline)
+            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: UUID.self) { id in
                 if let person = service.people.first(where: { $0.id == id }) {
                     PersonProfileView(person: person)
@@ -45,19 +47,14 @@ struct BalancesView: View {
         }
     }
 
-    private func totalCard(_ title: String, _ cents: Int) -> some View {
+    private func totalColumn(_ title: String, _ cents: Int) -> some View {
         VStack(alignment: .leading, spacing: 6) {
             Text(title)
-                .font(.caption)
+                .font(.subheadline)
                 .foregroundStyle(SNP.textMuted)
-            MoneyLabel(cents: cents, size: 22)
+            MoneyLabel(cents: cents, size: 34)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(14)
-        .overlay {
-            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .strokeBorder(SNP.hairline, lineWidth: 1)
-        }
     }
 
     @ViewBuilder
@@ -65,53 +62,43 @@ struct BalancesView: View {
         let rows = service.balances()
         if rows.isEmpty {
             Text("All square.")
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(SNP.textMuted)
         } else {
-            ForEach(rows, id: \.person.id) { row in
-                VStack(alignment: .leading, spacing: 10) {
-                    Button {
-                        path.append(row.person.id)
-                    } label: {
-                        HStack(spacing: 12) {
-                            AvatarView(person: row.person, size: 40)
-                            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 0) {
+                ForEach(rows, id: \.person.id) { row in
+                    VStack(alignment: .leading, spacing: 14) {
+                        Button {
+                            path.append(row.person.id)
+                        } label: {
+                            VStack(alignment: .leading, spacing: 6) {
                                 Text(row.person.displayName)
-                                    .font(.body.weight(.semibold))
+                                    .font(SNP.display(22))
                                     .foregroundStyle(SNP.text)
+                                MoneyLabel(cents: row.cents, signed: true, size: 28)
                                 Text(row.cents > 0 ? "owes you" : "you owe")
-                                    .font(.caption)
+                                    .font(.subheadline)
                                     .foregroundStyle(SNP.textMuted)
                             }
-                            Spacer()
-                            MoneyLabel(cents: row.cents, signed: true, size: 18)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                        }
+                        .buttonStyle(.plain)
+                        if row.cents < 0 {
+                            Button("Pay outside") {
+                                settlePerson = row.person
+                            }
+                            .buttonStyle(QuietButtonStyle(filled: true))
+                        } else {
+                            Button("Mark paid") {
+                                service.settleUp(with: row.person)
+                            }
+                            .buttonStyle(QuietButtonStyle())
                         }
                     }
-                    .buttonStyle(.plain)
-                    if row.cents < 0 {
-                        Button("Pay outside") {
-                            settlePerson = row.person
-                        }
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .foregroundStyle(.white)
-                        .background(SNP.accent, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
-                    } else {
-                        Button("Mark paid") {
-                            service.settleUp(with: row.person)
-                        }
-                        .font(.subheadline.weight(.semibold))
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 10)
-                        .foregroundStyle(SNP.text)
-                        .background(SNP.fill, in: RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .padding(.vertical, 20)
+                    if row.person.id != rows.last?.person.id {
+                        Hairline()
                     }
-                }
-                .padding(14)
-                .overlay {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .strokeBorder(SNP.hairline, lineWidth: 1)
                 }
             }
         }

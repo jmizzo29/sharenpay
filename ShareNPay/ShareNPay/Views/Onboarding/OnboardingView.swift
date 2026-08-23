@@ -7,33 +7,35 @@ struct OnboardingView: View {
     var body: some View {
         ZStack {
             SNP.background.ignoresSafeArea()
-            VStack(alignment: .leading, spacing: 20) {
-                BrandMark(size: 56)
-                Wordmark(size: 32)
-                Text("Your name")
-                    .font(.subheadline)
-                    .foregroundStyle(SNP.textMuted)
-                TextField("Display name", text: $name)
-                    .textInputAutocapitalization(.words)
-                    .padding(12)
-                    .background(SNP.fill, in: RoundedRectangle(cornerRadius: 10, style: .continuous))
+            VStack(alignment: .leading, spacing: 28) {
+                BrandMark(size: 52)
+                VStack(alignment: .leading, spacing: 10) {
+                    Wordmark(size: 36)
+                    Text("Add a bill. Split it. See who owes what.")
+                        .font(.title3)
+                        .foregroundStyle(SNP.textMuted)
+                }
+                VStack(alignment: .leading, spacing: 8) {
+                    Text("Your name")
+                        .font(.subheadline)
+                        .foregroundStyle(SNP.textMuted)
+                    TextField("Display name", text: $name)
+                        .font(SNP.display(28, weight: .regular))
+                        .textInputAutocapitalization(.words)
+                }
                 Button {
                     service.completeOnboarding(displayName: name)
                 } label: {
                     Text("Continue")
-                        .font(.headline)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
                 }
-                .buttonStyle(.borderedProminent)
-                .tint(SNP.accent)
+                .buttonStyle(QuietButtonStyle(filled: true, enabled: !name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty))
                 .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                Text("Add a bill, split it, see who owes what. Settle outside the app. ShareNPay does not take payments.")
-                    .font(.caption)
+                Text("Settle outside the app. ShareNPay does not take payments.")
+                    .font(.subheadline)
                     .foregroundStyle(SNP.textMuted)
                 Spacer()
             }
-            .padding(24)
+            .padding(28)
         }
     }
 }

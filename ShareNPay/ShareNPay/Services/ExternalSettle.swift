@@ -64,57 +64,88 @@ struct SettleOutsideSheet: View {
     @State private var copied = false
 
     var body: some View {
-        NavigationStack {
-            List {
-                Section {
-                    Text("Pay \(payee.firstName) \(LedgerMath.currencyString(cents: cents))")
-                        .font(.headline)
-                    Text(note)
-                        .font(.subheadline)
-                        .foregroundStyle(SNP.textMuted)
-                } footer: {
-                    Text("ShareNPay never takes this money. Open Venmo, Cash App, PayPal, or Zelle, then mark it paid here.")
-                }
-                Section("Pay outside") {
-                    if let url = ExternalSettle.venmoURL(handle: payee.venmoHandle, cents: cents, note: note) {
-                        Button("Open Venmo") { openURL(url) }
-                    }
-                    if let url = ExternalSettle.cashAppURL(cashTag: payee.cashTag, cents: cents) {
-                        Button("Open Cash App") { openURL(url) }
-                    }
-                    if let url = ExternalSettle.paypalURL(handle: payee.paypalHandle, cents: cents) {
-                        Button("Open PayPal") { openURL(url) }
-                    }
-                    Button(copied ? "Copied for Zelle" : "Copy note for Zelle") {
-                        UIPasteboard.general.string = "\(note) — \(payee.zelleHint.isEmpty ? payee.displayName : payee.zelleHint)"
-                        copied = true
-                        if let url = ExternalSettle.zelleURL() {
+        VStack(spacing: 28) {
+            Capsule()
+                .fill(SNP.hairline)
+                .frame(width: 36, height: 4)
+                .padding(.top, 10)
+
+            VStack(spacing: 6) {
+                Text("Pay \(payee.firstName)")
+                    .font(.subheadline)
+                    .foregroundStyle(SNP.textMuted)
+                MoneyLabel(cents: cents, size: 44)
+                Text(note)
+                    .font(.caption)
+                    .foregroundStyle(SNP.textMuted)
+                    .multilineTextAlignment(.center)
+            }
+
+            HStack(spacing: 10) {
+                if ExternalSettle.venmoURL(handle: payee.venmoHandle, cents: cents, note: note) != nil {
+                    provider("Venmo") {
+                        if let url = ExternalSettle.venmoURL(handle: payee.venmoHandle, cents: cents, note: note) {
                             openURL(url)
                         }
                     }
                 }
-                Section {
-                    Button("Mark paid") {
-                        onMarkPaid()
-                        dismiss()
+                if ExternalSettle.cashAppURL(cashTag: payee.cashTag, cents: cents) != nil {
+                    provider("Cash App") {
+                        if let url = ExternalSettle.cashAppURL(cashTag: payee.cashTag, cents: cents) {
+                            openURL(url)
+                        }
                     }
-                    .font(.headline)
-                } footer: {
-                    Text("Use after you send it outside the app.")
+                }
+                if ExternalSettle.paypalURL(handle: payee.paypalHandle, cents: cents) != nil {
+                    provider("PayPal") {
+                        if let url = ExternalSettle.paypalURL(handle: payee.paypalHandle, cents: cents) {
+                            openURL(url)
+                        }
+                    }
+                }
+                provider(copied ? "Copied" : "Zelle") {
+                    UIPasteboard.general.string = "\(note) — \(payee.zelleHint.isEmpty ? payee.displayName : payee.zelleHint)"
+                    copied = true
+                    if let url = ExternalSettle.zelleURL() {
+                        openURL(url)
+                    }
                 }
             }
-            .navigationTitle("Settle")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Close") { dismiss() }
+
+            VStack(spacing: 10) {
+                Button("Mark paid") {
+                    onMarkPaid()
+                    dismiss()
                 }
+                .buttonStyle(QuietButtonStyle(filled: true))
+                Text("ShareNPay never takes this money.")
+                    .font(.caption)
+                    .foregroundStyle(SNP.textMuted)
             }
         }
-        .presentationDetents([.medium, .large])
+        .padding(.horizontal, 22)
+        .padding(.bottom, 20)
+        .presentationDetents([.height(390)])
+        .presentationDragIndicator(.hidden)
+        .presentationBackground(.regularMaterial)
     }
 
     private var note: String {
         ExternalSettle.note(bill: billNote, cents: cents)
+    }
+
+    private func provider(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 13, weight: .semibold))
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .foregroundStyle(SNP.text)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 12, style: .continuous)
+                        .strokeBorder(SNP.hairline, lineWidth: 1)
+                }
+        }
+        .buttonStyle(.plain)
     }
 }

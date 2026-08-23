@@ -18,18 +18,18 @@ struct ComposerView: View {
             ZStack {
                 SNP.background.ignoresSafeArea()
                 ScrollView {
-                    VStack(alignment: .leading, spacing: 22) {
+                    VStack(alignment: .leading, spacing: 28) {
                         Text("Add a bill. Even split. Anyone can be on it.")
-                            .font(.subheadline)
+                            .font(.body)
                             .foregroundStyle(SNP.textMuted)
                         noteEditor
-                        AmountField(cents: $cents)
+                        AmountField(cents: $cents, size: 40)
                         categoryRow
                         peoplePicker
                         splitPreview
                         postButton
                     }
-                    .padding(20)
+                    .padding(22)
                 }
             }
             .navigationTitle("New share")
@@ -47,13 +47,7 @@ struct ComposerView: View {
         VStack(alignment: .leading, spacing: 8) {
             TextField("Dinner, Uber, rent, concert…", text: $note, axis: .vertical)
                 .lineLimit(3...5)
-                .font(.title3)
-                .padding(14)
-                .background(SNP.card, in: RoundedRectangle(cornerRadius: 18, style: .continuous))
-                .overlay {
-                    RoundedRectangle(cornerRadius: 18, style: .continuous)
-                        .strokeBorder(SNP.hairline, lineWidth: 1)
-                }
+                .font(SNP.display(22, weight: .regular))
                 .onChange(of: note) { _, value in
                     if value.count > limit {
                         note = String(value.prefix(limit))
@@ -68,7 +62,7 @@ struct ComposerView: View {
 
     private var categoryRow: some View {
         VStack(alignment: .leading, spacing: 10) {
-            Text("Account")
+            Text("Kind")
                 .font(.subheadline.weight(.semibold))
                 .foregroundStyle(SNP.textMuted)
             ScrollView(.horizontal, showsIndicators: false) {
@@ -111,8 +105,7 @@ struct ComposerView: View {
                             .foregroundStyle(selected.contains(person.id) ? SNP.accent : SNP.hairline)
                             .font(.title3)
                     }
-                    .padding(10)
-                    .background(SNP.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+                    .padding(.vertical, 10)
                 }
                 .buttonStyle(.plain)
             }
@@ -162,12 +155,8 @@ struct ComposerView: View {
             onCreated(payment)
         } label: {
             Text("Add bill")
-                .font(.headline)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 14)
         }
-        .buttonStyle(.borderedProminent)
-        .tint(SNP.accent)
+        .buttonStyle(QuietButtonStyle(filled: true, enabled: canPost))
         .disabled(!canPost)
         .padding(.bottom, 8)
     }

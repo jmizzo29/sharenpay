@@ -9,15 +9,15 @@ struct MoneyLabel: View {
 
     var body: some View {
         Text(LedgerMath.currencyString(cents: cents, signed: signed))
-            .font(.system(size: size, weight: emphasize ? .semibold : .medium))
+            .font(SNP.money(size, weight: emphasize ? .semibold : .medium))
             .monospacedDigit()
             .foregroundStyle(color)
+            .contentTransition(.numericText())
             .accessibilityLabel(accessibility)
     }
 
     private var color: Color {
         if let tint { return tint }
-        guard signed else { return SNP.text }
         return SNP.text
     }
 
@@ -33,13 +33,13 @@ struct AmountField: View {
     var size: CGFloat = 36
 
     var body: some View {
-        HStack(alignment: .firstTextBaseline, spacing: 4) {
+        HStack(alignment: .firstTextBaseline, spacing: 2) {
             Text("$")
-                .font(.system(size: size * 0.64, weight: .semibold))
+                .font(SNP.money(size * 0.58, weight: .medium))
                 .foregroundStyle(SNP.textMuted)
             TextField("0.00", text: displayBinding)
                 .keyboardType(.decimalPad)
-                .font(.system(size: size, weight: .semibold))
+                .font(SNP.money(size))
                 .monospacedDigit()
                 .foregroundStyle(SNP.text)
         }

@@ -12,15 +12,16 @@ struct PersonProfileView: View {
         ZStack {
             SNP.background.ignoresSafeArea()
             ScrollView {
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 36) {
                     identity
                     balance
                     sharedBills
                 }
-                .padding(16)
+                .padding(.horizontal, 22)
+                .padding(.top, 8)
+                .padding(.bottom, 28)
             }
         }
-        .navigationTitle(person.isCurrentUser ? "You" : person.firstName)
         .navigationBarTitleDisplayMode(.inline)
         .sheet(isPresented: $showSettle) {
             let net = service.netCents(with: person)
@@ -36,38 +37,35 @@ struct PersonProfileView: View {
 
     private var identity: some View {
         VStack(alignment: .leading, spacing: 8) {
-            AvatarView(person: person, size: 64)
             Text(person.displayName)
-                .font(.title2.weight(.bold))
+                .font(SNP.display(34))
                 .foregroundStyle(SNP.text)
             Text(person.blurb)
-                .font(.subheadline)
+                .font(.body)
                 .foregroundStyle(SNP.textMuted)
         }
     }
 
     private var balance: some View {
         let net = service.netCents(with: person)
-        return VStack(alignment: .leading, spacing: 10) {
+        return VStack(alignment: .leading, spacing: 14) {
             if person.isCurrentUser {
                 Text("This is you.")
                     .foregroundStyle(SNP.textMuted)
             } else if net == 0 {
                 Text("You’re square.")
-                    .font(.headline)
+                    .font(SNP.display(22))
             } else {
-                MoneyLabel(cents: net, signed: true, size: 28)
+                MoneyLabel(cents: net, signed: true, size: 40)
                 Text(net > 0 ? "They owe you." : "You owe them.")
-                    .font(.subheadline)
+                    .font(.body)
                     .foregroundStyle(SNP.textMuted)
                 if net < 0 {
                     Button("Pay outside") { showSettle = true }
-                        .buttonStyle(.borderedProminent)
-                        .tint(SNP.accent)
+                        .buttonStyle(QuietButtonStyle(filled: true))
                 } else {
                     Button("Mark paid") { service.settleUp(with: person) }
-                        .buttonStyle(.bordered)
-                        .tint(SNP.accent)
+                        .buttonStyle(QuietButtonStyle())
                 }
             }
         }
@@ -77,21 +75,25 @@ struct PersonProfileView: View {
         let mine = payments.filter { payment in
             payment.participants.contains(where: { $0.id == person.id })
         }
-        return VStack(alignment: .leading, spacing: 10) {
+        return VStack(alignment: .leading, spacing: 0) {
             Text("Shared bills")
-                .font(.headline)
+                .font(SNP.display(20))
+                .padding(.bottom, 4)
             if mine.isEmpty {
                 Text("No bills yet.")
                     .foregroundStyle(SNP.textMuted)
+                    .padding(.top, 12)
             } else {
                 ForEach(mine, id: \.id) { payment in
                     NavigationLink {
                         PaymentDetailView(payment: payment)
                     } label: {
                         ActivityRow(payment: payment, delta: service.viewerDelta(for: payment))
-                            .padding(.vertical, 6)
                     }
                     .buttonStyle(.plain)
+                    if payment.id != mine.last?.id {
+                        Hairline()
+                    }
                 }
             }
         }

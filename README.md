@@ -55,7 +55,7 @@ Statuses: **Open** (still confirming or unpaid) → **Confirmed** (everyone agre
 
 ## Visual
 
-White / near-white, black text, one ink accent `#1B2A4A`. Dark mark with a white N. White tab bar.
+White / near-white and dark, black text, one ink accent `#1B2A4A`. Large type, tight hierarchy, hairlines instead of chunky cards. Money uses SF Rounded. Dark mark with a white N. White tab bar.
 
 ## Project layout
 

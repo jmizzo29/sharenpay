@@ -6,35 +6,34 @@ struct ActivityRow: View {
     let delta: Int
 
     var body: some View {
-        HStack(alignment: .top, spacing: 12) {
-            VStack(alignment: .leading, spacing: 4) {
-                Text(payment.note)
-                    .font(.body.weight(.semibold))
-                    .foregroundStyle(SNP.text)
-                Text(subtitle)
+        VStack(alignment: .leading, spacing: 8) {
+            Text(payment.note)
+                .font(SNP.display(22))
+                .foregroundStyle(SNP.text)
+                .lineLimit(2)
+            if payment.status == .settled {
+                Text("Paid")
+                    .font(SNP.money(28, weight: .medium))
+                    .foregroundStyle(SNP.textMuted)
+            } else {
+                MoneyLabel(cents: shownAmount, signed: delta != 0, size: 28)
+            }
+            HStack(alignment: .firstTextBaseline, spacing: 8) {
+                Text(whoLine)
                     .font(.subheadline)
                     .foregroundStyle(SNP.textMuted)
-                HStack(spacing: 8) {
-                    StatusPill(status: rowStatus)
-                    Text(shareLine)
-                        .font(.caption)
-                        .foregroundStyle(SNP.textMuted)
-                }
-            }
-            Spacer(minLength: 8)
-            VStack(alignment: .trailing, spacing: 4) {
-                MoneyLabel(cents: payment.amountCents, size: 16)
-                if payment.status != .settled, delta != 0 {
-                    MoneyLabel(cents: delta, signed: true, size: 13, tint: SNP.textMuted)
-                }
+                    .lineLimit(2)
+                Spacer(minLength: 8)
+                StatusPill(status: rowStatus)
             }
         }
+        .padding(.vertical, 18)
         .accessibilityElement(children: .combine)
     }
 
-    private var subtitle: String {
-        let payer = payment.payer?.isCurrentUser == true ? "You" : (payment.payer?.firstName ?? "Someone")
-        return "\(payer) paid · \(payment.category.shortTitle) · \(payment.participants.count) people"
+    private var shownAmount: Int {
+        if delta != 0 { return delta }
+        return payment.amountCents
     }
 
     private var rowStatus: PaymentStatus {
@@ -45,12 +44,25 @@ struct ActivityRow: View {
         return payment.status
     }
 
-    private var shareLine: String {
-        let unpaid = payment.splits.filter { $0.person?.id != payment.payer?.id && !$0.settled }
-        if payment.status == .settled || unpaid.isEmpty {
-            return "All paid"
+    private var whoLine: String {
+        if payment.status == .settled {
+            let payer = payment.payer?.isCurrentUser == true ? "You" : (payment.payer?.firstName ?? "Someone")
+            return "\(payer) paid · \(payment.participants.count) people"
         }
-        let names = unpaid.compactMap { $0.person?.isCurrentUser == true ? "You" : $0.person?.firstName }
+        let unpaid = payment.splits.filter { $0.person?.id != payment.payer?.id && !$0.settled }
+        let names = unpaid.compactMap { share -> String? in
+            guard let person = share.person else { return nil }
+            return person.isCurrentUser ? "You" : person.firstName
+        }
+        if names.isEmpty {
+            return "Everyone is clear"
+        }
+        if delta < 0, let payer = payment.payer {
+            return "You owe \(payer.firstName)"
+        }
+        if delta > 0 {
+            return names.joined(separator: ", ") + (names.count == 1 ? " owes you" : " owe you")
+        }
         return "Unpaid: \(names.joined(separator: ", "))"
     }
 }

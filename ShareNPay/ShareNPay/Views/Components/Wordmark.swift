@@ -10,9 +10,9 @@ struct Wordmark: View {
                 .foregroundStyle(SNP.accent)
             Text("Pay")
         }
-        .font(.system(size: size, weight: .bold, design: .default))
+        .font(.system(size: size, weight: .semibold, design: .default))
         .foregroundStyle(SNP.text)
-        .tracking(-0.4)
+        .tracking(-0.6)
         .accessibilityLabel("ShareNPay")
     }
 }
