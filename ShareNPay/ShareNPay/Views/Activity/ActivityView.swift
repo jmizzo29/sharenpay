@@ -114,29 +114,39 @@ struct HomeComposer: View {
     @State private var photoItem: PhotosPickerItem?
     @State private var cameraImage: UIImage?
     @State private var showCamera = false
+    @State private var receiptMiss = false
 
     var body: some View {
         FieldChrome {
             VStack(alignment: .leading, spacing: 16) {
-                HStack(alignment: .top, spacing: 10) {
+                HStack(alignment: .top, spacing: 8) {
                     TextField("What’s the bill?", text: $note, axis: .vertical)
                         .font(SNP.display(20, weight: .regular))
                         .lineLimit(1...3)
                         .onChange(of: note) { _, value in
                             if value.count > 160 { note = String(value.prefix(160)) }
+                            receiptMiss = false
                             applyParse()
                         }
-                    Menu {
-                        Button("Take photo") { showCamera = true }
-                        PhotosPicker(selection: $photoItem, matching: .images) {
-                            Text("Choose photo")
-                        }
+                    PhotosPicker(selection: $photoItem, matching: .images) {
+                        Image(systemName: "photo")
+                            .font(.system(size: 16, weight: .medium))
+                            .foregroundStyle(SNP.textMuted)
+                            .frame(width: 32, height: 32)
+                    }
+                    .disabled(readingReceipt)
+                    .accessibilityLabel("Choose a receipt photo")
+                    Button {
+                        showCamera = true
                     } label: {
                         Image(systemName: readingReceipt ? "hourglass" : "camera")
                             .font(.system(size: 16, weight: .medium))
                             .foregroundStyle(SNP.textMuted)
+                            .frame(width: 32, height: 32)
                     }
-                    .accessibilityLabel("Scan a receipt")
+                    .buttonStyle(.plain)
+                    .disabled(readingReceipt)
+                    .accessibilityLabel("Photograph a receipt")
                 }
                 HStack(alignment: .firstTextBaseline) {
                     AmountField(cents: $cents, size: 34)
@@ -195,6 +205,11 @@ struct HomeComposer: View {
                         .foregroundStyle(SNP.textMuted)
                 }
                 .buttonStyle(.plain)
+                if receiptMiss {
+                    Text("Couldn’t read a total. Type the bill or try another photo.")
+                        .font(.subheadline)
+                        .foregroundStyle(SNP.textMuted)
+                }
                 if canPost {
                     Text(confirmLine)
                         .font(.subheadline)
@@ -299,28 +314,41 @@ struct HomeComposer: View {
     }
 
     private func applyReceipt(_ result: ReceiptReader.Result) {
+        receiptMiss = false
         note = result.merchant
         parsedTitle = result.merchant
         cents = result.cents
-        category = .dinner
+        category = BillParser.parse(result.merchant, people: service.people).category
+        if category == .other { category = .dinner }
         fromAssist = true
         confirmed = false
     }
 
     private func readPicker(_ item: PhotosPickerItem) async {
         readingReceipt = true
-        defer { readingReceipt = false }
+        defer {
+            readingReceipt = false
+            photoItem = nil
+        }
         guard let data = try? await item.loadTransferable(type: Data.self),
               let image = UIImage(data: data)
-        else { return }
+        else {
+            receiptMiss = true
+            return
+        }
         await readImage(image)
     }
 
     private func readImage(_ image: UIImage) async {
         readingReceipt = true
-        defer { readingReceipt = false }
+        defer {
+            readingReceipt = false
+            cameraImage = nil
+        }
         if let result = await ReceiptReader.extract(from: image) {
             applyReceipt(result)
+        } else {
+            receiptMiss = true
         }
     }
 
@@ -342,6 +370,7 @@ struct HomeComposer: View {
         fromAssist = false
         confirmed = false
         isRecurring = false
+        receiptMiss = false
         onCreated(payment)
     }
 }

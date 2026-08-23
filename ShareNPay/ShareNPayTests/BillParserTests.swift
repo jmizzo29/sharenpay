@@ -1,3 +1,4 @@
+import SwiftData
 import XCTest
 @testable import ShareNPay
 
@@ -32,6 +33,14 @@ final class BillParserTests: XCTestCase {
         XCTAssertEqual(draft.personIDs.count, 3)
     }
 
+    func testParsesWifiAsMonthly() {
+        let draft = BillParser.parse("wifi 80 with Maya", people: people)
+        XCTAssertEqual(draft.cents, 8_000)
+        XCTAssertEqual(draft.category, .internet)
+        XCTAssertTrue(draft.isRecurring)
+        XCTAssertEqual(draft.title, "Wifi")
+    }
+
     func testParseMoney() {
         XCTAssertEqual(BillParser.parseMoney("$1,800"), 180_000)
         XCTAssertEqual(BillParser.parseMoney("86.40"), 8_640)
@@ -48,6 +57,10 @@ final class BillParserTests: XCTestCase {
         ])
         XCTAssertEqual(result?.merchant, "RED IGUANA")
         XCTAssertEqual(result?.cents, 8_640)
+    }
+
+    func testReceiptWithoutMoneyReturnsNil() {
+        XCTAssertNil(ReceiptReader.extract(fromLines: ["Thanks for visiting"]))
     }
 
     func testSettleNotePrefillsShare() {

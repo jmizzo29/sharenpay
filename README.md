@@ -90,6 +90,7 @@ Opening Venmo / PayPal / Cash App / Zelle prefills `April rent · your share $90
 - Not locked to one household. Rent with roommates is one kind of bill, not the product.
 - Not a social Venmo feed.
 - No email/password auth.
+- Not a chatbot. The composer parses a bill line. It does not chat.
 
 ## Mock vs real money
 

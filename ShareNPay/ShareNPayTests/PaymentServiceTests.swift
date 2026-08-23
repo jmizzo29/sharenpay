@@ -33,6 +33,8 @@ final class PaymentServiceTests: XCTestCase {
 
         let rent = try XCTUnwrap(service.activity.first { $0.note == "August rent" })
         XCTAssertEqual(Set(rent.participants.map(\.handle)), ["alexrivera", "maya", "jordan"])
+        XCTAssertTrue(rent.isRecurring)
+        XCTAssertNotNil(rent.nextDueAt)
     }
 
     func testBalancesAcrossDifferentGroups() {
