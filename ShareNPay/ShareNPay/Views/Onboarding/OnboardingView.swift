@@ -10,7 +10,7 @@ struct OnboardingView: View {
     var body: some View {
         ZStack {
             SNP.background.ignoresSafeArea()
-            warmGlow
+            coolGlow
             ScrollView {
                 VStack(alignment: .leading, spacing: 28) {
                     header
@@ -26,9 +26,9 @@ struct OnboardingView: View {
         }
     }
 
-    private var warmGlow: some View {
+    private var coolGlow: some View {
         LinearGradient(
-            colors: [SNP.coral.opacity(0.22), .clear, SNP.amber.opacity(0.12)],
+            colors: [SNP.accent.opacity(0.16), .clear, SNP.positive.opacity(0.08)],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
@@ -54,7 +54,7 @@ struct OnboardingView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Label("How a share works", systemImage: "quote.opening")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(SNP.coral)
+                    .foregroundStyle(SNP.accent)
                 step("1", "Write a short note, pick a category, add people.")
                 step("2", "Split evenly. Everyone sees who owes whom.")
                 step("3", "Discuss, agree, approve — then settle the mock ledger.")
@@ -68,7 +68,7 @@ struct OnboardingView: View {
                 .font(.system(size: 13, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)
                 .frame(width: 22, height: 22)
-                .background(SNP.coral, in: Circle())
+                .background(SNP.accent, in: Circle())
             Text(text)
                 .font(.subheadline)
                 .foregroundStyle(SNP.text)
@@ -114,7 +114,7 @@ struct OnboardingView: View {
                 .padding(.vertical, 16)
         }
         .buttonStyle(.borderedProminent)
-        .tint(SNP.coral)
+        .tint(SNP.accent)
         .disabled(name.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
     }
 

@@ -21,7 +21,7 @@ struct AvatarView: View {
 
     private var fill: Color {
         if person.isCurrentUser { return SNP.youTint }
-        return Color(hue: person.hue, saturation: 0.48, brightness: 0.72)
+        return Color(hue: person.hue, saturation: 0.40, brightness: 0.58)
     }
 }
 

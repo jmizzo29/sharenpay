@@ -20,7 +20,7 @@ struct RootView: View {
                 SNP.background.ignoresSafeArea()
             }
         }
-        .tint(SNP.coral)
+        .tint(SNP.accent)
         .onAppear {
             if service == nil {
                 let created = PaymentService(context: context)

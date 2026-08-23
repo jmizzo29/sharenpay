@@ -15,7 +15,7 @@ You need a Mac with **Xcode 15 or later** and the **iOS 17+** simulator.
 
 On first launch the app seeds a demo table: roommates, friends, family, and Rio Grande Salon. Sign in with any display name — it stays on the device.
 
-Light and dark mode follow the system appearance.
+Light and dark mode follow the system appearance. The UI is a cool slate scheme: blue accent `#2563EB`, teal for money owed to you `#0F766E`, background `#F4F6F8`, and slate text. Dark mode is cool slate, not brown.
 
 To run the ledger tests in Xcode: Product → Test (the **ShareNPayTests** target).
 
@@ -61,6 +61,25 @@ SwiftUI + SwiftData + a small `PaymentService`, as hypothesized.
 Statuses: **pending** (still talking) → **agreed** (everyone who must approve has tapped Agree) → **settled** (mock ledger closed).
 
 That conversation-and-approval loop is the product. The public-feed model is the thing this rebuild refuses to become.
+
+## Palette
+
+Cool and clean. Tokens live in `ShareNPay/Theme/Palette.swift`.
+
+| Token | Hex | Use |
+| --- | --- | --- |
+| Accent / primary | `#2563EB` | Wordmark N, buttons, you-owe, selection |
+| Accent deep | `#1D4ED8` | Agreed state, stronger actions |
+| Positive | `#0F766E` | Owed to you, settled |
+| Background | `#F4F6F8` | App canvas |
+| Card | `#FFFFFF` | Surfaces |
+| Sand fill | `#E8EDF2` | Quiet fills |
+| Text | `#0F172A` | Primary type |
+| Text muted | `#64748B` | Secondary type |
+| Hairline | `#E2E8F0` | Borders |
+| You tint | `#1D4ED8` | Current-user avatar |
+
+Dark mode uses cool slate (`#0B1220` canvas, `#1E293B` cards), not warm brown.
 
 ## Project layout
 

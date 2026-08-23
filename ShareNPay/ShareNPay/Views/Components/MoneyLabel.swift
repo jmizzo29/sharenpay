@@ -18,8 +18,8 @@ struct MoneyLabel: View {
     private var color: Color {
         if let tint { return tint }
         guard signed else { return SNP.text }
-        if cents > 0 { return SNP.sage }
-        if cents < 0 { return SNP.coral }
+        if cents > 0 { return SNP.positive }
+        if cents < 0 { return SNP.accent }
         return SNP.textMuted
     }
 

@@ -108,7 +108,7 @@ struct ComposerView: View {
                         }
                         Spacer()
                         Image(systemName: selected.contains(person.id) ? "checkmark.circle.fill" : "circle")
-                            .foregroundStyle(selected.contains(person.id) ? SNP.coral : SNP.hairline)
+                            .foregroundStyle(selected.contains(person.id) ? SNP.accent : SNP.hairline)
                             .font(.title3)
                     }
                     .padding(10)
@@ -131,7 +131,7 @@ struct ComposerView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text("Even split")
                     .font(.subheadline.weight(.semibold))
-                    .foregroundStyle(SNP.coral)
+                    .foregroundStyle(SNP.accent)
                 if selected.isEmpty {
                     Text("Add at least one friend, family member, or business.")
                         .font(.subheadline)
@@ -167,7 +167,7 @@ struct ComposerView: View {
                 .padding(.vertical, 14)
         }
         .buttonStyle(.borderedProminent)
-        .tint(SNP.coral)
+        .tint(SNP.accent)
         .disabled(!canPost)
         .padding(.bottom, 8)
     }

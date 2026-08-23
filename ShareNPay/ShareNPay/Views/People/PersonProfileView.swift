@@ -88,7 +88,7 @@ struct PersonProfileView: View {
                     .padding(.vertical, 12)
             }
             .buttonStyle(.borderedProminent)
-            .tint(SNP.coral)
+            .tint(SNP.accent)
             Button {
                 compose = .request
             } label: {
@@ -97,7 +97,7 @@ struct PersonProfileView: View {
                     .padding(.vertical, 12)
             }
             .buttonStyle(.bordered)
-            .tint(SNP.espressoSoft)
+            .tint(SNP.textMuted)
             if service.netCents(with: person) != 0 {
                 Button {
                     confirmSettle = true
@@ -107,7 +107,7 @@ struct PersonProfileView: View {
                         .padding(.horizontal, 8)
                 }
                 .buttonStyle(.bordered)
-                .tint(SNP.sage)
+                .tint(SNP.positive)
                 .accessibilityLabel("Settle up")
             }
         }

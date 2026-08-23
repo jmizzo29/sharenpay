@@ -45,7 +45,7 @@ struct PayRequestView: View {
                                 .padding(.vertical, 14)
                         }
                         .buttonStyle(.borderedProminent)
-                        .tint(SNP.coral)
+                        .tint(SNP.accent)
                         .disabled(!canSubmit)
                     }
                     .padding(20)
@@ -99,7 +99,7 @@ struct PayRequestView: View {
                         }
                         Spacer()
                         Image(systemName: personID == person.id ? "checkmark.circle.fill" : "circle")
-                            .foregroundStyle(personID == person.id ? SNP.coral : SNP.hairline)
+                            .foregroundStyle(personID == person.id ? SNP.accent : SNP.hairline)
                     }
                     .padding(10)
                     .background(SNP.card, in: RoundedRectangle(cornerRadius: 16, style: .continuous))

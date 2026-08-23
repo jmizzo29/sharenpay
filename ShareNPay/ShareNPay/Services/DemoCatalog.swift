@@ -21,7 +21,7 @@ enum DemoCatalog {
             displayName: displayName,
             handle: handle(from: displayName),
             kind: .you,
-            hue: 0.58,
+            hue: 0.62,
             blurb: "Salt Lake City · sharing the table since 2010",
             isCurrentUser: true
         )
@@ -30,7 +30,7 @@ enum DemoCatalog {
             displayName: "Maya Chen",
             handle: "maya",
             kind: .friend,
-            hue: 0.08,
+            hue: 0.56,
             blurb: "Roommate on 300 West. Pays rent like clockwork — after the thread."
         )
         let jordan = Person(
@@ -38,7 +38,7 @@ enum DemoCatalog {
             displayName: "Jordan Hale",
             handle: "jordan",
             kind: .friend,
-            hue: 0.18,
+            hue: 0.60,
             blurb: "Dinner captain. Always down for Red Iguana."
         )
         let priya = Person(
@@ -46,7 +46,7 @@ enum DemoCatalog {
             displayName: "Priya Shah",
             handle: "priya",
             kind: .friend,
-            hue: 0.78,
+            hue: 0.70,
             blurb: "Plans the cabin. Collects the deposit. Keeps the group honest."
         )
         let luis = Person(
@@ -54,7 +54,7 @@ enum DemoCatalog {
             displayName: "Luis Ortega",
             handle: "luis",
             kind: .friend,
-            hue: 0.38,
+            hue: 0.48,
             blurb: "Sunday league treasurer and unofficial DJ."
         )
         let elena = Person(
@@ -62,7 +62,7 @@ enum DemoCatalog {
             displayName: "Elena Mitchell",
             handle: "elena",
             kind: .family,
-            hue: 0.92,
+            hue: 0.66,
             blurb: "Family. Birthday flowers, holiday gas, the quiet IOUs."
         )
         let salon = Person(
@@ -70,7 +70,7 @@ enum DemoCatalog {
             displayName: "Rio Grande Salon",
             handle: "riograndesalon",
             kind: .business,
-            hue: 0.88,
+            hue: 0.54,
             blurb: "Independent salon on Rio Grande. Book, split, settle — no front-desk math."
         )
 

@@ -8,7 +8,7 @@ struct Wordmark: View {
         HStack(spacing: 0) {
             Text("Share")
             Text("N")
-                .foregroundStyle(SNP.coral)
+                .foregroundStyle(SNP.accent)
             Text("Pay")
         }
         .font(.system(size: size, weight: .bold, design: .rounded))
@@ -24,9 +24,9 @@ struct BrandMark: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: size * 0.28, style: .continuous)
-                .fill(SNP.coral.gradient)
+                .fill(SNP.accent.gradient)
                 .frame(width: size, height: size)
-                .shadow(color: SNP.coral.opacity(0.35), radius: 12, y: 6)
+                .shadow(color: SNP.accent.opacity(0.35), radius: 12, y: 6)
             Text("N")
                 .font(.system(size: size * 0.52, weight: .bold, design: .rounded))
                 .foregroundStyle(.white)

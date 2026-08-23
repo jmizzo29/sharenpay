@@ -113,7 +113,7 @@ struct PaymentDetailView: View {
                     .padding(.vertical, 12)
             }
             .buttonStyle(.borderedProminent)
-            .tint(Color(hex: 0x2F6F8F))
+            .tint(SNP.accentDeep)
         }
 
         if service.canSettle(payment) {
@@ -127,7 +127,7 @@ struct PaymentDetailView: View {
                     .padding(.vertical, 12)
             }
             .buttonStyle(.borderedProminent)
-            .tint(SNP.sage)
+            .tint(SNP.positive)
         }
 
         if payment.status == .settled {
@@ -193,7 +193,7 @@ struct PaymentDetailView: View {
                         .padding(.horizontal, 12)
                         .padding(.vertical, 10)
                         .background(
-                            mine ? SNP.coral : SNP.card,
+                            mine ? SNP.accent : SNP.card,
                             in: RoundedRectangle(cornerRadius: 16, style: .continuous)
                         )
                     Text(message.createdAt.formatted(date: .omitted, time: .shortened))
@@ -218,7 +218,7 @@ struct PaymentDetailView: View {
             } label: {
                 Image(systemName: "arrow.up.circle.fill")
                     .font(.system(size: 32))
-                    .foregroundStyle(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? SNP.hairline : SNP.coral)
+                    .foregroundStyle(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ? SNP.hairline : SNP.accent)
             }
             .disabled(draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             .accessibilityLabel("Send")

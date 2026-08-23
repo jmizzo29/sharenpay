@@ -65,8 +65,8 @@ struct BalancesView: View {
 
     private var totals: some View {
         HStack(spacing: 12) {
-            totalCard("You owe", service.youOweTotal(), SNP.coral)
-            totalCard("Owed to you", service.owedToYouTotal(), SNP.sage)
+            totalCard("You owe", service.youOweTotal(), SNP.accent)
+            totalCard("Owed to you", service.owedToYouTotal(), SNP.positive)
         }
     }
 
@@ -135,7 +135,7 @@ struct BalancesView: View {
                                     .padding(.vertical, 10)
                             }
                             .buttonStyle(.borderedProminent)
-                            .tint(row.cents > 0 ? SNP.sage : SNP.coral)
+                            .tint(row.cents > 0 ? SNP.positive : SNP.accent)
                         }
                     }
                 }

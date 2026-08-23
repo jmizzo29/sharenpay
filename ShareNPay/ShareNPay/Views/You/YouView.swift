@@ -82,7 +82,7 @@ struct YouView: View {
                         .foregroundStyle(SNP.textMuted)
                 }
             }
-            .tint(SNP.coral)
+            .tint(SNP.accent)
             .onChange(of: notifications) { _, value in
                 service.updateProfile(displayName: name, notificationsEnabled: value)
             }
@@ -120,7 +120,7 @@ struct YouView: View {
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 12)
                 .background(SNP.card, in: RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .foregroundStyle(SNP.coral)
+                .foregroundStyle(SNP.accent)
         }
     }
 }

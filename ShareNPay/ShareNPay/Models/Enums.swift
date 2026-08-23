@@ -76,13 +76,13 @@ enum ExpenseCategory: String, Codable, CaseIterable, Identifiable {
 
     var tint: Color {
         switch self {
-        case .rent: Color(hex: 0xC4784A)
-        case .restaurant: Color(hex: 0xD4533C)
-        case .salon: Color(hex: 0xC06A8A)
-        case .vacation: Color(hex: 0x3D8B8B)
-        case .club: Color(hex: 0x4A7C59)
-        case .friendsFamily: SNP.coral
-        case .other: SNP.gold
+        case .rent: Color(hex: 0x475569)
+        case .restaurant: Color(hex: 0x0369A1)
+        case .salon: Color(hex: 0x4F46E5)
+        case .vacation: Color(hex: 0x0E7490)
+        case .club: SNP.positive
+        case .friendsFamily: SNP.accent
+        case .other: Color(hex: 0x64748B)
         }
     }
 }
@@ -128,9 +128,9 @@ enum PaymentStatus: String, Codable, CaseIterable, Identifiable {
 
     var tint: Color {
         switch self {
-        case .pending: SNP.gold
-        case .agreed: Color(hex: 0x2F6F8F)
-        case .settled: SNP.sage
+        case .pending: SNP.pending
+        case .agreed: SNP.accentDeep
+        case .settled: SNP.positive
         }
     }
 

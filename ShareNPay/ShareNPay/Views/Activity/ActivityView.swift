@@ -38,7 +38,7 @@ struct ActivityView: View {
                     } label: {
                         Image(systemName: "plus.circle.fill")
                             .font(.title2)
-                            .foregroundStyle(SNP.coral)
+                            .foregroundStyle(SNP.accent)
                             .accessibilityLabel("New share")
                     }
                 }
@@ -86,12 +86,12 @@ struct ActivityView: View {
             snapshotCard(
                 title: "You owe",
                 cents: service.youOweTotal(),
-                tint: SNP.coral
+                tint: SNP.accent
             )
             snapshotCard(
                 title: "Owed to you",
                 cents: service.owedToYouTotal(),
-                tint: SNP.sage
+                tint: SNP.positive
             )
         }
     }
