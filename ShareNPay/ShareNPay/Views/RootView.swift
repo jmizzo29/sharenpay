@@ -4,35 +4,70 @@ import UIKit
 
 struct RootView: View {
     @Environment(\.modelContext) private var context
-    @Query private var accounts: [AppAccount]
+    @Environment(SessionStore.self) private var session
     @State private var service: PaymentService?
+    @State private var lastUID: String?
 
     var body: some View {
         Group {
-            if let service {
-                if accounts.first?.hasCompletedOnboarding == true {
-                    MainTabs()
-                        .environment(service)
-                } else {
-                    OnboardingView()
-                        .environment(service)
-                }
-            } else {
+            switch session.phase {
+            case .checking:
                 SNP.background.ignoresSafeArea()
+            case .needsSetup:
+                SetupView(reason: FirebaseConfig.missingReason)
+            case .signedOut:
+                SignInView()
+                    .environment(session)
+            case .signedIn:
+                if let service {
+                    if service.isHydrating {
+                        loading
+                    } else {
+                        MainTabs()
+                            .environment(service)
+                            .environment(session)
+                    }
+                } else {
+                    loading
+                }
             }
         }
         .tint(SNP.accent)
         .onAppear {
+            session.start()
             if service == nil {
-                let created = PaymentService(context: context)
-                created.ensureSeeded()
-                if created.account?.hasCompletedOnboarding != true {
-                    created.completeOnboarding(
-                        displayName: created.currentUser?.displayName ?? "Alex Rivera"
-                    )
-                }
-                service = created
+                service = PaymentService(context: context)
             }
+            Task { await handle(session.phase) }
+        }
+        .onChange(of: session.phase) { _, phase in
+            Task { await handle(phase) }
+        }
+    }
+
+    private var loading: some View {
+        ZStack {
+            SNP.background.ignoresSafeArea()
+            VStack(spacing: 16) {
+                Wordmark(size: 28)
+                Text("Loading your bills")
+                    .font(.subheadline)
+                    .foregroundStyle(SNP.textMuted)
+            }
+        }
+    }
+
+    private func handle(_ phase: SessionStore.Phase) async {
+        switch phase {
+        case .signedIn(let user):
+            guard lastUID != user.uid else { return }
+            lastUID = user.uid
+            await service?.hydrateFromCloud(user: user)
+        case .signedOut, .needsSetup:
+            lastUID = nil
+            service?.clearLocal()
+        case .checking:
+            break
         }
     }
 }

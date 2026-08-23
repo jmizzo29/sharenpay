@@ -22,8 +22,13 @@ extension View {
     @MainActor
     func previewShareNPay(onboarded: Bool = true) -> some View {
         let pair = PreviewContainer.make(onboarded: onboarded)
+        let session = SessionStore()
+        session.phase = .signedIn(
+            SignedInUser(uid: "preview", email: "alex@example.com", displayName: "Alex Rivera")
+        )
         return self
             .modelContainer(pair.0)
             .environment(pair.1)
+            .environment(session)
     }
 }

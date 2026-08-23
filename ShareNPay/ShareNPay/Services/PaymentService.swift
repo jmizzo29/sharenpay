@@ -6,6 +6,10 @@ import SwiftData
 @Observable
 final class PaymentService {
     let context: ModelContext
+    var isHydrating = false
+    var cloudError: String?
+    var cloudUID = ""
+    var cloudEmail = ""
 
     init(context: ModelContext) {
         self.context = context
@@ -316,14 +320,7 @@ final class PaymentService {
         let displayName = name ?? currentUser?.displayName ?? "Alex Rivera"
         let onboarded = account?.hasCompletedOnboarding ?? false
         let notifications = account?.notificationsEnabled ?? true
-
-        ((try? context.fetch(FetchDescriptor<ThreadMessage>())) ?? []).forEach(context.delete)
-        ((try? context.fetch(FetchDescriptor<SplitShare>())) ?? []).forEach(context.delete)
-        ((try? context.fetch(FetchDescriptor<Payment>())) ?? []).forEach(context.delete)
-        ((try? context.fetch(FetchDescriptor<Person>())) ?? []).forEach(context.delete)
-        ((try? context.fetch(FetchDescriptor<AppAccount>())) ?? []).forEach(context.delete)
-        save()
-
+        wipeLocal()
         DemoCatalog.seed(into: context, displayName: displayName)
         if let user = currentUser {
             user.displayName = displayName
@@ -338,8 +335,135 @@ final class PaymentService {
         save()
     }
 
-    func save() {
+    func clearLocal() {
+        wipeLocal()
+        cloudUID = ""
+        cloudEmail = ""
+        save(syncCloud: false)
+    }
+
+    func hydrateFromCloud(user: SignedInUser) async {
+        isHydrating = true
+        cloudError = nil
+        defer { isHydrating = false }
+        cloudUID = user.uid
+        cloudEmail = user.email
+        guard CloudStore.shared.isAvailable else { return }
+        do {
+            let snapshot = try await CloudStore.shared.pullLedger()
+            if snapshot.isNewAccount || snapshot.people.isEmpty {
+                wipeLocal()
+                ensureSeeded(defaultName: user.displayName)
+                completeOnboarding(displayName: user.displayName)
+                return
+            }
+            apply(snapshot, displayName: user.displayName)
+            save(syncCloud: false)
+        } catch {
+            cloudError = error.localizedDescription
+        }
+    }
+
+    func save(syncCloud: Bool = true) {
         try? context.save()
+        guard syncCloud, CloudStore.shared.isAvailable, !cloudUID.isEmpty else { return }
+        let snapshot = exportSnapshot()
+        Task { [snapshot] in
+            do {
+                try await CloudStore.shared.pushLedger(snapshot)
+            } catch {
+                cloudError = error.localizedDescription
+            }
+        }
+    }
+
+    func exportSnapshot() -> LedgerSnapshot {
+        let profile = CloudProfile(
+            uid: cloudUID,
+            email: cloudEmail,
+            displayName: currentUser?.displayName ?? account?.displayName ?? "You",
+            notificationsEnabled: account?.notificationsEnabled ?? true,
+            seeded: true
+        )
+        return CloudCodec.snapshot(people: people, payments: activity, profile: profile)
+    }
+
+    private func apply(_ snapshot: LedgerSnapshot, displayName: String) {
+        wipeLocal()
+        var byID: [UUID: Person] = [:]
+        for record in snapshot.people {
+            guard let id = UUID(uuidString: record.id) else { continue }
+            let person = Person(
+                id: id,
+                displayName: record.isCurrentUser ? displayName : record.displayName,
+                handle: record.handle,
+                kind: PersonKind(rawValue: record.kind) ?? .friend,
+                hue: record.hue,
+                blurb: record.blurb,
+                isCurrentUser: record.isCurrentUser,
+                venmoHandle: record.venmoHandle,
+                cashTag: record.cashTag,
+                paypalHandle: record.paypalHandle,
+                zelleHint: record.zelleHint
+            )
+            context.insert(person)
+            byID[id] = person
+        }
+        for record in snapshot.bills {
+            guard let id = UUID(uuidString: record.id) else { continue }
+            let participants = record.participantIds.compactMap { UUID(uuidString: $0) }.compactMap { byID[$0] }
+            let payer = record.payerId.flatMap(UUID.init(uuidString:)).flatMap { byID[$0] }
+            let payment = Payment(
+                id: id,
+                note: record.note,
+                amountCents: record.amountCents,
+                category: ExpenseCategory(rawValue: record.category) ?? .other,
+                kind: PaymentKind(rawValue: record.kind) ?? .sharedExpense,
+                status: PaymentStatus(rawValue: record.status) ?? .pending,
+                createdAt: Date(timeIntervalSince1970: record.createdAt),
+                payer: payer,
+                participants: participants
+            )
+            payment.settledAt = record.settledAt.map { Date(timeIntervalSince1970: $0) }
+            context.insert(payment)
+            for share in record.splits {
+                guard let personID = UUID(uuidString: share.personId), let person = byID[personID] else { continue }
+                let split = SplitShare(
+                    amountCents: share.amountCents,
+                    person: person,
+                    agreed: share.agreed,
+                    settled: share.settled
+                )
+                split.payment = payment
+                context.insert(split)
+            }
+            for message in record.messages {
+                let author = message.authorId.flatMap(UUID.init(uuidString:)).flatMap { byID[$0] }
+                let thread = ThreadMessage(
+                    body: message.body,
+                    author: author,
+                    createdAt: Date(timeIntervalSince1970: message.createdAt),
+                    isSystem: message.isSystem
+                )
+                thread.payment = payment
+                context.insert(thread)
+            }
+        }
+        let account = AppAccount(
+            displayName: displayName,
+            handle: DemoCatalog.handle(from: displayName),
+            notificationsEnabled: snapshot.profile?.notificationsEnabled ?? true,
+            hasCompletedOnboarding: true
+        )
+        context.insert(account)
+    }
+
+    private func wipeLocal() {
+        ((try? context.fetch(FetchDescriptor<ThreadMessage>())) ?? []).forEach(context.delete)
+        ((try? context.fetch(FetchDescriptor<SplitShare>())) ?? []).forEach(context.delete)
+        ((try? context.fetch(FetchDescriptor<Payment>())) ?? []).forEach(context.delete)
+        ((try? context.fetch(FetchDescriptor<Person>())) ?? []).forEach(context.delete)
+        ((try? context.fetch(FetchDescriptor<AppAccount>())) ?? []).forEach(context.delete)
     }
 
     private func refreshPaid(_ payment: Payment) {

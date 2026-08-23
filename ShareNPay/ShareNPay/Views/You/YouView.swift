@@ -2,6 +2,7 @@ import SwiftUI
 
 struct YouView: View {
     @Environment(PaymentService.self) private var service
+    @Environment(SessionStore.self) private var session
     @Environment(\.dismiss) private var dismiss
     @State private var name = ""
     @State private var notifications = true
@@ -20,6 +21,11 @@ struct YouView: View {
                                 notificationsEnabled: notifications
                             )
                         }
+                    if !service.cloudEmail.isEmpty {
+                        Text(service.cloudEmail)
+                            .font(.subheadline)
+                            .foregroundStyle(SNP.textMuted)
+                    }
                     Toggle("Reminders", isOn: $notifications)
                         .tint(SNP.accent)
                         .onChange(of: notifications) { _, value in
@@ -27,13 +33,25 @@ struct YouView: View {
                         }
                 }
                 Section {
-                    Text("ShareNPay does the split. It does not take the money. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid.")
+                    Text("ShareNPay does the split. It does not take the money. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid. Bills are stored on your Google account.")
                         .font(.body)
                         .foregroundStyle(SNP.textMuted)
                         .listRowBackground(Color.clear)
                 }
+                if let cloudError = service.cloudError, !cloudError.isEmpty {
+                    Section {
+                        Text(cloudError)
+                            .font(.subheadline)
+                            .foregroundStyle(SNP.textMuted)
+                    }
+                }
                 Section {
                     Button("Reset demo data") { confirmReset = true }
+                    Button("Sign out", role: .destructive) {
+                        service.clearLocal()
+                        session.signOut()
+                        dismiss()
+                    }
                 }
             }
             .listStyle(.plain)
@@ -56,7 +74,7 @@ struct YouView: View {
                 }
                 Button("Cancel", role: .cancel) {}
             } message: {
-                Text("Restores Maya, Jordan, Priya, and the sample bills.")
+                Text("Restores Maya, Jordan, Priya, and the sample bills, then writes them to your Google account.")
             }
         }
     }
