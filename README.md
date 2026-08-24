@@ -125,6 +125,9 @@ ShareNPay/ShareNPay.xcodeproj
 ShareNPay/ShareNPay/
 ShareNPay/ShareNPayTests/
 firebase/firestore.rules
+web/
 ```
+
+The marketing site lives in `web/`.
 
 Bundle ID: `com.sharenpay.app`. iOS 17. iPhone only.

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ShareNPay — Know who owes whom</title>
+  <meta name="description" content="Roommates, rent, utilities, dinner. We do the math. You settle on Venmo, Zelle, Cash App, or PayPal. ShareNPay never processes the payment.">
+  <meta name="theme-color" content="#ffffff">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23111111'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='-apple-system,sans-serif' font-size='14' font-weight='700' fill='%23ffffff'%3ES%3C/text%3E%3C/svg%3E">
+  <style>
+    :root {
+      --white: #ffffff;
+      --ink: #111111;
+      --mute: #8E8E93;
+      --owed: #0A7A4B;
+      --hair: #E8E8E8;
+      --wash: #F2F2F2;
+      --max: 1120px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--white);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
+      font-size: 17px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .wrap {
+      width: min(var(--max), calc(100% - 48px));
+      margin-inline: auto;
+    }
+
+    /* ——— Nav ——— */
+    header.site {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: saturate(1.4) blur(16px);
+      border-bottom: 1px solid transparent;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .wordmark {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    nav.links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    nav.links a:not(.pill):hover { color: var(--mute); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      height: 36px;
+      padding: 0 16px;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .pill.ghost {
+      background: transparent;
+      color: var(--ink);
+      height: auto;
+      padding: 0;
+      font-weight: 500;
+    }
+
+    /* ——— Hero ——— */
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 280px;
+      gap: 80px;
+      align-items: center;
+      padding: 88px 0 108px;
+    }
+
+    .hero h1 {
+      margin: 0 0 22px;
+      font-size: clamp(44px, 6.4vw, 80px);
+      font-weight: 700;
+      letter-spacing: -0.045em;
+      line-height: 0.96;
+    }
+
+    .lede {
+      margin: 0;
+      max-width: 34ch;
+      font-size: 20px;
+      line-height: 1.45;
+      color: var(--mute);
+    }
+
+    .lede strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .hero-visual {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .open-link {
+      font-size: 13px;
+      color: var(--mute);
+    }
+
+    .open-link:hover { color: var(--ink); }
+
+    /* ——— CSS iPhone ——— */
+    .phone {
+      position: relative;
+      width: 280px;
+      height: 572px;
+      padding: 10px;
+      border-radius: 42px;
+      background: #1a1a1a;
+      box-shadow:
+        0 0 0 1px #0a0a0a,
+        0 28px 60px rgba(17, 17, 17, 0.18);
+    }
+
+    .phone.sm {
+      width: 210px;
+      height: 429px;
+      padding: 8px;
+      border-radius: 34px;
+    }
+
+    .glass {
+      position: relative;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 32px;
+      background: var(--white);
+    }
+
+    .phone.sm .glass { border-radius: 26px; }
+
+    .notch {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      z-index: 3;
+      width: 96px;
+      height: 22px;
+      transform: translateX(-50%);
+      border-radius: 0 0 16px 16px;
+      background: #1a1a1a;
+    }
+
+    .phone.sm .notch {
+      width: 74px;
+      height: 16px;
+      border-radius: 0 0 12px 12px;
+    }
+
+    .status {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 18px 0;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .phone.sm .status { padding: 9px 14px 0; font-size: 9px; }
+
+    .status .glyphs {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .bar {
+      display: inline-block;
+      width: 14px;
+      height: 8px;
+      border: 1.2px solid var(--ink);
+      border-radius: 2px;
+      position: relative;
+    }
+
+    .bar::after {
+      content: "";
+      position: absolute;
+      inset: 1.5px 4px 1.5px 1.5px;
+      background: var(--ink);
+    }
+
+    .screen {
+      display: flex;
+      flex-direction: column;
+      height: calc(100% - 26px);
+      padding: 8px 16px 0;
+    }
+
+    .phone.sm .screen { padding: 6px 13px 0; height: calc(100% - 20px); }
+
+    .appbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 18px;
+    }
+
+    .appbar .name {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .avatar {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 8px;
+      font-weight: 700;
+      display: grid;
+      place-items: center;
+    }
+
+    .you-owe {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--mute);
+    }
+
+    .hero-fig {
+      margin: 4px 0 18px;
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      font-variant-numeric: tabular-nums;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    .composer {
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--hair);
+    }
+
+    .composer .ask {
+      font-size: 13px;
+      color: #c7c7cc;
+    }
+
+    .composer .acts {
+      display: flex;
+      gap: 16px;
+      margin-top: 8px;
+      font-size: 12px;
+      color: var(--mute);
+    }
+
+    .feed { flex: 1; min-height: 0; }
+
+    .row {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 11px 0;
+      border-bottom: 1px solid var(--hair);
+    }
+
+    .row .title {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .row .meta {
+      margin-top: 3px;
+      font-size: 10px;
+      color: var(--mute);
+    }
+
+    .row .amt {
+      font-size: 14px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, sans-serif;
+      white-space: nowrap;
+    }
+
+    .row .amt.plus { color: var(--owed); }
+
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      padding: 8px 0 14px;
+      border-top: 1px solid var(--hair);
+    }
+
+    .tabs span {
+      text-align: center;
+      font-size: 9px;
+      color: var(--mute);
+    }
+
+    .tabs span.on { color: var(--ink); font-weight: 600; }
+
+    .home-pip {
+      width: 96px;
+      height: 4px;
+      margin: 0 auto 6px;
+      border-radius: 999px;
+      background: var(--ink);
+    }
+
+    /* ——— Beats ——— */
+    .beats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 48px;
+      padding: 8px 0 96px;
+    }
+
+    .beats h2 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .beats p {
+      margin: 0;
+      color: var(--mute);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .pair {
+      display: flex;
+      gap: 20px;
+      margin-top: 18px;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, sans-serif;
+      font-variant-numeric: tabular-nums;
+      font-weight: 700;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
+
+    .pair .plus { color: var(--owed); }
+
+    /* ——— Line ——— */
+    .line {
+      padding: 24px 0 108px;
+      max-width: 22ch;
+    }
+
+    .line h2 {
+      margin: 0 0 14px;
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .line p {
+      margin: 0;
+      color: var(--mute);
+      font-size: 18px;
+      line-height: 1.5;
+      max-width: 36ch;
+    }
+
+    /* ——— Product ——— */
+    .product {
+      background: var(--wash);
+      padding: 88px 0;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 64px;
+      align-items: center;
+    }
+
+    .product h2 {
+      margin: 0 0 16px;
+      font-size: clamp(36px, 5vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .product p.blurb {
+      margin: 0 0 28px;
+      max-width: 38ch;
+      color: var(--mute);
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    .cta-row {
+      display: flex;
+      align-items: center;
+      gap: 22px;
+    }
+
+    .cta-row .pill { height: 44px; padding: 0 20px; font-size: 15px; }
+
+    .cta-row a.how { font-size: 15px; color: var(--ink); }
+
+    .pair-phones {
+      display: flex;
+      gap: 20px;
+    }
+
+    .sm-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+
+    .typed {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--hair);
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .chip {
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: var(--wash);
+      font-size: 10px;
+      font-weight: 600;
+    }
+
+    .detail-kicker {
+      font-size: 10px;
+      color: var(--mute);
+      margin-bottom: 6px;
+    }
+
+    .detail-title {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    .detail-amt {
+      margin: 8px 0 6px;
+      font-size: 22px;
+      font-weight: 700;
+      font-family: ui-rounded, "SF Pro Rounded", -apple-system, sans-serif;
+      letter-spacing: -0.03em;
+    }
+
+    .month {
+      display: inline-block;
+      margin-top: 2px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--hair);
+      font-size: 8px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--mute);
+    }
+
+    .settle {
+      margin-top: 16px;
+      padding-top: 12px;
+      border-top: 1px solid var(--hair);
+    }
+
+    .settle h3 {
+      margin: 0 0 8px;
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: var(--mute);
+    }
+
+    .rails {
+      display: flex;
+      gap: 6px;
+    }
+
+    .rail {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--ink);
+      display: grid;
+      place-items: center;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .mark {
+      margin-top: 10px;
+      width: 100%;
+      height: 30px;
+      border: 0;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    /* ——— Footer ——— */
+    footer.site {
+      border-top: 1px solid var(--hair);
+      padding: 28px 0 40px;
+    }
+
+    .foot {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      font-size: 13px;
+      color: var(--mute);
+    }
+
+    .foot strong { color: var(--ink); font-weight: 700; }
+
+    @media (max-width: 900px) {
+      .hero,
+      .product-grid { grid-template-columns: 1fr; gap: 48px; }
+      .hero { padding: 56px 0 72px; }
+      .beats { grid-template-columns: 1fr; gap: 36px; padding-bottom: 72px; }
+      .line { padding-bottom: 72px; }
+      nav.links a:not(.pill) { display: none; }
+      .pair-phones { justify-content: flex-start; }
+    }
+
+    @media (max-width: 520px) {
+      .wrap { width: min(var(--max), calc(100% - 32px)); }
+      .pair-phones { flex-direction: column; }
+      .foot { flex-direction: column; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site">
+    <div class="wrap nav">
+      <a class="wordmark" href="#top">ShareNPay</a>
+      <nav class="links" aria-label="Primary">
+        <a href="#how">How it works</a>
+        <a href="#app">App</a>
+        <a href="#iphone">iPhone</a>
+        <a class="pill" href="#iphone">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="wrap hero" id="app">
+      <div>
+        <h1>Know who owes whom.</h1>
+        <p class="lede">
+          Roommates, rent, utilities, dinner. We do the math. You settle on
+          <strong>Venmo, Zelle, Cash App, or PayPal.</strong>
+        </p>
+      </div>
+
+      <div class="hero-visual">
+        <figure class="phone" aria-label="ShareNPay on iPhone">
+          <div class="glass">
+            <div class="notch" aria-hidden="true"></div>
+            <div class="status">
+              <span>9:41</span>
+              <span class="glyphs" aria-hidden="true">●●●● <i class="bar"></i></span>
+            </div>
+            <div class="screen">
+              <div class="appbar">
+                <span class="name">ShareNPay</span>
+                <span class="avatar">AR</span>
+              </div>
+              <div class="you-owe">You owe</div>
+              <div class="hero-fig">−$972.40</div>
+              <div class="composer">
+                <div class="ask">What’s the bill?</div>
+                <div class="acts"><span>Pay</span><span>Request</span></div>
+              </div>
+              <div class="feed">
+                <div class="row">
+                  <div>
+                    <div class="title">Moab cabin deposit</div>
+                    <div class="meta">$420 · 4 people · Priya paid</div>
+                  </div>
+                  <div class="amt">−$105.00</div>
+                </div>
+                <div class="row">
+                  <div>
+                    <div class="title">Red Iguana after the game</div>
+                    <div class="meta">$86.40 · 3 people · You paid</div>
+                  </div>
+                  <div class="amt plus">+$57.60</div>
+                </div>
+                <div class="row">
+                  <div>
+                    <div class="title">April rent — the 300 West place</div>
+                    <div class="meta">$1,800 · 2 people · Maya paid</div>
+                  </div>
+                  <div class="amt">−$900.00</div>
+                </div>
+              </div>
+              <div class="tabs" aria-hidden="true">
+                <span class="on">Home</span>
+                <span>Balances</span>
+                <span>People</span>
+              </div>
+              <div class="home-pip" aria-hidden="true"></div>
+            </div>
+          </div>
+        </figure>
+        <a class="open-link" href="#iphone">Open full screen</a>
+      </div>
+    </section>
+
+    <section class="wrap beats" id="how">
+      <article>
+        <h2>Split any bill.</h2>
+        <p>Even split. Leftover pennies on the person who covered it. Rent, a cabin deposit, Sunday league dues.</p>
+      </article>
+      <article>
+        <h2>See your number.</h2>
+        <p>One figure at the top of the house. You owe is black. You’re owed is the only green we use.</p>
+        <div class="pair" aria-label="Example balances">
+          <span>−$972.40</span>
+          <span class="plus">+$57.60</span>
+        </div>
+      </article>
+      <article>
+        <h2>Settle out.</h2>
+        <p>V, Z, $, P — we open the app you already have. Then mark paid. ShareNPay never touches the money.</p>
+      </article>
+    </section>
+
+    <section class="wrap line">
+      <h2>April rent 1800 with Maya</h2>
+      <p>Type a bill in English. We read the people, the amount, the category. Monthly, if that’s how the house works.</p>
+    </section>
+
+    <section class="product" id="iphone">
+      <div class="wrap product-grid">
+        <div>
+          <h2>iPhone is the product.</h2>
+          <p class="blurb">Coming to the App Store. The web preview is live now, so you can tap it today — same ledger, same settle rails.</p>
+          <div class="cta-row">
+            <a class="pill" href="#app">Open the app</a>
+            <a class="how" href="#how">How it works</a>
+          </div>
+        </div>
+
+        <div class="pair-phones">
+          <figure class="phone sm" aria-label="Type a bill in English">
+            <div class="glass">
+              <div class="notch" aria-hidden="true"></div>
+              <div class="status"><span>9:41</span><span class="glyphs">●●●●</span></div>
+              <div class="screen">
+                <div class="sm-label">Type it in</div>
+                <div class="typed">April rent 1800 with Maya</div>
+                <div class="chips">
+                  <span class="chip">Maya</span>
+                  <span class="chip">Jordan</span>
+                  <span class="chip">Luis</span>
+                  <span class="chip">Elena</span>
+                  <span class="chip">Rent</span>
+                  <span class="chip">Monthly</span>
+                </div>
+              </div>
+            </div>
+          </figure>
+
+          <figure class="phone sm" aria-label="Settle April rent outside the app">
+            <div class="glass">
+              <div class="notch" aria-hidden="true"></div>
+              <div class="status"><span>9:41</span><span class="glyphs">●●●●</span></div>
+              <div class="screen">
+                <div class="detail-kicker">Shared expense</div>
+                <div class="detail-title">April rent — the 300 West place</div>
+                <div class="detail-amt">$1,800.00</div>
+                <span class="month">MONTHLY</span>
+                <div class="row" style="margin-top:10px">
+                  <div>
+                    <div class="title">You</div>
+                    <div class="meta">Maya paid the landlord</div>
+                  </div>
+                  <div class="amt">−$900.00</div>
+                </div>
+                <div class="settle">
+                  <h3>SETTLE OUT</h3>
+                  <div class="rails" aria-label="Venmo, Zelle, Cash App, PayPal">
+                    <span class="rail">V</span>
+                    <span class="rail">Z</span>
+                    <span class="rail">$</span>
+                    <span class="rail">P</span>
+                  </div>
+                  <button class="mark" type="button">Mark paid</button>
+                </div>
+              </div>
+            </div>
+          </figure>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site">
+    <div class="wrap foot">
+      <p><strong>ShareNPay</strong> never processes the payment.</p>
+      <p>2010 idea, 2026 product.</p>
+    </div>
+  </footer>
+</body>
+</html>
