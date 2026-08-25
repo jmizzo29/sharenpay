@@ -3,9 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Zeroed — Open until they’re zeroed out</title>
-  <meta name="description" content="Bills and invoices of any kind stay open until they’re zeroed out. We do the math. You settle on Venmo, Zelle, Cash App, or PayPal. Zeroed never processes the payment.">
+  <title>Zeroed — Open until they are zeroed out</title>
+  <meta name="description" content="Bills and invoices of any kind stay open until they are zeroed out. We do the math. You settle on Venmo, Zelle, Cash App, or PayPal. Zeroed never processes the payment.">
   <meta name="theme-color" content="#ffffff">
+  <meta property="og:title" content="Zeroed">
+  <meta property="og:description" content="Bills and invoices of any kind stay open until they are zeroed out. We do the math. Settle on Venmo, Zelle, Cash App, or PayPal.">
+  <meta property="og:image" content="/icon-512.png">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary">
+  <link rel="canonical" href="/">
   <link rel="manifest" href="/manifest.json">
   <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
@@ -18,7 +24,7 @@
       --owed: #0A7A4B;
       --hair: #E8E8E8;
       --wash: #F2F2F2;
-      --max: 1120px;
+      --max: 1080px;
     }
 
     *, *::before, *::after { box-sizing: border-box; }
@@ -30,7 +36,7 @@
       background: var(--white);
       color: var(--ink);
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Helvetica, Arial, sans-serif;
-      font-size: 17px;
+      font-size: 16px;
       line-height: 1.45;
       -webkit-font-smoothing: antialiased;
       text-rendering: optimizeLegibility;
@@ -38,30 +44,56 @@
 
     a { color: inherit; text-decoration: none; }
 
+    .skip {
+      position: absolute;
+      left: 16px;
+      top: -48px;
+      z-index: 40;
+      padding: 8px 12px;
+      background: var(--ink);
+      color: var(--white);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .skip:focus { top: 12px; }
+
     .wrap {
-      width: min(var(--max), calc(100% - 48px));
+      width: min(var(--max), calc(100% - 40px));
       margin-inline: auto;
     }
 
-    /* ——— Nav ——— */
     header.site {
       position: sticky;
       top: 0;
       z-index: 20;
       background: rgba(255, 255, 255, 0.92);
       backdrop-filter: saturate(1.4) blur(16px);
-      border-bottom: 1px solid transparent;
+      border-bottom: 1px solid var(--hair);
     }
 
     .nav {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      height: 72px;
+      height: 64px;
     }
 
-    .wordmark {
-      font-size: 20px;
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand img {
+      display: block;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+    }
+
+    .brand span {
+      font-size: 18px;
       font-weight: 700;
       letter-spacing: -0.03em;
     }
@@ -69,12 +101,14 @@
     nav.links {
       display: flex;
       align-items: center;
-      gap: 28px;
+      gap: 22px;
       font-size: 14px;
-      color: var(--ink);
     }
 
+    nav.links a:not(.pill) { color: var(--ink); }
     nav.links a:not(.pill):hover { color: var(--mute); }
+
+    .how-nav { display: none; }
 
     .pill {
       display: inline-flex;
@@ -89,36 +123,26 @@
       font-weight: 600;
     }
 
-    .pill.ghost {
-      background: transparent;
-      color: var(--ink);
-      height: auto;
-      padding: 0;
-      font-weight: 500;
-    }
+    .pill:hover { opacity: 0.88; }
 
-    /* ——— Hero ——— */
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 280px;
-      gap: 80px;
-      align-items: center;
-      padding: 88px 0 108px;
-    }
+    .pill.lg { height: 44px; padding: 0 20px; font-size: 15px; }
+
+    .hero { padding: 48px 0 40px; }
 
     .hero h1 {
-      margin: 0 0 22px;
-      font-size: clamp(44px, 6.4vw, 80px);
+      margin: 0 0 18px;
+      max-width: 12ch;
+      font-size: clamp(40px, 11vw, 76px);
       font-weight: 700;
-      letter-spacing: -0.045em;
-      line-height: 0.96;
+      letter-spacing: -0.048em;
+      line-height: 0.94;
     }
 
     .lede {
       margin: 0;
-      max-width: 34ch;
-      font-size: 20px;
-      line-height: 1.45;
+      max-width: 36ch;
+      font-size: 18px;
+      line-height: 1.5;
       color: var(--mute);
     }
 
@@ -127,460 +151,345 @@
       font-weight: 600;
     }
 
-    .hero-visual {
+    .cta-row {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 14px;
+      gap: 20px;
+      margin-top: 28px;
     }
 
-    .open-link {
-      font-size: 13px;
-      color: var(--mute);
-    }
-
-    .open-link:hover { color: var(--ink); }
-
-    /* ——— CSS iPhone ——— */
-    .phone {
-      position: relative;
-      width: 280px;
-      height: 572px;
-      padding: 10px;
-      border-radius: 42px;
-      background: #1a1a1a;
-      box-shadow:
-        0 0 0 1px #0a0a0a,
-        0 28px 60px rgba(17, 17, 17, 0.18);
-    }
-
-    .phone.sm {
-      width: 210px;
-      height: 429px;
-      padding: 8px;
-      border-radius: 34px;
-    }
-
-    .glass {
-      position: relative;
-      height: 100%;
-      overflow: hidden;
-      border-radius: 32px;
-      background: var(--white);
-    }
-
-    .phone.sm .glass { border-radius: 26px; }
-
-    .notch {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      z-index: 3;
-      width: 96px;
-      height: 22px;
-      transform: translateX(-50%);
-      border-radius: 0 0 16px 16px;
-      background: #1a1a1a;
-    }
-
-    .phone.sm .notch {
-      width: 74px;
-      height: 16px;
-      border-radius: 0 0 12px 12px;
-    }
-
-    .status {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 12px 18px 0;
-      font-size: 11px;
-      font-weight: 600;
-    }
-
-    .phone.sm .status { padding: 9px 14px 0; font-size: 9px; }
-
-    .status .glyphs {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .bar {
-      display: inline-block;
-      width: 14px;
-      height: 8px;
-      border: 1.2px solid var(--ink);
-      border-radius: 2px;
-      position: relative;
-    }
-
-    .bar::after {
-      content: "";
-      position: absolute;
-      inset: 1.5px 4px 1.5px 1.5px;
-      background: var(--ink);
-    }
-
-    .screen {
-      display: flex;
-      flex-direction: column;
-      height: calc(100% - 26px);
-      padding: 8px 16px 0;
-    }
-
-    .phone.sm .screen { padding: 6px 13px 0; height: calc(100% - 20px); }
-
-    .appbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .appbar .name {
+    .cta-row a.ghost {
       font-size: 15px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
+      font-weight: 500;
+      color: var(--ink);
     }
 
-    .avatar {
-      width: 22px;
-      height: 22px;
-      border-radius: 50%;
-      background: var(--ink);
-      color: var(--white);
-      font-size: 8px;
-      font-weight: 700;
+    .cta-row a.ghost:hover { color: var(--mute); }
+
+    .balances {
       display: grid;
-      place-items: center;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 48px;
+      border-top: 1px solid var(--hair);
     }
 
-    .you-owe {
-      font-size: 10px;
+    .balances article {
+      padding: 22px 0 4px;
+    }
+
+    .balances article + article {
+      padding-left: 20px;
+      border-left: 1px solid var(--hair);
+    }
+
+    .kicker {
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--mute);
     }
 
-    .hero-fig {
-      margin: 4px 0 18px;
-      font-size: 36px;
+    .fig {
+      margin: 8px 0 0;
+      font-size: clamp(28px, 7vw, 44px);
       font-weight: 700;
       letter-spacing: -0.04em;
+      line-height: 1;
       font-variant-numeric: tabular-nums;
       font-family: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
-    .composer {
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--hair);
+    .fig.plus { color: var(--owed); }
+
+    .how {
+      padding: 20px 0 72px;
     }
 
-    .composer .ask {
+    .how > h2 {
+      margin: 0 0 28px;
       font-size: 13px;
-      color: #c7c7cc;
-    }
-
-    .composer .acts {
-      display: flex;
-      gap: 16px;
-      margin-top: 8px;
-      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
       color: var(--mute);
     }
 
-    .feed { flex: 1; min-height: 0; }
+    .steps {
+      display: grid;
+      gap: 0;
+      border-top: 1px solid var(--hair);
+    }
+
+    .steps article {
+      padding: 24px 0;
+      border-bottom: 1px solid var(--hair);
+    }
+
+    .steps .num {
+      display: block;
+      margin-bottom: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      color: var(--mute);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .steps h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .steps p {
+      margin: 0;
+      max-width: 34ch;
+      color: var(--mute);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .stay {
+      margin: 28px 0 0;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+    }
+
+    .product {
+      background: var(--wash);
+      padding: 56px 0;
+    }
+
+    .product-head {
+      margin-bottom: 28px;
+    }
+
+    .product-head h2 {
+      margin: 0 0 12px;
+      font-size: clamp(32px, 6vw, 48px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+
+    .product-head p {
+      margin: 0;
+      max-width: 42ch;
+      color: var(--mute);
+      font-size: 17px;
+      line-height: 1.5;
+    }
+
+    .screens {
+      display: grid;
+      gap: 16px;
+    }
+
+    .surface {
+      background: var(--white);
+      border: 1px solid var(--hair);
+      border-radius: 16px;
+      padding: 22px 20px 8px;
+    }
+
+    .surface .name {
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 18px;
+    }
 
     .row {
       display: flex;
       justify-content: space-between;
-      gap: 10px;
-      padding: 11px 0;
-      border-bottom: 1px solid var(--hair);
+      gap: 12px;
+      padding: 14px 0;
+      border-top: 1px solid var(--hair);
     }
 
     .row .title {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 600;
       letter-spacing: -0.02em;
     }
 
     .row .meta {
       margin-top: 3px;
-      font-size: 10px;
+      font-size: 12px;
       color: var(--mute);
     }
 
-    .row .amt {
-      font-size: 14px;
+    .amt {
+      font-size: 16px;
       font-weight: 700;
       font-variant-numeric: tabular-nums;
       font-family: ui-rounded, "SF Pro Rounded", -apple-system, sans-serif;
       white-space: nowrap;
     }
 
-    .row .amt.plus { color: var(--owed); }
-
-    .tabs {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      padding: 8px 0 14px;
-      border-top: 1px solid var(--hair);
-    }
-
-    .tabs span {
-      text-align: center;
-      font-size: 9px;
-      color: var(--mute);
-    }
-
-    .tabs span.on { color: var(--ink); font-weight: 600; }
-
-    .home-pip {
-      width: 96px;
-      height: 4px;
-      margin: 0 auto 6px;
-      border-radius: 999px;
-      background: var(--ink);
-    }
-
-    /* ——— Beats ——— */
-    .beats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 48px;
-      padding: 8px 0 96px;
-    }
-
-    .beats h2 {
-      margin: 0 0 10px;
-      font-size: 22px;
-      font-weight: 700;
-      letter-spacing: -0.03em;
-    }
-
-    .beats p {
-      margin: 0;
-      color: var(--mute);
-      font-size: 16px;
-      line-height: 1.5;
-    }
-
-    .pair {
-      display: flex;
-      gap: 20px;
-      margin-top: 18px;
-      font-family: ui-rounded, "SF Pro Rounded", -apple-system, sans-serif;
-      font-variant-numeric: tabular-nums;
-      font-weight: 700;
-      font-size: 20px;
-      letter-spacing: -0.03em;
-    }
-
-    .pair .plus { color: var(--owed); }
-
-    /* ——— Line ——— */
-    .line {
-      padding: 24px 0 108px;
-      max-width: 22ch;
-    }
-
-    .line h2 {
-      margin: 0 0 14px;
-      font-size: clamp(36px, 5vw, 52px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-    }
-
-    .line p {
-      margin: 0;
-      color: var(--mute);
-      font-size: 18px;
-      line-height: 1.5;
-      max-width: 36ch;
-    }
-
-    /* ——— Product ——— */
-    .product {
-      background: var(--wash);
-      padding: 88px 0;
-    }
-
-    .product-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 64px;
-      align-items: center;
-    }
-
-    .product h2 {
-      margin: 0 0 16px;
-      font-size: clamp(36px, 5vw, 52px);
-      font-weight: 700;
-      letter-spacing: -0.04em;
-      line-height: 1.05;
-    }
-
-    .product p.blurb {
-      margin: 0 0 28px;
-      max-width: 38ch;
-      color: var(--mute);
-      font-size: 18px;
-      line-height: 1.5;
-    }
-
-    .cta-row {
-      display: flex;
-      align-items: center;
-      gap: 22px;
-    }
-
-    .cta-row .pill { height: 44px; padding: 0 20px; font-size: 15px; }
-
-    .cta-row a.how { font-size: 15px; color: var(--ink); }
-
-    .pair-phones {
-      display: flex;
-      gap: 20px;
-    }
-
-    .sm-label {
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 10px;
-    }
-
-    .typed {
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: -0.02em;
-      padding-bottom: 8px;
-      border-bottom: 1px solid var(--hair);
-    }
-
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-top: 12px;
-    }
-
-    .chip {
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: var(--wash);
-      font-size: 10px;
-      font-weight: 600;
-    }
-
-    .detail-kicker {
-      font-size: 10px;
-      color: var(--mute);
-      margin-bottom: 6px;
-    }
+    .amt.plus { color: var(--owed); }
 
     .detail-title {
-      font-size: 16px;
+      font-size: 22px;
       font-weight: 700;
       letter-spacing: -0.03em;
       line-height: 1.15;
+      margin: 6px 0 8px;
     }
 
     .detail-amt {
-      margin: 8px 0 6px;
-      font-size: 22px;
+      margin: 0 0 4px;
+      font-size: 28px;
       font-weight: 700;
+      letter-spacing: -0.035em;
       font-family: ui-rounded, "SF Pro Rounded", -apple-system, sans-serif;
-      letter-spacing: -0.03em;
+      font-variant-numeric: tabular-nums;
     }
 
     .month {
       display: inline-block;
-      margin-top: 2px;
+      margin: 8px 0 4px;
       padding: 2px 7px;
       border-radius: 999px;
       border: 1px solid var(--hair);
-      font-size: 8px;
+      font-size: 10px;
       font-weight: 700;
       letter-spacing: 0.06em;
       color: var(--mute);
     }
 
     .settle {
-      margin-top: 16px;
-      padding-top: 12px;
+      margin-top: 8px;
+      padding-top: 16px;
       border-top: 1px solid var(--hair);
     }
 
     .settle h3 {
-      margin: 0 0 8px;
-      font-size: 9px;
+      margin: 0 0 12px;
+      font-size: 11px;
       letter-spacing: 0.08em;
       color: var(--mute);
     }
 
     .rails {
       display: flex;
-      gap: 6px;
+      gap: 8px;
     }
 
     .rail {
-      width: 28px;
-      height: 28px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       border: 1px solid var(--ink);
       display: grid;
       place-items: center;
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
     }
 
     .mark {
-      margin-top: 10px;
-      width: 100%;
-      height: 30px;
-      border: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 14px 0 16px;
+      height: 44px;
       border-radius: 999px;
       background: var(--ink);
       color: var(--white);
-      font-size: 11px;
+      font-size: 15px;
       font-weight: 600;
     }
 
-    /* ——— Footer ——— */
+    .install {
+      padding: 40px 0 56px;
+    }
+
+    .install h2 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+    }
+
+    .install p {
+      margin: 0;
+      max-width: 46ch;
+      color: var(--mute);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
     footer.site {
       border-top: 1px solid var(--hair);
-      padding: 28px 0 40px;
+      padding: 24px 0 36px;
     }
 
     .foot {
       display: flex;
-      justify-content: space-between;
-      gap: 24px;
+      flex-direction: column;
+      gap: 12px;
       font-size: 13px;
       color: var(--mute);
     }
 
-    .foot strong { color: var(--ink); font-weight: 700; }
-
-    @media (max-width: 900px) {
-      .hero,
-      .product-grid { grid-template-columns: 1fr; gap: 48px; }
-      .hero { padding: 56px 0 72px; }
-      .beats { grid-template-columns: 1fr; gap: 36px; padding-bottom: 72px; }
-      .line { padding-bottom: 72px; }
-      nav.links a:not(.pill) { display: none; }
-      .pair-phones { justify-content: flex-start; }
+    .foot .brand {
+      color: var(--ink);
     }
 
-    @media (max-width: 520px) {
-      .wrap { width: min(var(--max), calc(100% - 32px)); }
-      .pair-phones { flex-direction: column; }
-      .foot { flex-direction: column; }
+    .foot .brand span { font-size: 15px; }
+
+    .foot strong { color: var(--ink); font-weight: 600; }
+
+    @media (min-width: 640px) {
+      .wrap { width: min(var(--max), calc(100% - 48px)); }
+      .nav { height: 72px; }
+      .how-nav { display: inline; }
+      .hero { padding: 72px 0 48px; }
+      .lede { font-size: 20px; }
+      .balances article { padding-top: 28px; }
+      .balances article + article { padding-left: 32px; }
+      .steps { grid-template-columns: 1fr 1fr; }
+      .steps article {
+        padding: 28px 28px 28px 0;
+        border-bottom: 0;
+        border-top: 0;
+      }
+      .steps article:nth-child(odd) { padding-right: 28px; }
+      .steps article:nth-child(-n+2) { border-bottom: 1px solid var(--hair); }
+      .steps article:nth-child(even) {
+        padding-left: 28px;
+        border-left: 1px solid var(--hair);
+      }
+      .screens { grid-template-columns: 1fr 1fr; gap: 20px; }
+      .product { padding: 72px 0; }
+      .foot {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+    }
+
+    @media (min-width: 980px) {
+      .hero { padding: 88px 0 56px; }
+      .steps { grid-template-columns: repeat(4, 1fr); }
+      .steps article,
+      .steps article:nth-child(odd),
+      .steps article:nth-child(even) {
+        padding: 28px 24px 8px 0;
+        border: 0;
+        border-top: 1px solid var(--hair);
+      }
+      .steps article + article {
+        padding-left: 24px;
+        border-left: 1px solid var(--hair);
+      }
+      .how { padding-bottom: 96px; }
+      .install { padding: 48px 0 72px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -589,176 +498,147 @@
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Skip to content</a>
+
   <header class="site">
     <div class="wrap nav">
-      <a class="wordmark" href="#top">Zeroed</a>
+      <a class="brand" href="/">
+        <img src="/icon-192.png" width="28" height="28" alt="">
+        <span>Zeroed</span>
+      </a>
       <nav class="links" aria-label="Primary">
-        <a href="#how">How it works</a>
-        <a href="/app">App</a>
-        <a href="#iphone">iPhone</a>
-        <a class="pill" href="/app">Open app</a>
+        <a class="how-nav" href="#how">How it works</a>
+        <a class="pill" href="/app">Open the app</a>
       </nav>
     </div>
   </header>
 
-  <main id="top">
-    <section class="wrap hero" id="app">
-      <div>
-        <h1>Open until they’re zeroed out.</h1>
-        <p class="lede">
-          Bills and invoices of any kind. We do the math. You settle on
-          <strong>Venmo, Zelle, Cash App, or PayPal.</strong>
-        </p>
+  <main id="main">
+    <section class="wrap hero">
+      <h1>Open until they are zeroed out.</h1>
+      <p class="lede">
+        A ledger for bills and invoices of any kind. We do the math.
+        You settle on <strong>Venmo, Zelle, Cash App, or PayPal.</strong>
+      </p>
+      <div class="cta-row">
+        <a class="pill lg" href="/app">Open the app</a>
+        <a class="ghost" href="#how">How it works</a>
       </div>
 
-      <div class="hero-visual">
-        <figure class="phone" aria-label="Zeroed on iPhone">
-          <div class="glass">
-            <div class="notch" aria-hidden="true"></div>
-            <div class="status">
-              <span>9:41</span>
-              <span class="glyphs" aria-hidden="true">●●●● <i class="bar"></i></span>
-            </div>
-            <div class="screen">
-              <div class="appbar">
-                <span class="name">Zeroed</span>
-                <span class="avatar">AR</span>
-              </div>
-              <div class="you-owe">You owe</div>
-              <div class="hero-fig">−$972.40</div>
-              <div class="composer">
-                <div class="ask">What’s the bill?</div>
-                <div class="acts"><span>Pay</span><span>Request</span></div>
-              </div>
-              <div class="feed">
-                <div class="row">
-                  <div>
-                    <div class="title">Moab cabin deposit</div>
-                    <div class="meta">$420 · 4 people · Priya paid</div>
-                  </div>
-                  <div class="amt">−$105.00</div>
-                </div>
-                <div class="row">
-                  <div>
-                    <div class="title">Red Iguana after the game</div>
-                    <div class="meta">$86.40 · 3 people · You paid</div>
-                  </div>
-                  <div class="amt plus">+$57.60</div>
-                </div>
-                <div class="row">
-                  <div>
-                    <div class="title">April rent — the 300 West place</div>
-                    <div class="meta">$1,800 · 2 people · Maya paid</div>
-                  </div>
-                  <div class="amt">−$900.00</div>
-                </div>
-              </div>
-              <div class="tabs" aria-hidden="true">
-                <span class="on">Home</span>
-                <span>Balances</span>
-                <span>People</span>
-              </div>
-              <div class="home-pip" aria-hidden="true"></div>
-            </div>
-          </div>
-        </figure>
-        <a class="open-link" href="/app">Open full screen</a>
+      <div class="balances" aria-label="Example balances">
+        <article>
+          <div class="kicker">You owe</div>
+          <p class="fig">−$972.40</p>
+        </article>
+        <article>
+          <div class="kicker">You’re owed</div>
+          <p class="fig plus">+$57.60</p>
+        </article>
       </div>
     </section>
 
-    <section class="wrap beats" id="how">
-      <article>
-        <h2>Split any bill.</h2>
-        <p>Even split. Leftover pennies on the person who covered it. Rent, a cabin deposit, Sunday league dues.</p>
-      </article>
-      <article>
-        <h2>See your number.</h2>
-        <p>One figure at the top of the house. You owe is black. You’re owed is the only green we use.</p>
-        <div class="pair" aria-label="Example balances">
-          <span>−$972.40</span>
-          <span class="plus">+$57.60</span>
-        </div>
-      </article>
-      <article>
-        <h2>Settle out.</h2>
-        <p>V, Z, $, P — we open the app you already have. Then mark paid. Zeroed never touches the money.</p>
-      </article>
+    <section class="wrap how" id="how">
+      <h2>How it works</h2>
+      <div class="steps">
+        <article>
+          <span class="num">01</span>
+          <h3>Add a bill</h3>
+          <p>Or an invoice. Type it in. Split it evenly. Rent, dinner, a cabin deposit, league dues.</p>
+        </article>
+        <article>
+          <span class="num">02</span>
+          <h3>See who owes whom</h3>
+          <p>One number for you. You owe is black. You’re owed is the only green we use.</p>
+        </article>
+        <article>
+          <span class="num">03</span>
+          <h3>Settle out</h3>
+          <p>We open Venmo, Zelle, Cash App, or PayPal. The app you already have moves the money.</p>
+        </article>
+        <article>
+          <span class="num">04</span>
+          <h3>Mark paid</h3>
+          <p>The share closes when you say it did. Zeroed never touches the money.</p>
+        </article>
+      </div>
+      <p class="stay">Bills stay open until they are zeroed.</p>
     </section>
 
-    <section class="wrap line">
-      <h2>April rent 1800 with Maya</h2>
-      <p>Type a bill in English. We read the people, the amount, the category. Monthly, if that’s how the house works.</p>
-    </section>
-
-    <section class="product" id="iphone">
-      <div class="wrap product-grid">
-        <div>
-          <h2>Add it to Home Screen.</h2>
-          <p class="blurb">Open the app in Safari. Tap Share, then Add to Home Screen. You get Zeroed as a standalone app — no Safari chrome. Same ledger. Same settle rails.</p>
-          <div class="cta-row">
-            <a class="pill" href="/app">Open the app</a>
-            <a class="how" href="#how">How it works</a>
-          </div>
+    <section class="product" id="product" aria-labelledby="product-title">
+      <div class="wrap">
+        <div class="product-head">
+          <h2 id="product-title">Who owes whom.</h2>
+          <p>Open bills. Who paid. Who still owes. Settle outside the app, then mark it paid.</p>
         </div>
 
-        <div class="pair-phones">
-          <figure class="phone sm" aria-label="Type a bill in English">
-            <div class="glass">
-              <div class="notch" aria-hidden="true"></div>
-              <div class="status"><span>9:41</span><span class="glyphs">●●●●</span></div>
-              <div class="screen">
-                <div class="sm-label">Type it in</div>
-                <div class="typed">April rent 1800 with Maya</div>
-                <div class="chips">
-                  <span class="chip">Maya</span>
-                  <span class="chip">Jordan</span>
-                  <span class="chip">Luis</span>
-                  <span class="chip">Elena</span>
-                  <span class="chip">Rent</span>
-                  <span class="chip">Monthly</span>
-                </div>
+        <div class="screens">
+          <article class="surface" aria-label="Open bills">
+            <div class="name">Zeroed</div>
+            <div class="kicker">You owe</div>
+            <p class="fig">−$972.40</p>
+            <div class="row">
+              <div>
+                <div class="title">Moab cabin deposit</div>
+                <div class="meta">$420 · 4 people · Priya paid</div>
               </div>
+              <div class="amt">−$105.00</div>
             </div>
-          </figure>
+            <div class="row">
+              <div>
+                <div class="title">Red Iguana after the game</div>
+                <div class="meta">$86.40 · 3 people · You paid</div>
+              </div>
+              <div class="amt plus">+$57.60</div>
+            </div>
+            <div class="row">
+              <div>
+                <div class="title">April rent — the 300 West place</div>
+                <div class="meta">$1,800 · 2 people · Maya paid</div>
+              </div>
+              <div class="amt">−$900.00</div>
+            </div>
+          </article>
 
-          <figure class="phone sm" aria-label="Settle April rent outside the app">
-            <div class="glass">
-              <div class="notch" aria-hidden="true"></div>
-              <div class="status"><span>9:41</span><span class="glyphs">●●●●</span></div>
-              <div class="screen">
-                <div class="detail-kicker">Shared expense</div>
-                <div class="detail-title">April rent — the 300 West place</div>
-                <div class="detail-amt">$1,800.00</div>
-                <span class="month">MONTHLY</span>
-                <div class="row" style="margin-top:10px">
-                  <div>
-                    <div class="title">You</div>
-                    <div class="meta">Maya paid the landlord</div>
-                  </div>
-                  <div class="amt">−$900.00</div>
-                </div>
-                <div class="settle">
-                  <h3>SETTLE OUT</h3>
-                  <div class="rails" aria-label="Venmo, Zelle, Cash App, PayPal">
-                    <span class="rail">V</span>
-                    <span class="rail">Z</span>
-                    <span class="rail">$</span>
-                    <span class="rail">P</span>
-                  </div>
-                  <button class="mark" type="button">Mark paid</button>
-                </div>
+          <article class="surface" aria-label="Settle a bill outside Zeroed">
+            <div class="kicker">Shared expense</div>
+            <div class="detail-title">April rent — the 300 West place</div>
+            <p class="detail-amt">$1,800.00</p>
+            <span class="month">MONTHLY</span>
+            <div class="row">
+              <div>
+                <div class="title">You</div>
+                <div class="meta">Maya paid the landlord</div>
               </div>
+              <div class="amt">−$900.00</div>
             </div>
-          </figure>
+            <div class="settle">
+              <h3>SETTLE OUT</h3>
+              <div class="rails" aria-label="Venmo, Zelle, Cash App, PayPal">
+                <span class="rail">V</span>
+                <span class="rail">Z</span>
+                <span class="rail">$</span>
+                <span class="rail">P</span>
+              </div>
+              <a class="mark" href="/app">Mark paid</a>
+            </div>
+          </article>
         </div>
       </div>
+    </section>
+
+    <section class="wrap install" id="install">
+      <h2>Add to Home Screen</h2>
+      <p>In Safari, tap Share, then Add to Home Screen. Zeroed opens as its own app — same ledger, no browser chrome.</p>
     </section>
   </main>
 
   <footer class="site">
     <div class="wrap foot">
+      <a class="brand" href="/">
+        <img src="/icon-192.png" width="28" height="28" alt="">
+        <span>Zeroed</span>
+      </a>
       <p><strong>Zeroed</strong> never processes the payment.</p>
-      <p>2010 idea, 2026 product.</p>
     </div>
   </footer>
 </body>
