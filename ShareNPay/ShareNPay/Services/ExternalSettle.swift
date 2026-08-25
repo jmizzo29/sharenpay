@@ -21,7 +21,7 @@ enum ExternalSettle {
         return URL(string: "https://cash.app/$\(tag)/\(amountString(cents))")
     }
 
-    /// Outbound paypal.me send-money link only. Not Checkout, Braintree, or any ShareNPay rail.
+    /// Outbound paypal.me send-money link only. Not Checkout, Braintree, or any in-app rail.
     static func paypalURL(handle: String, cents: Int) -> URL? {
         guard !handle.isEmpty else { return nil }
         var slug = handle
@@ -105,7 +105,7 @@ struct SettleOutsideSheet: View {
             }
             .buttonStyle(QuietButtonStyle(filled: true))
 
-            Text("ShareNPay never takes this money.")
+            Text("Zeroed never takes this money.")
                 .font(.caption)
                 .foregroundStyle(SNP.textMuted)
         }

@@ -145,6 +145,6 @@ enum Recurrence: String, Codable, CaseIterable {
             }
             return "Next due \(when). Monthly — we never auto-charge."
         }
-        return "Settle when you can. ShareNPay doesn’t take the money."
+        return "Settle when you can. Zeroed doesn’t take the money."
     }
 }

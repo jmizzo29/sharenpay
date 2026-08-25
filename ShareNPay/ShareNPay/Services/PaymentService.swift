@@ -242,7 +242,7 @@ final class PaymentService {
         guard let actor, let share = share(for: actor, in: payment), !share.settled else { return }
         share.settled = true
         share.agreed = true
-        addSystem(payment, "\(actor.firstName) marked their share paid outside ShareNPay.")
+        addSystem(payment, "\(actor.firstName) marked their share paid outside Zeroed.")
         refreshPaid(payment)
         save()
     }
@@ -263,7 +263,7 @@ final class PaymentService {
             payment.status = .settled
             payment.settledAt = .now
             payment.splits.forEach { $0.settled = true; $0.agreed = true }
-            addSystem(payment, "Settled up with \(person.firstName). Paid outside ShareNPay.")
+            addSystem(payment, "Settled up with \(person.firstName). Paid outside Zeroed.")
         }
         save()
     }

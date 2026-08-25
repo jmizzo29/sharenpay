@@ -5,15 +5,14 @@ struct Wordmark: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Text("Share")
-            Text("N")
+            Text("Z")
                 .foregroundStyle(SNP.accent)
-            Text("Pay")
+            Text("eroed")
         }
         .font(.system(size: size, weight: .semibold, design: .default))
         .foregroundStyle(SNP.text)
         .tracking(-0.6)
-        .accessibilityLabel("ShareNPay")
+        .accessibilityLabel("Zeroed")
     }
 }
 
@@ -25,7 +24,7 @@ struct BrandMark: View {
             RoundedRectangle(cornerRadius: size * 0.18, style: .continuous)
                 .fill(SNP.accent)
                 .frame(width: size, height: size)
-            Text("N")
+            Text("Z")
                 .font(.system(size: size * 0.52, weight: .bold, design: .default))
                 .foregroundStyle(.white)
         }

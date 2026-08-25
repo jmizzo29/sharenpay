@@ -12,7 +12,7 @@ struct ShareNPayApp: App {
         do {
             container = try ModelContainer(for: schema, configurations: [configuration])
         } catch {
-            fatalError("ShareNPay could not open its local cache: \(error)")
+            fatalError("Zeroed could not open its local cache: \(error)")
         }
     }
 

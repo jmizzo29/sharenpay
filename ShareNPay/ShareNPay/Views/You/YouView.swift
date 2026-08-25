@@ -33,7 +33,7 @@ struct YouView: View {
                         }
                 }
                 Section {
-                    Text("ShareNPay does the split. It does not take the money. Optional reminders stay on this iPhone. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid.")
+                    Text("Zeroed does the split. It does not take the money. Optional reminders stay on this iPhone. Settle on Venmo, Cash App, PayPal, or Zelle, then mark paid.")
                         .font(.body)
                         .foregroundStyle(SNP.textMuted)
                         .listRowBackground(Color.clear)

@@ -13,7 +13,7 @@ You need a Mac with **Xcode 15 or later** and the **iOS 17+** simulator.
 1. Clone this repo.
 2. Open `ShareNPay/ShareNPay.xcodeproj` in Xcode and let Swift packages resolve (Firebase Auth, Cloud Firestore, Google Sign-In).
 3. Add your Firebase iOS config (below). Until you do, the app opens a setup screen and does not crash.
-4. Select the **ShareNPay** scheme and an iPhone simulator.
+4. Select the iOS app scheme and an iPhone simulator. The home-screen name is **Zeroed**.
 5. Press Run.
 
 ## One-time Firebase / Google Cloud setup
