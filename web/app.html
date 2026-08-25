@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>ShareNPay</title>
-  <meta name="description" content="Know who owes whom. We do the math. You settle on Venmo, Zelle, Cash App, or PayPal. ShareNPay never processes the payment.">
+  <title>Zeroed</title>
+  <meta name="description" content="Bills and invoices of any kind stay open until they’re zeroed out. We do the math. You settle on Venmo, Zelle, Cash App, or PayPal. Zeroed never processes the payment.">
   <meta name="theme-color" content="#ffffff">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23111111'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='-apple-system,sans-serif' font-size='14' font-weight='700' fill='%23ffffff'%3ES%3C/text%3E%3C/svg%3E">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23111111'/%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='-apple-system,sans-serif' font-size='14' font-weight='700' fill='%23ffffff'%3EZ%3C/text%3E%3C/svg%3E">
   <style>
     :root {
       --white: #ffffff;
@@ -447,8 +447,8 @@
 <body>
   <div class="stage">
     <aside class="stage-note">
-      <a href="/">ShareNPay</a>
-      <p>Web preview. Same ledger. Same settle rails. ShareNPay never processes the payment.</p>
+      <a href="/">Zeroed</a>
+      <p>Web preview. Same ledger. Same settle rails. Zeroed never processes the payment.</p>
     </aside>
     <div class="device">
       <div class="app" id="root"></div>
@@ -457,7 +457,7 @@
 
   <script>
     (function () {
-      const STORE = "sharenpay.web.v1";
+      const STORE = "zeroed-preview-v1";
       const YOU = "you";
       const MAYA = "maya";
       const JORDAN = "jordan";
@@ -955,7 +955,7 @@
         return (
           statusBar() +
           '<div class="screen">' +
-            '<div class="appbar"><div class="wordmark">ShareNPay</div>' +
+            '<div class="appbar"><div class="wordmark">Zeroed</div>' +
               '<button type="button" class="avatar" data-act="tab" data-tab="people">AR</button></div>' +
             '<div class="kicker">' + label + "</div>" +
             '<div class="hero-fig' + (net > 0 ? " plus" : "") + '">' + esc(fig) + "</div>" +
@@ -1005,7 +1005,7 @@
               "</div>" +
               '<button type="button" class="mark" data-act="mark-paid" data-id="' + esc(bill.id) + '"' +
                 (open ? "" : " disabled") + ">" + (open ? "Mark paid" : "This bill is paid") + "</button>" +
-              '<p class="never">ShareNPay never processes the payment. We open Venmo, Zelle, Cash App, or PayPal, then you mark paid.</p>' +
+              '<p class="never">Zeroed never processes the payment. We open Venmo, Zelle, Cash App, or PayPal, then you mark paid.</p>' +
             "</div>" +
           "</div>" + tabBar("home")
         );
