@@ -75,4 +75,11 @@ final class BillParserTests: XCTestCase {
         let copy = Recurrence.dueCopy(nextDueAt: due, isRecurring: true, settled: false)
         XCTAssertTrue(copy?.contains("Nobody is charged") == true)
     }
+
+    func testOneTimeDueCopyNamesZeroed() {
+        let copy = Recurrence.dueCopy(nextDueAt: nil, isRecurring: false, settled: false)
+        XCTAssertEqual(copy, "Settle when you can. Zeroed doesn’t take the money.")
+        XCTAssertFalse((copy ?? "").localizedCaseInsensitiveContains("ShareNPay"))
+        XCTAssertFalse((copy ?? "").localizedCaseInsensitiveContains("Share N Pay"))
+    }
 }

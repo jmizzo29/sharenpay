@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>NSCameraUsageDescription</key>
-	<string>ShareNPay reads a receipt on this iPhone to suggest the merchant and total. You confirm before anyone is on the split.</string>
+	<string>Zeroed reads a receipt on this iPhone to suggest the merchant and total. You confirm before anyone is on the split.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>ShareNPay reads a receipt photo on this iPhone to suggest the merchant and total. You confirm before anyone is on the split.</string>
+	<string>Zeroed reads a receipt photo on this iPhone to suggest the merchant and total. You confirm before anyone is on the split.</string>
 	<key>GIDClientID</key>
 	<string>YOUR_IOS_CLIENT_ID.apps.googleusercontent.com</string>
 	<key>CFBundleURLTypes</key>

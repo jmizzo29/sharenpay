@@ -1,6 +1,6 @@
-# ShareNPay
+# Zeroed
 
-Shared bills. Any bill. **ShareNPay never takes the money.**
+Shared bills. Any bill. **Zeroed never takes the money.** Bills stay open until they are zeroed out.
 
 Add a bill, split it evenly, and show who owes whom so everyone knows. Roommate rent is a common example — so is dinner, an Uber, utilities, or concert tickets. Settle outside the app on Venmo, Zelle, Cash App, or PayPal, then mark paid.
 
@@ -13,7 +13,7 @@ You need a Mac with **Xcode 15 or later** and the **iOS 17+** simulator.
 1. Clone this repo.
 2. Open `ShareNPay/ShareNPay.xcodeproj` in Xcode and let Swift packages resolve (Firebase Auth, Cloud Firestore, Google Sign-In).
 3. Add your Firebase iOS config (below). Until you do, the app opens a setup screen and does not crash.
-4. Select the **ShareNPay** scheme and an iPhone simulator.
+4. Select the iOS app scheme and an iPhone simulator. The home-screen name is **Zeroed**.
 5. Press Run.
 
 ## One-time Firebase / Google Cloud setup
@@ -26,7 +26,7 @@ Do this once. This repo does **not** ship a real Firebase project or API keys.
 2. Create a project (or use an existing one).
 3. Add an **iOS** app.
 4. iOS bundle ID must be **`com.sharenpay.app`**.
-5. App nickname can be ShareNPay.
+5. App nickname can be Zeroed.
 6. Download **GoogleService-Info.plist**.
 
 ### 2. Drop in the iOS config
@@ -104,7 +104,7 @@ Opening Venmo / PayPal / Cash App / Zelle prefills `April rent · your share $90
 
 **Never in this repo**
 
-Payment SDKs, live Firebase API keys, PayPal Checkout, Braintree, or anything that moves funds through ShareNPay.
+Payment SDKs, live Firebase API keys, PayPal Checkout, Braintree, or anything that moves funds through Zeroed.
 
 ## Architecture
 

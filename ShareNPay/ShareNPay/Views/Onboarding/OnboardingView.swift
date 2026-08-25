@@ -20,7 +20,7 @@ struct SetupView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     step("1", "Create a Firebase project and add an iOS app with bundle ID com.sharenpay.app")
                     step("2", "Enable Authentication → Google")
-                    step("3", "Replace ShareNPay/ShareNPay/GoogleService-Info.plist with the file Firebase downloads")
+                    step("3", "Replace GoogleService-Info.plist with the file Firebase downloads")
                     step("4", "Set Info.plist GIDClientID and the URL scheme to REVERSED_CLIENT_ID")
                     step("5", "Deploy firebase/firestore.rules")
                 }
@@ -74,7 +74,7 @@ struct SignInView: View {
                         .font(.subheadline)
                         .foregroundStyle(SNP.textMuted)
                 }
-                Text("Settle outside the app. ShareNPay does not take payments. Your bills live on your Google account.")
+                Text("Settle outside the app. Zeroed does not take payments. Your bills live on your Google account.")
                     .font(.subheadline)
                     .foregroundStyle(SNP.textMuted)
             }
