@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>CONFIGURATION_NOTE</key>
-	<string>Copy the GoogleService-Info.plist downloaded from Firebase over ShareNPay/ShareNPay/GoogleService-Info.plist. Then set Info.plist GIDClientID to CLIENT_ID and the URL scheme to REVERSED_CLIENT_ID.</string>
+	<string>Copy the GoogleService-Info.plist downloaded from Firebase over the iOS app’s GoogleService-Info.plist (same folder as this example). Then set Info.plist GIDClientID to CLIENT_ID and the URL scheme to REVERSED_CLIENT_ID.</string>
 	<key>CLIENT_ID</key>
 	<string>YOUR_IOS_CLIENT_ID.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>

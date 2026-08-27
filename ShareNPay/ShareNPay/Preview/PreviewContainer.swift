@@ -20,7 +20,7 @@ enum PreviewContainer {
 
 extension View {
     @MainActor
-    func previewShareNPay(onboarded: Bool = true) -> some View {
+    func previewZeroed(onboarded: Bool = true) -> some View {
         let pair = PreviewContainer.make(onboarded: onboarded)
         let session = SessionStore()
         session.phase = .signedIn(

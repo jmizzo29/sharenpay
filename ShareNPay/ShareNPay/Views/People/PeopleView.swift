@@ -100,5 +100,5 @@ struct PeopleView: View {
 
 #Preview {
     PeopleView()
-        .previewShareNPay()
+        .previewZeroed()
 }

@@ -377,5 +377,5 @@ struct HomeComposer: View {
 
 #Preview {
     ActivityView()
-        .previewShareNPay()
+        .previewZeroed()
 }

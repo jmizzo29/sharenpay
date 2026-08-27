@@ -119,5 +119,5 @@ struct MainTabs: View {
 
 #Preview("Onboarded") {
     RootView()
-        .previewShareNPay()
+        .previewZeroed()
 }

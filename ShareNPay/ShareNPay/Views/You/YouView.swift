@@ -82,5 +82,5 @@ struct YouView: View {
 
 #Preview {
     YouView()
-        .previewShareNPay()
+        .previewZeroed()
 }

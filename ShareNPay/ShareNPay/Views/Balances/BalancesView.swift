@@ -107,5 +107,5 @@ struct BalancesView: View {
 
 #Preview {
     BalancesView()
-        .previewShareNPay()
+        .previewZeroed()
 }

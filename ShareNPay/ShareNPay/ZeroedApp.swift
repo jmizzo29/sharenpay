@@ -2,13 +2,13 @@ import SwiftData
 import SwiftUI
 
 @main
-struct ShareNPayApp: App {
+struct ZeroedApp: App {
     let container: ModelContainer
     @State private var session = SessionStore()
 
     init() {
         let schema = SchemaV1.schema
-        let configuration = ModelConfiguration("ShareNPay", schema: schema)
+        let configuration = ModelConfiguration("Zeroed", schema: schema)
         do {
             container = try ModelContainer(for: schema, configurations: [configuration])
         } catch {

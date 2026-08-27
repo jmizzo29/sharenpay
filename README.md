@@ -11,7 +11,7 @@ Sign in with Google. Bills live in Cloud Firestore on that Google account, so th
 You need a Mac with **Xcode 15 or later** and the **iOS 17+** simulator.
 
 1. Clone this repo.
-2. Open `ShareNPay/ShareNPay.xcodeproj` in Xcode and let Swift packages resolve (Firebase Auth, Cloud Firestore, Google Sign-In).
+2. Open the Xcode project at `ShareNPay/ShareNPay.xcodeproj` (on-disk folder name; the product is Zeroed) and let Swift packages resolve (Firebase Auth, Cloud Firestore, Google Sign-In).
 3. Add your Firebase iOS config (below). Until you do, the app opens a setup screen and does not crash.
 4. Select the iOS app scheme and an iPhone simulator. The home-screen name is **Zeroed**.
 5. Press Run.
@@ -120,6 +120,8 @@ White / near-white and dark, black text, one ink accent `#1B2A4A`. Large type, t
 
 ## Project layout
 
+The iOS Xcode project, targets, and folders are still named `ShareNPay` on disk. Renaming them would break the project. The product people see is **Zeroed**.
+
 ```
 ShareNPay/ShareNPay.xcodeproj
 ShareNPay/ShareNPay/
@@ -130,4 +132,4 @@ web/
 
 The marketing site lives in `web/`.
 
-Bundle ID: `com.sharenpay.app`. iOS 17. iPhone only.
+Bundle ID stays `com.sharenpay.app` so signing and Firebase keep working. iOS 17. iPhone only.

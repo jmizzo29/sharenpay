@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A00000000000000000000065 /* ShareNPayApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000064 /* ShareNPayApp.swift */; };
+		A00000000000000000000065 /* ZeroedApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000064 /* ZeroedApp.swift */; };
 		A00000000000000000000067 /* Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000066 /* Palette.swift */; };
 		A00000000000000000000069 /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = A00000000000000000000068 /* Enums.swift */; };
 		A0000000000000000000006B /* Person.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0000000000000000000006A /* Person.swift */; };
@@ -57,7 +57,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A00000000000000000000064 /* ShareNPayApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareNPayApp.swift; sourceTree = "<group>"; };
+		A00000000000000000000064 /* ZeroedApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ZeroedApp.swift; sourceTree = "<group>"; };
 		A00000000000000000000066 /* Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Palette.swift; sourceTree = "<group>"; };
 		A00000000000000000000068 /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		A0000000000000000000006A /* Person.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Person.swift; sourceTree = "<group>"; };
@@ -265,7 +265,7 @@
 		A0000000000000000000000A /* ShareNPay */ = {
 			isa = PBXGroup;
 			children = (
-				A00000000000000000000064 /* ShareNPayApp.swift */,
+				A00000000000000000000064 /* ZeroedApp.swift */,
 				A00000000000000000000E08 /* Info.plist */,
 				A00000000000000000000E06 /* GoogleService-Info.plist */,
 				A000000000000000000000A1 /* Theme */,
@@ -408,7 +408,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A00000000000000000000065 /* ShareNPayApp.swift in Sources */,
+				A00000000000000000000065 /* ZeroedApp.swift in Sources */,
 				A00000000000000000000067 /* Palette.swift in Sources */,
 				A00000000000000000000069 /* Enums.swift in Sources */,
 				A0000000000000000000006B /* Person.swift in Sources */,
