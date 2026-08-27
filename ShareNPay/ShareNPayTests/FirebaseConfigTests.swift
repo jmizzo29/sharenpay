@@ -23,7 +23,7 @@ final class FirebaseConfigTests: XCTestCase {
             "CLIENT_ID": "1234567890-abcdef.apps.googleusercontent.com",
             "REVERSED_CLIENT_ID": "com.googleusercontent.apps.1234567890-abcdef",
             "GOOGLE_APP_ID": "1:1234567890:ios:abcdef123456",
-            "PROJECT_ID": "sharenpay-prod",
+            "PROJECT_ID": "zeroed-prod",
             "API_KEY": "AIzaSyExampleNotARealKeyValue",
             "BUNDLE_ID": "com.sharenpay.app"
         ]

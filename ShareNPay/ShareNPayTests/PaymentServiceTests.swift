@@ -86,7 +86,7 @@ final class PaymentServiceTests: XCTestCase {
         XCTAssertEqual(tickets.status, .settled)
     }
 
-    func testOutboundSettleLinksDoNotTouchShareNPayRails() {
+    func testOutboundSettleLinksStayOnExternalRails() {
         let maya = person("maya")
         let note = ExternalSettle.note(bill: "August rent", cents: 60_000)
         let venmo = ExternalSettle.venmoURL(handle: maya.venmoHandle, cents: 60_000, note: note)
